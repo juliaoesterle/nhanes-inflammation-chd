@@ -1,0 +1,24 @@
+# Data: course-provided, never committed -- put the CSVs in data/raw/
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Generated outputs (re-create with `python prepare_data.py`)
+reports/
+
+# Report source lives on Overleaf
+*.zip
+
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
