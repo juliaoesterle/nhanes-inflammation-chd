@@ -1,0 +1,13 @@
+model,features,cv_auc_mean,cv_auc_sd,best_params
+Random forest,M0,0.7941114963403225,0.00967456004439606,"{'min_samples_leaf': 50, 'max_features': 0.5, 'max_depth': 4, 'class_weight': 'balanced_subsample'}"
+Random forest,M1,0.803838533927687,0.007865122658530831,"{'min_samples_leaf': 50, 'max_features': 0.5, 'max_depth': 4, 'class_weight': None}"
+Random forest,M2,0.8591932199658796,0.011572686131273938,"{'min_samples_leaf': 50, 'max_features': 'sqrt', 'max_depth': 12, 'class_weight': None}"
+Random forest,M2 + NLR,0.8625227010070992,0.014776567567236755,"{'min_samples_leaf': 20, 'max_features': 'sqrt', 'max_depth': None, 'class_weight': 'balanced_subsample'}"
+Random forest,M2 + CRP,0.8590611413791205,0.012599770585904764,"{'min_samples_leaf': 50, 'max_features': 'sqrt', 'max_depth': 12, 'class_weight': None}"
+Random forest,M3,0.8604864894612294,0.013337369274820652,"{'min_samples_leaf': 50, 'max_features': 'sqrt', 'max_depth': 12, 'class_weight': None}"
+Gradient boosting,M0,0.7924137361730229,0.01035826924819476,"{'class_weight': 'balanced', 'l2_regularization': np.float64(0.09565499215943825), 'learning_rate': np.float64(0.011085122517311707), 'max_iter': 200, 'max_leaf_nodes': 7, 'min_samples_leaf': 50}"
+Gradient boosting,M1,0.8051235485113641,0.010930057939883357,"{'class_weight': 'balanced', 'l2_regularization': np.float64(0.09565499215943825), 'learning_rate': np.float64(0.011085122517311707), 'max_iter': 200, 'max_leaf_nodes': 7, 'min_samples_leaf': 50}"
+Gradient boosting,M2,0.8527929117825106,0.011534624310823808,"{'class_weight': 'balanced', 'l2_regularization': np.float64(0.35127047262708466), 'learning_rate': np.float64(0.025644046794293652), 'max_iter': 200, 'max_leaf_nodes': 7, 'min_samples_leaf': 100}"
+Gradient boosting,M2 + NLR,0.8565846678773872,0.009846632979374968,"{'class_weight': 'balanced', 'l2_regularization': np.float64(0.35127047262708466), 'learning_rate': np.float64(0.025644046794293652), 'max_iter': 200, 'max_leaf_nodes': 7, 'min_samples_leaf': 100}"
+Gradient boosting,M2 + CRP,0.8549116724451048,0.009736199299372058,"{'class_weight': 'balanced', 'l2_regularization': np.float64(0.35127047262708466), 'learning_rate': np.float64(0.025644046794293652), 'max_iter': 200, 'max_leaf_nodes': 7, 'min_samples_leaf': 100}"
+Gradient boosting,M3,0.85675251774806,0.008338761131497412,"{'class_weight': 'balanced', 'l2_regularization': np.float64(0.35127047262708466), 'learning_rate': np.float64(0.025644046794293652), 'max_iter': 200, 'max_leaf_nodes': 7, 'min_samples_leaf': 100}"

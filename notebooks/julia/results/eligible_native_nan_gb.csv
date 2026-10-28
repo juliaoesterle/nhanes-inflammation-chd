@@ -1,0 +1,3 @@
+features,train_n,test_n,test_cases,roc_auc_all_eligible,roc_auc_complete_case_subset,roc_auc_incomplete_subset,incomplete_test_n,incomplete_test_cases
+M2,4430,1108,82,0.8712737127371274,0.8916403729570674,0.7807971014492754,199,15
+M3,4430,1108,82,0.8727357010412209,0.8928989257985607,0.7833333333333333,199,15
