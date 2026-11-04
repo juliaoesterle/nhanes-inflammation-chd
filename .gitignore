@@ -25,3 +25,6 @@ venv/
 
 # Local quiz-me records
 .quiz-me/
+
+# Local context/lecture materials
+notebooks/**/context/
