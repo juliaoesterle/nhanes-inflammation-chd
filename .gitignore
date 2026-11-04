@@ -22,3 +22,6 @@ venv/
 .DS_Store
 .vscode/
 .idea/
+
+# Local quiz-me records
+.quiz-me/
