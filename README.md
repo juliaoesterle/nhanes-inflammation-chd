@@ -45,6 +45,7 @@ data/raw/              course CSVs (git-ignored)
 data/processed/        parquet outputs of prepare_data.py (git-ignored)
 reports/               flowchart.csv, cleaning_log.csv, missingness.csv (generated)
 notebooks/<name>/      everyone's own experiments, e.g. notebooks/julia/01_eda.ipynb
+comparison/            all models side by side: python comparison/compare_models.py
 ```
 
 **Rule of thumb:** experiment freely in your own `notebooks/<name>/` folder, but never redefine
