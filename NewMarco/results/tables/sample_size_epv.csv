@@ -1,0 +1,5 @@
+setting,cases,parameters_M3,events_per_parameter
+Full analysis sample,412,19,21.68421052631579
+Outer training fold (4/5),329,19,17.31578947368421
+Inner training fold (4/5 of 4/5),263,19,13.842105263157896
+Old draft: 80% of the complete cases,273,19,14.368421052631579

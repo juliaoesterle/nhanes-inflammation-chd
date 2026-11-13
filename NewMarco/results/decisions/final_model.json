@@ -1,0 +1,6 @@
+{
+  "rule": "LR unless another algorithm is significantly better (Bonferroni p < 0.05)",
+  "highest_mean_auc": "SVM",
+  "decision": "LR",
+  "significantly_better": []
+}

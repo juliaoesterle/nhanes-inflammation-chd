@@ -1,0 +1,101 @@
+[    0.4s] n = 5,538, cases = 412
+[    0.4s] E1 missing data ...
+[    8.3s] E1 summary:
+learner      strategy  auc_common_mean  auc_common_lo  auc_common_hi  auc_incomplete_mean  auc_incomplete_lo  auc_incomplete_hi  auc_all_mean  auc_all_lo  auc_all_hi  brier_common_mean  brier_common_lo  brier_common_hi  n_train_mean
+     LR complete_case           0.8667         0.8492         0.8843                  NaN                NaN                NaN           NaN         NaN         NaN             0.0575           0.0540           0.0609        3650.4
+     LR   drop_income           0.8670         0.8470         0.8870               0.8476             0.7703             0.9248        0.8637      0.8394      0.8881             0.0572           0.0542           0.0602        4430.4
+     LR        median           0.8672         0.8481         0.8862               0.8485             0.7698             0.9273        0.8638      0.8412      0.8864             0.0572           0.0541           0.0602        4430.4
+     RF complete_case           0.8649         0.8440         0.8858                  NaN                NaN                NaN           NaN         NaN         NaN             0.0581           0.0564           0.0598        3650.4
+     RF   drop_income           0.8663         0.8470         0.8855               0.8344             0.7634             0.9054        0.8609      0.8377      0.8841             0.0579           0.0562           0.0596        4430.4
+     RF        median           0.8677         0.8459         0.8894               0.8360             0.7674             0.9045        0.8623      0.8390      0.8857             0.0579           0.0562           0.0596        4430.4
+[    8.3s] E1 differences vs complete case:
+learner    strategy  delta_auc_vs_cc      lo     hi      p
+     LR drop_income           0.0003 -0.0046 0.0052 0.8886
+     LR      median           0.0005 -0.0034 0.0043 0.7969
+     RF drop_income           0.0014 -0.0038 0.0066 0.5669
+     RF      median           0.0028 -0.0020 0.0076 0.2230
+[    8.4s] E1 decision: {'rule': 'median + indicator (keeps everybody) unless another option is more than 0.005 AUC better on the same test people', 'mean_auc_common_subset': {'complete_case': 0.8657970656628464, 'drop_income': 0.8666378411090683, 'median': 0.867408004282872}, 'decision': 'median'}
+[    8.8s] E2 feature selection ...
+[    8.9s]   naive pool S2: 342 raw columns (<= 40 % missing); S3 pool: 39 variables
+[   48.2s] E2 summary:
+                  strategy  auc_mean  auc_lo  auc_hi  brier_mean  n_selected_mean  jaccard_stability  freq_log_nlr  freq_log_crp  share_leakage_in_top20
+        S1 literature (M3)    0.8622  0.8455  0.8789      0.0576             13.0             1.0000           1.0           1.0                     NaN
+  S2 all variables + lasso    0.9234  0.9031  0.9438      0.0436            114.2             0.4734           NaN           NaN                    0.35
+          S3 pool + filter    0.8686  0.8473  0.8899      0.0570             21.5             0.6923           1.0           0.0                     NaN
+ S3 pool + wrapper (RFECV)    0.8696  0.8472  0.8921      0.0569             23.4             0.7175           1.0           0.9                     NaN
+S3 pool + embedded (lasso)    0.8699  0.8482  0.8916      0.0566             34.9             0.8568           1.0           1.0                     NaN
+[   48.2s] E2 naive pool, top 15 selected raw variables:
+          selection_frequency  mean_abs_coef                     category                                     label
+RXQ510                    1.0          0.531                    treatment   Dr told to take daily low-dose aspirin?
+MCQ160B                   1.0          0.418        other heart diagnosis    Ever told had congestive heart failure
+RXQ050                    1.0          0.353                    treatment    Number of prescription medicines taken
+OSQ230                    1.0          0.338  other diagnosis / condition       Any metal objects inside your body?
+MCQ160D                   1.0          0.297        other heart diagnosis  Ever told you had angina/angina pectoris
+RIAGENDR                  1.0          0.271          risk factor / other                                    Gender
+BPQ101D                   1.0          0.216                    treatment   Taking meds to lower blood cholesterol?
+HUQ010                    1.0          0.213     health-care use / status                  General health condition
+RIDAGEYR                  1.0          0.177          risk factor / other                 Age in years at screening
+LBXTC                     1.0          0.167          risk factor / other                 Total Cholesterol (mg/dL)
+LBXPNL                    1.0          0.157          risk factor / other              Linoleic acid (C18:2n-6) (%)
+LBXPED                    1.0          0.126          risk factor / other    11,14-Eicosadienoic acid (C20:2n6) (%)
+PAD680                    1.0          0.118          risk factor / other                Minutes sedentary activity
+FNQ520                    1.0          0.116          risk factor / other  Level of feeling worried/nervous/anxious
+LBDTHGLC                  1.0          0.115          risk factor / other         Blood mercury, total comment code
+[   48.2s] E2 hybrid pool, share of folds in which each variable is selected:
+                filter  wrapper (RFECV)  embedded (lasso)
+age                1.0              1.0               1.0
+egfr               1.0              1.0               1.0
+diabetes           1.0              1.0               1.0
+log_uacr           1.0              1.0               1.0
+male               1.0              1.0               1.0
+log_nlr            1.0              1.0               1.0
+hypertension       1.0              1.0               1.0
+total_chol         1.0              1.0               1.0
+smoking            1.0              1.0               1.0
+told_high_chol     1.0              1.0               1.0
+rdw                1.0              0.9               1.0
+waist              1.0              0.6               1.0
+log_activity       0.8              0.7               1.0
+sbp                0.5              1.0               1.0
+race_eth           0.4              1.0               1.0
+log_ggt            0.4              1.0               1.0
+pulse              0.4              0.9               1.0
+education          0.7              0.6               1.0
+income_pir         0.3              0.9               0.9
+monocyte_pct       0.4              0.7               1.0
+glucose            0.9              0.1               1.0
+wbc                0.4              0.6               1.0
+phq9               0.0              0.9               1.0
+log_crp            0.0              0.9               1.0
+uric_acid          0.9              0.1               0.8
+dbp                0.8              0.1               0.9
+log_tg             0.3              0.4               1.0
+platelets          0.5              0.1               1.0
+sedentary_min      0.0              0.5               1.0
+hdl_chol           0.7              0.1               0.6
+log_drinks_wk      0.2              0.2               0.8
+albumin            0.5              0.1               0.6
+vitamin_d          0.4              0.0               0.7
+log_alt            0.0              0.3               0.7
+eosinophil_pct     0.0              0.1               0.8
+sleep_hours        0.0              0.1               0.8
+hemoglobin         0.0              0.2               0.5
+bmi                0.0              0.3               0.3
+log_cotinine       0.0              0.0               0.5
+[   49.1s] E3 class imbalance ...
+[   60.1s] E3 summary:
+learner       option   auc  pr_auc  brier  scaled_brier  cal_intercept  cal_slope  mean_pred  sens_at_0.5  spec_at_0.5  f1_at_0.5  accuracy_at_0.5  sens_at_prev  spec_at_prev  f1_at_prev
+     LR         none 0.862   0.342  0.058         0.163          0.001      0.954      0.074        0.088        0.991      0.146            0.924         0.817         0.761       0.341
+     LR class_weight 0.862   0.335  0.156        -1.265         -2.558      0.890      0.319        0.820        0.762      0.344            0.767         0.987         0.308       0.186
+     LR   oversample 0.861   0.333  0.156        -1.271         -2.561      0.887      0.319        0.812        0.761      0.340            0.765         0.985         0.306       0.186
+     LR  undersample 0.856   0.322  0.164        -1.387         -2.671      0.831      0.326        0.823        0.748      0.332            0.754         0.987         0.313       0.187
+     LR        smote 0.860   0.334  0.151        -1.192         -2.566      0.797      0.300        0.792        0.777      0.347            0.778         0.983         0.373       0.201
+     RF         none 0.861   0.336  0.058         0.159          0.004      1.315      0.074        0.000        1.000      0.000            0.926         0.859         0.708       0.313
+     RF class_weight 0.863   0.334  0.111        -0.611         -1.870      1.210      0.264        0.684        0.849      0.385            0.837         0.984         0.281       0.180
+     RF   oversample 0.860   0.328  0.108        -0.567         -1.825      1.162      0.255        0.663        0.859      0.388            0.844         0.983         0.302       0.184
+     RF  undersample 0.858   0.327  0.167        -1.430         -2.353      1.604      0.380        0.831        0.739      0.328            0.746         1.000         0.023       0.141
+     RF        smote 0.857   0.309  0.094        -0.365         -1.601      1.051      0.221        0.536        0.891      0.372            0.865         0.979         0.393       0.206
+[   60.1s] E3 decision: {'rule': 'correction only if AUC gain > 0.005 and Brier not worse', 'mean_auc': {'class_weight': 0.8626108587125847, 'none': 0.861668596522384, 'oversample': 0.8604780846741555, 'smote': 0.8586518468543177, 'undersample': 0.8570336388535379}, 'mean_brier': {'class_weight': 0.1334717061063785, 'none': 0.057772219638525135, 'oversample': 0.1321404814044497, 'smote': 0.12246641195823701, 'undersample': 0.16588331344802132}, 'decision': 'none'}
+[   60.4s] E4 single-split variability ...
+[   64.1s] E4: {'auc_M3_range_95': [np.float64(0.8310042552179907), np.float64(0.8940554723529691)], 'auc_M3_min_max': [np.float64(0.8021442495126706), np.float64(0.9228949745637807)], 'delta_auc_range_95': [np.float64(-0.005267020871963166), np.float64(0.004873294346978477)], 'share_splits_delta_negative': 0.295, 'share_splits_delta_above_0.01': 0.0}
+[   64.4s] done

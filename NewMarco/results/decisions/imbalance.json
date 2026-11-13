@@ -1,0 +1,18 @@
+{
+  "rule": "correction only if AUC gain > 0.005 and Brier not worse",
+  "mean_auc": {
+    "class_weight": 0.8626108587125847,
+    "none": 0.861668596522384,
+    "oversample": 0.8604780846741555,
+    "smote": 0.8586518468543177,
+    "undersample": 0.8570336388535379
+  },
+  "mean_brier": {
+    "class_weight": 0.1334717061063785,
+    "none": 0.057772219638525135,
+    "oversample": 0.1321404814044497,
+    "smote": 0.12246641195823701,
+    "undersample": 0.16588331344802132
+  },
+  "decision": "none"
+}

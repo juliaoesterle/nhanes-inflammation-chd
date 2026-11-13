@@ -1,0 +1,184 @@
+[    0.4s] 1 SD of log NLR = factor 1.58; 1 SD of log CRP = factor 3.15
+[    0.4s] Median + indicator (primary): n = 5,538, cases = 412
+[    0.4s] Complete cases: n = 4,544, cases = 337
+[    0.4s] Income column dropped: n = 5,538, cases = 412
+[    1.0s] Odds ratios per SD:
+marker  adjusted_for_other_marker   model                     analysis    n               OR      P  significant_bonferroni
+   NLR                      False Model 1 Median + indicator (primary) 5538 1.30 (1.17-1.44) <0.001                    True
+   NLR                      False Model 1               Complete cases 4544 1.27 (1.13-1.43) <0.001                    True
+   NLR                      False Model 1        Income column dropped 5538 1.30 (1.17-1.44) <0.001                    True
+   NLR                      False Model 1              Survey-weighted 5538 1.32 (1.16-1.50) <0.001                    True
+   NLR                      False Model 2 Median + indicator (primary) 5538 1.20 (1.07-1.34)  0.002                    True
+   NLR                      False Model 2               Complete cases 4544 1.18 (1.04-1.34)  0.010                    True
+   NLR                      False Model 2        Income column dropped 5538 1.20 (1.08-1.35)  0.001                    True
+   NLR                      False Model 2              Survey-weighted 5538 1.18 (1.05-1.33)  0.008                    True
+   NLR                      False Model 3 Median + indicator (primary) 5538 1.21 (1.08-1.36)  0.001                    True
+   NLR                      False Model 3               Complete cases 4544 1.18 (1.04-1.35)  0.011                    True
+   NLR                      False Model 3        Income column dropped 5538 1.22 (1.08-1.36) <0.001                    True
+   NLR                      False Model 3              Survey-weighted 5538 1.19 (1.07-1.33)  0.004                    True
+hs-CRP                      False Model 1 Median + indicator (primary) 5538 1.11 (0.99-1.24)  0.066                   False
+hs-CRP                      False Model 1               Complete cases 4544 1.14 (1.01-1.29)  0.039                   False
+hs-CRP                      False Model 1        Income column dropped 5538 1.11 (0.99-1.24)  0.066                   False
+hs-CRP                      False Model 1              Survey-weighted 5538 1.14 (1.01-1.28)  0.037                   False
+hs-CRP                      False Model 2 Median + indicator (primary) 5538 0.96 (0.84-1.08)  0.483                   False
+hs-CRP                      False Model 2               Complete cases 4544 0.96 (0.83-1.11)  0.585                   False
+hs-CRP                      False Model 2        Income column dropped 5538 0.97 (0.85-1.10)  0.587                   False
+hs-CRP                      False Model 2              Survey-weighted 5538 0.91 (0.81-1.02)  0.103                   False
+hs-CRP                      False Model 3 Median + indicator (primary) 5538 0.99 (0.87-1.13)  0.916                   False
+hs-CRP                      False Model 3               Complete cases 4544 1.01 (0.88-1.17)  0.878                   False
+hs-CRP                      False Model 3        Income column dropped 5538 1.00 (0.88-1.14)  0.965                   False
+hs-CRP                      False Model 3              Survey-weighted 5538 0.95 (0.85-1.05)  0.290                   False
+   NLR                       True Model 1 Median + indicator (primary) 5538 1.28 (1.16-1.43) <0.001                    True
+   NLR                       True Model 1               Complete cases 4544 1.25 (1.11-1.41) <0.001                    True
+   NLR                       True Model 1        Income column dropped 5538 1.28 (1.16-1.43) <0.001                    True
+   NLR                       True Model 1              Survey-weighted 5538 1.30 (1.13-1.50)  0.001                    True
+hs-CRP                       True Model 1 Median + indicator (primary) 5538 1.06 (0.95-1.18)  0.322                   False
+hs-CRP                       True Model 1               Complete cases 4544 1.10 (0.97-1.24)  0.150                   False
+hs-CRP                       True Model 1        Income column dropped 5538 1.06 (0.95-1.18)  0.322                   False
+hs-CRP                       True Model 1              Survey-weighted 5538 1.08 (0.95-1.22)  0.242                   False
+   NLR                       True Model 2 Median + indicator (primary) 5538 1.21 (1.08-1.36) <0.001                    True
+   NLR                       True Model 2               Complete cases 4544 1.19 (1.05-1.36)  0.007                    True
+   NLR                       True Model 2        Income column dropped 5538 1.22 (1.09-1.37) <0.001                    True
+   NLR                       True Model 2              Survey-weighted 5538 1.22 (1.06-1.40)  0.008                    True
+hs-CRP                       True Model 2 Median + indicator (primary) 5538 0.92 (0.81-1.04)  0.195                   False
+hs-CRP                       True Model 2               Complete cases 4544 0.93 (0.81-1.07)  0.325                   False
+hs-CRP                       True Model 2        Income column dropped 5538 0.93 (0.82-1.05)  0.245                   False
+hs-CRP                       True Model 2              Survey-weighted 5538 0.87 (0.76-0.99)  0.041                   False
+   NLR                       True Model 3 Median + indicator (primary) 5538 1.22 (1.08-1.37) <0.001                    True
+   NLR                       True Model 3               Complete cases 4544 1.19 (1.04-1.35)  0.011                    True
+   NLR                       True Model 3        Income column dropped 5538 1.23 (1.09-1.38) <0.001                    True
+   NLR                       True Model 3              Survey-weighted 5538 1.22 (1.07-1.38)  0.005                    True
+hs-CRP                       True Model 3 Median + indicator (primary) 5538 0.95 (0.84-1.08)  0.460                   False
+hs-CRP                       True Model 3               Complete cases 4544 0.98 (0.85-1.13)  0.784                   False
+hs-CRP                       True Model 3        Income column dropped 5538 0.96 (0.84-1.09)  0.542                   False
+hs-CRP                       True Model 3              Survey-weighted 5538 0.91 (0.80-1.03)  0.112                   False
+[    1.4s] assoc_full_model:
+             variable                       scale     or     lo     hi      p
+               nlr_sd               per SD of log 1.2144 1.0825 1.3625 0.0009
+               crp_sd               per SD of log 0.9188 0.8083 1.0444 0.1951
+                  age         per SD (17.1 units) 2.5479 2.0680 3.1391 0.0000
+                 male yes vs no (or vs reference) 1.7362 1.3527 2.2285 0.0000
+race_mexican_american yes vs no (or vs reference) 0.3468 0.1713 0.7024 0.0033
+  race_other_hispanic yes vs no (or vs reference) 0.9722 0.6485 1.4573 0.8913
+        race_nh_black yes vs no (or vs reference) 0.4488 0.2903 0.6939 0.0003
+        race_nh_asian yes vs no (or vs reference) 1.3540 0.7772 2.3589 0.2846
+     race_other_multi yes vs no (or vs reference) 0.7137 0.4428 1.1501 0.1659
+           income_pir          per SD (1.5 units) 0.8515 0.7504 0.9664 0.0128
+       income_missing yes vs no (or vs reference) 0.9847 0.7052 1.3748 0.9277
+                  bmi          per SD (7.2 units) 1.1680 1.0243 1.3319 0.0204
+           smk_former yes vs no (or vs reference) 1.7208 1.3368 2.2150 0.0000
+          smk_current yes vs no (or vs reference) 2.6990 1.9260 3.7821 0.0000
+             diabetes yes vs no (or vs reference) 1.7915 1.3885 2.3115 0.0000
+         hypertension yes vs no (or vs reference) 2.0460 1.5652 2.6745 0.0000
+           total_chol         per SD (42.3 units) 0.5833 0.5069 0.6713 0.0000
+             hdl_chol         per SD (14.6 units) 0.9112 0.7896 1.0515 0.2033
+                 egfr         per SD (21.0 units) 0.8034 0.7050 0.9154 0.0010
+[    1.4s] assoc_lr_test:
+added_to_model_2  df  loglik_model2  loglik_with_markers  lr_statistic      p
+             NLR   1     -1081.9645           -1077.0485        9.8318 0.0017
+          hs-CRP   1     -1081.9645           -1081.7169        0.4952 0.4816
+    NLR + hs-CRP   2     -1081.9645           -1076.2034       11.5221 0.0031
+[    1.4s] assoc_nonlinearity:
+marker  or_squared_term  p_squared_term
+   NLR           1.0132          0.6681
+hs-CRP           0.9884          0.7873
+[    1.4s] assoc_categories:
+                        marker          group  median_value       range     or     lo     hi      p    beta     se
+                           NLR Q1 (reference)        1.2302   0.29-1.51 1.0000 1.0000 1.0000    NaN     NaN    NaN
+                           NLR             Q2        1.7599   1.51-2.00 1.0775 0.7363 1.5767 0.7008  0.0746 0.1942
+                           NLR             Q3        2.2868   2.00-2.69 1.3758 0.9600 1.9718 0.0823  0.3190 0.1836
+                           NLR             Q4        3.3301  2.69-29.71 1.3259 0.9363 1.8777 0.1120  0.2821 0.1775
+                        hs-CRP Q1 (reference)        0.5200   0.11-0.81 1.0000 1.0000 1.0000    NaN     NaN    NaN
+                        hs-CRP             Q2        1.2200   0.82-1.81 0.8333 0.6011 1.1551 0.2737 -0.1824 0.1666
+                        hs-CRP             Q3        2.8200   1.82-4.18 0.9008 0.6434 1.2613 0.5430 -0.1045 0.1717
+                        hs-CRP             Q4        7.2500 4.19-150.92 0.8531 0.5988 1.2153 0.3789 -0.1589 0.1806
+hs-CRP clinical (ref < 1 mg/L)       1-3 mg/L           NaN         NaN 1.0129 0.7590 1.3517 0.9307  0.0128 0.1472
+hs-CRP clinical (ref < 1 mg/L)       > 3 mg/L           NaN         NaN 0.9358 0.6872 1.2744 0.6736 -0.0664 0.1576
+[    1.4s] assoc_vif:
+             variable    vif
+                  age 2.1626
+                 egfr 1.8955
+                  bmi 1.4784
+               crp_sd 1.4524
+             hdl_chol 1.4110
+         hypertension 1.3252
+        race_nh_black 1.2400
+                 male 1.2006
+           income_pir 1.1845
+          smk_current 1.1837
+             diabetes 1.1706
+           total_chol 1.1559
+               nlr_sd 1.1516
+           smk_former 1.1451
+  race_other_hispanic 1.1258
+race_mexican_american 1.1164
+        race_nh_asian 1.0876
+     race_other_multi 1.0668
+       income_missing 1.0103
+[    1.4s] assoc_decomposition:
+                adjustment marker     or     lo     hi      p    beta     se
+        Model 1 (age, sex)    NLR 1.2973 1.1693 1.4393 0.0000  0.2603 0.0530
+        Model 1 (age, sex) hs-CRP 1.1096 0.9933 1.2395 0.0655  0.1040 0.0565
+          + race/ethnicity    NLR 1.3014 1.1701 1.4473 0.0000  0.2634 0.0542
+          + race/ethnicity hs-CRP 1.1201 1.0017 1.2526 0.0467  0.1135 0.0570
+                  + income    NLR 1.2969 1.1694 1.4382 0.0000  0.2600 0.0528
+                  + income hs-CRP 1.0831 0.9693 1.2102 0.1589  0.0798 0.0566
+                     + BMI    NLR 1.2758 1.1488 1.4169 0.0000  0.2436 0.0535
+                     + BMI hs-CRP 0.9980 0.8843 1.1263 0.9740 -0.0020 0.0617
+                 + smoking    NLR 1.2832 1.1564 1.4238 0.0000  0.2493 0.0531
+                 + smoking hs-CRP 1.0627 0.9501 1.1885 0.2874  0.0608 0.0571
+                + diabetes    NLR 1.3052 1.1745 1.4503 0.0000  0.2663 0.0538
+                + diabetes hs-CRP 1.0758 0.9617 1.2034 0.2016  0.0731 0.0572
+            + hypertension    NLR 1.2908 1.1631 1.4324 0.0000  0.2552 0.0531
+            + hypertension hs-CRP 1.0655 0.9522 1.1924 0.2688  0.0635 0.0574
+       + total cholesterol    NLR 1.2587 1.1324 1.3992 0.0000  0.2301 0.0540
+       + total cholesterol hs-CRP 1.1254 1.0080 1.2565 0.0355  0.1182 0.0562
+         + HDL cholesterol    NLR 1.3229 1.1912 1.4693 0.0000  0.2799 0.0535
+         + HDL cholesterol hs-CRP 1.0230 0.9117 1.1479 0.6988  0.0227 0.0588
+                    + eGFR    NLR 1.2848 1.1578 1.4257 0.0000  0.2506 0.0531
+                    + eGFR hs-CRP 1.0759 0.9619 1.2035 0.2006  0.0732 0.0572
+    + lipid-lowering drugs    NLR 1.3064 1.1737 1.4541 0.0000  0.2673 0.0546
+    + lipid-lowering drugs hs-CRP 1.1477 1.0243 1.2859 0.0176  0.1378 0.0580
+Model 2 (all risk factors)    NLR 1.1970 1.0696 1.3396 0.0017  0.1798 0.0574
+Model 2 (all risk factors) hs-CRP 0.9557 0.8422 1.0845 0.4825 -0.0453 0.0645
+[    1.4s] assoc_interactions:
+marker      modifier  interaction_or     lo     hi      p  stratum_or  stratum_lo  stratum_hi  stratum_cases
+   NLR     lipid_med          1.0080 0.7959 1.2766 0.9474         NaN         NaN         NaN            NaN
+   NLR lipid_med = 0             NaN    NaN    NaN    NaN      1.2149      0.9878      1.4943           96.0
+   NLR lipid_med = 1             NaN    NaN    NaN    NaN      1.2273      1.0686      1.4094          316.0
+   NLR          male          0.8675 0.6908 1.0894 0.2213         NaN         NaN         NaN            NaN
+   NLR      male = 0             NaN    NaN    NaN    NaN      1.3000      1.0686      1.5815          146.0
+   NLR      male = 1             NaN    NaN    NaN    NaN      1.1407      0.9937      1.3093          266.0
+hs-CRP     lipid_med          1.0634 0.8245 1.3716 0.6359         NaN         NaN         NaN            NaN
+hs-CRP lipid_med = 0             NaN    NaN    NaN    NaN      0.9520      0.7419      1.2215           96.0
+hs-CRP lipid_med = 1             NaN    NaN    NaN    NaN      1.0112      0.8705      1.1746          316.0
+hs-CRP          male          1.0472 0.8265 1.3269 0.7026         NaN         NaN         NaN            NaN
+hs-CRP      male = 0             NaN    NaN    NaN    NaN      0.9834      0.7941      1.2179          146.0
+hs-CRP      male = 1             NaN    NaN    NaN    NaN      0.9334      0.7961      1.0943          266.0
+[    1.7s] Sensitivity (association):
+                               analysis    n  cases  NLR_or  NLR_lo  NLR_hi  NLR_p  hs-CRP_or  hs-CRP_lo  hs-CRP_hi  hs-CRP_p
+  Primary (Model 2, median + indicator) 5538    412   1.197   1.070   1.340  0.002      0.956      0.842      1.085     0.483
+     Complete cases (listwise deletion) 4544    337   1.181   1.041   1.341  0.010      0.961      0.834      1.108     0.585
+                  Income column dropped 5538    412   1.204   1.076   1.348  0.001      0.966      0.851      1.096     0.587
+       Model 3 (+ lipid-lowering drugs) 5538    412   1.209   1.078   1.356  0.001      0.993      0.874      1.128     0.916
+        Survey-weighted (US population) 5538    412   1.184   1.053   1.331  0.008      0.909      0.808      1.022     0.103
+                   Outcome incl. angina 5533    457   1.138   1.022   1.266  0.019      0.959      0.850      1.082     0.498
+                        Outcome MI only 5363    237   1.280   1.112   1.473  0.001      0.856      0.728      1.006     0.060
+                       Outcome CHD only 5423    297   1.178   1.034   1.342  0.014      1.002      0.867      1.157     0.979
+               Exclude hs-CRP > 10 mg/L 5132    381   1.189   1.054   1.340  0.005      0.962      0.824      1.124     0.628
+    Exclude IQR outliers of log markers 5421    392   1.146   1.007   1.304  0.039      0.939      0.819      1.076     0.363
+Untreated only (no lipid-lowering drug) 3948     96   1.215   0.988   1.494  0.065      0.952      0.742      1.221     0.699
+           Age 40-79 (risk-score range) 3834    328   1.208   1.065   1.370  0.003      0.961      0.835      1.105     0.575
+               NLR from absolute counts 5538    412   1.195   1.068   1.338  0.002      0.956      0.842      1.085     0.483
+[   14.4s] Sensitivity (prediction, LR dAUC):
+                                   analysis    n  cases  auc_m2  auc_m3  delta_auc      lo     hi      p
+                        Primary (CHD or MI) 5538    412  0.8615  0.8628     0.0013 -0.0009 0.0035 0.2188
+                       Outcome incl. angina 5533    457  0.8484  0.8486     0.0002 -0.0022 0.0026 0.8833
+                            Outcome MI only 5363    237  0.8644  0.8691     0.0047 -0.0007 0.0101 0.0843
+                           Outcome CHD only 5423    297  0.8703  0.8704     0.0001 -0.0029 0.0031 0.9322
+                   Exclude hs-CRP > 10 mg/L 5132    381  0.8637  0.8642     0.0005 -0.0020 0.0031 0.6612
+        Exclude IQR outliers of log markers 5421    392  0.8621  0.8623     0.0002 -0.0022 0.0026 0.8512
+                             Untreated only 3924     88  0.8368  0.8327    -0.0041 -0.0119 0.0037 0.2828
+                                  Age 40-79 3834    328  0.8312  0.8319     0.0006 -0.0048 0.0061 0.8053
+Treatment as predictor (+ lipid & BP drugs) 5538    412  0.8754  0.8762     0.0008 -0.0014 0.0030 0.4631
+  Without cholesterol (treatment-distorted) 5538    412  0.8487  0.8504     0.0017 -0.0026 0.0060 0.4152

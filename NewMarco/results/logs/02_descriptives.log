@@ -1,0 +1,96 @@
+[    1.9s] Table 1:
+                        Characteristic Overall (n=5,538) No CHD/MI (n=5,126)    CHD/MI (n=412)   SMD           Test Missing %      p p (Bonferroni)
+              Age, years, median [IQR]       57 [39, 68]         55 [38, 67]       70 [63, 77]  1.14 Mann-Whitney U       0.0 <0.001         <0.001
+ Income-to-poverty ratio, median [IQR] 2.88 [1.47, 5.00]   2.94 [1.48, 5.00] 2.46 [1.36, 4.21] -0.18 Mann-Whitney U      12.7 <0.001          0.013
+              BMI, kg/m2, median [IQR] 28.5 [24.7, 33.5]   28.3 [24.6, 33.5] 29.5 [25.8, 34.4]  0.16 Mann-Whitney U       1.3 <0.001          0.005
+       Systolic BP, mmHg, median [IQR]    120 [110, 132]      120 [110, 132]    124 [113, 140]  0.23 Mann-Whitney U       3.0 <0.001         <0.001
+Total cholesterol, mg/dL, median [IQR]    185 [159, 214]      187 [162, 216]    152 [131, 181] -0.72 Mann-Whitney U       1.7 <0.001         <0.001
+  HDL cholesterol, mg/dL, median [IQR]       53 [44, 62]         53 [44, 63]       48 [41, 58] -0.34 Mann-Whitney U       1.7 <0.001         <0.001
+     eGFR, mL/min/1.73m2, median [IQR]      94 [78, 106]        94 [80, 107]       75 [57, 93] -0.86 Mann-Whitney U       2.7 <0.001         <0.001
+                     NLR, median [IQR] 2.00 [1.51, 2.69]   1.96 [1.49, 2.65] 2.39 [1.84, 3.29]  0.42 Mann-Whitney U       0.0 <0.001         <0.001
+            hs-CRP, mg/L, median [IQR] 1.81 [0.81, 4.18]   1.81 [0.81, 4.18] 1.97 [0.90, 4.48]  0.02 Mann-Whitney U       0.0  0.256          1.000
+                       Male sex, n (%)      2,494 (45.0)        2,228 (43.5)        266 (64.6)  0.43     Chi-square       0.0 <0.001         <0.001
+                       Diabetes, n (%)        778 (14.0)          624 (12.2)        154 (37.4)  0.61     Chi-square       0.0 <0.001         <0.001
+                   Hypertension, n (%)      2,439 (44.9)        2,119 (42.2)        320 (78.2)  0.79     Chi-square       1.9 <0.001         <0.001
+               hs-CRP > 10 mg/L, n (%)         406 (7.3)           375 (7.3)          31 (7.5)  0.01     Chi-square       0.0  0.876          1.000
+      Lipid-lowering medication, n (%)      1,590 (28.8)        1,274 (24.9)        316 (78.2)  1.26     Chi-square       0.4 <0.001         <0.001
+                  BP medication, n (%)      1,731 (31.3)        1,439 (28.1)        292 (71.0)  0.95     Chi-square       0.1 <0.001         <0.001
+                 Race/ethnicity, n (%)                                                                   Chi-square       0.0 <0.001          0.001
+                    Non-Hispanic White      3,302 (59.6)        3,016 (58.8)        286 (69.4)  0.22                                               
+                    Non-Hispanic Black        645 (11.6)          613 (12.0)          32 (7.8) -0.14                                               
+                      Mexican American         373 (6.7)           363 (7.1)          10 (2.4) -0.22                                               
+                        Other Hispanic        570 (10.3)          532 (10.4)          38 (9.2) -0.04                                               
+                    Non-Hispanic Asian         305 (5.5)           285 (5.6)          20 (4.9) -0.03                                               
+                   Other / multiracial         343 (6.2)           317 (6.2)          26 (6.3)  0.01                                               
+                        Smoking, n (%)                                                                   Chi-square       0.1 <0.001         <0.001
+                                 Never      3,270 (59.1)        3,120 (60.9)        150 (36.4) -0.50                                               
+                                Former      1,460 (26.4)        1,278 (25.0)        182 (44.2)  0.41                                               
+                               Current        801 (14.5)          721 (14.1)         80 (19.4)  0.14                                               
+[    2.0s] Selection bias (SMD vs analysis sample):
+                 variable  No examination  No blood markers  Incomplete covariates (kept!)
+                      Age          -0.062            -0.077                         -0.038
+                 Male sex          -0.023            -0.064                          0.015
+  Income-to-poverty ratio          -0.089            -0.355                         -0.359
+          Education (1-5)          -0.177            -0.288                         -0.232
+                 Diabetes          -0.077             0.066                          0.039
+        Told hypertension          -0.027             0.109                         -0.032
+Lipid-lowering medication          -0.145            -0.069                         -0.072
+         CHD/MI (outcome)          -0.048             0.014                         -0.012
+       Non-Hispanic White          -0.061            -0.196                         -0.225
+       Non-Hispanic Black           0.069             0.256                          0.152
+         Mexican American           0.051            -0.030                          0.059
+           Other Hispanic          -0.032            -0.050                          0.116
+       Non-Hispanic Asian          -0.022             0.022                          0.039
+      Other / multiracial           0.034             0.078                         -0.007
+           Smoking: Never          -0.022            -0.121                          0.079
+          Smoking: Former           0.001            -0.035                         -0.047
+         Smoking: Current           0.029             0.197                         -0.051
+                NLR (log)             NaN             0.045                         -0.034
+             hs-CRP (log)             NaN             0.362                         -0.035
+[    2.2s] Income-missingness model (n = 5,422):
+                                   OR     lo     hi      p
+Mexican American (vs White)     1.218  0.877  1.693  0.239
+Non-Hispanic Asian (vs White)   1.314  0.930  1.858  0.121
+Non-Hispanic Black (vs White)   1.577  1.221  2.037  0.000
+Other Hispanic (vs White)       1.535  1.184  1.989  0.001
+Other / multiracial (vs White)  1.045  0.727  1.504  0.811
+Smoking: Current (vs never)     0.621  0.476  0.810  0.000
+Smoking: Former (vs never)      0.840  0.690  1.024  0.085
+Age (per 10 y)                  1.046  0.989  1.105  0.113
+Male sex                        1.089  0.922  1.285  0.314
+Education (per level)           0.826  0.767  0.890  0.000
+Diabetes                        0.961  0.755  1.224  0.748
+Hypertension                    0.914  0.758  1.101  0.342
+CHD/MI (outcome)                1.027  0.746  1.416  0.869
+NLR (log)                       0.923  0.766  1.113  0.402
+hs-CRP (log)                    0.933  0.866  1.005  0.067
+[    2.2s] CHD/MI prevalence by income missingness:
+       size      mean
+m                    
+False  4832  0.074089
+True    706  0.076487
+[    2.2s] Sample size (events per parameter; rule of thumb >= 10):
+                             setting  cases  parameters_M3  events_per_parameter
+                Full analysis sample    412             19                  21.7
+           Outer training fold (4/5)    329             19                  17.3
+    Inner training fold (4/5 of 4/5)    263             19                  13.8
+Old draft: 80% of the complete cases    273             19                  14.4
+[   12.7s] Shape and outliers (course W2/W3):
+marker scale  skewness  excess_kurtosis  shapiro_p_n5000  n_outliers_iqr  n_outliers_z3    min     max
+   NLR   raw     4.658           61.197              0.0             232             71  0.295  29.710
+   NLR   log     0.150            0.988              0.0              93             37 -1.222   3.391
+hs-CRP   raw     7.781           91.672              0.0             469             96  0.110 150.920
+hs-CRP   log     0.231           -0.119              0.0              29             18 -2.207   5.017
+[   15.4s] Missingness patterns:
+                        missing_variables    n   pct  chd_mi_prevalence_pct
+                                 complete 4563 82.39                   7.50
+                               income_pir  661 11.94                   7.56
+             total_chol + hdl_chol + egfr   80  1.44                  10.00
+                             hypertension   69  1.25                   1.45
+                                     egfr   48  0.87                   0.00
+                                      bmi   42  0.76                  14.29
+                       bmi + hypertension   19  0.34                   5.26
+                income_pir + hypertension   15  0.27                   0.00
+income_pir + total_chol + hdl_chol + egfr   12  0.22                   0.00
+                         income_pir + bmi    9  0.16                  22.22
+[   15.4s] Key numbers: {'n': 5538, 'cases': 412, 'prevalence': np.float64(0.07439508847959553), 'n_complete_case': 4563, 'cases_complete_case': 342, 'lipid_med_cases': np.float64(0.7821782178217822), 'lipid_med_controls': np.float64(0.2493150684931507), 'rho_nlr_crp': 0.1545821130680348}

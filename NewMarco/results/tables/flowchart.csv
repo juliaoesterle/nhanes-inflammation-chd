@@ -1,0 +1,7 @@
+step,n,cases,excluded,prevalence_pct
+All NHANES 2021-2023 participants,11933,559,0,4.68
+Aged >= 20 years,7809,559,4124,7.16
+Answered the CHD/MI questions,7773,559,36,7.19
+Attended the examination centre (MEC),6037,451,1736,7.47
+NLR and hs-CRP measured = analysis sample,5538,412,499,7.44
+  of which complete on all M2 covariates (old draft's sample),4563,342,0,7.5

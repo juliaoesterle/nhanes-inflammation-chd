@@ -1,0 +1,11 @@
+# Exact versions used for all results in results/ (Python 3.11.16).
+# Older scikit-learn (< 1.8) or statsmodels (< 0.15) silently change the models:
+# e.g. LogisticRegression(l1_ratio=1) is only a lasso without `penalty` from 1.8 on.
+numpy==2.4.6
+pandas==3.1.0
+pyarrow==26.0.0
+scikit-learn==1.9.1
+scipy==1.17.1
+statsmodels==0.15.0
+patsy==1.0.3
+matplotlib==3.11.2

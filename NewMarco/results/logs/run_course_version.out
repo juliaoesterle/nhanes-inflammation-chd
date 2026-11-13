@@ -1,0 +1,390 @@
+
+=== 03_design_experiments.py ===
+[    0.4s] n = 5,538, cases = 412
+[    0.4s] E1 missing data ...
+[    8.3s] E1 summary:
+learner      strategy  auc_common_mean  auc_common_lo  auc_common_hi  auc_incomplete_mean  auc_incomplete_lo  auc_incomplete_hi  auc_all_mean  auc_all_lo  auc_all_hi  brier_common_mean  brier_common_lo  brier_common_hi  n_train_mean
+     LR complete_case           0.8667         0.8492         0.8843                  NaN                NaN                NaN           NaN         NaN         NaN             0.0575           0.0540           0.0609        3650.4
+     LR   drop_income           0.8670         0.8470         0.8870               0.8476             0.7703             0.9248        0.8637      0.8394      0.8881             0.0572           0.0542           0.0602        4430.4
+     LR        median           0.8672         0.8481         0.8862               0.8485             0.7698             0.9273        0.8638      0.8412      0.8864             0.0572           0.0541           0.0602        4430.4
+     RF complete_case           0.8649         0.8440         0.8858                  NaN                NaN                NaN           NaN         NaN         NaN             0.0581           0.0564           0.0598        3650.4
+     RF   drop_income           0.8663         0.8470         0.8855               0.8344             0.7634             0.9054        0.8609      0.8377      0.8841             0.0579           0.0562           0.0596        4430.4
+     RF        median           0.8677         0.8459         0.8894               0.8360             0.7674             0.9045        0.8623      0.8390      0.8857             0.0579           0.0562           0.0596        4430.4
+[    8.3s] E1 differences vs complete case:
+learner    strategy  delta_auc_vs_cc      lo     hi      p
+     LR drop_income           0.0003 -0.0046 0.0052 0.8886
+     LR      median           0.0005 -0.0034 0.0043 0.7969
+     RF drop_income           0.0014 -0.0038 0.0066 0.5669
+     RF      median           0.0028 -0.0020 0.0076 0.2230
+[    8.4s] E1 decision: {'rule': 'median + indicator (keeps everybody) unless another option is more than 0.005 AUC better on the same test people', 'mean_auc_common_subset': {'complete_case': 0.8657970656628464, 'drop_income': 0.8666378411090683, 'median': 0.867408004282872}, 'decision': 'median'}
+[    8.8s] E2 feature selection ...
+[    8.9s]   naive pool S2: 342 raw columns (<= 40 % missing); S3 pool: 39 variables
+[   48.2s] E2 summary:
+                  strategy  auc_mean  auc_lo  auc_hi  brier_mean  n_selected_mean  jaccard_stability  freq_log_nlr  freq_log_crp  share_leakage_in_top20
+        S1 literature (M3)    0.8622  0.8455  0.8789      0.0576             13.0             1.0000           1.0           1.0                     NaN
+  S2 all variables + lasso    0.9234  0.9031  0.9438      0.0436            114.2             0.4734           NaN           NaN                    0.35
+          S3 pool + filter    0.8686  0.8473  0.8899      0.0570             21.5             0.6923           1.0           0.0                     NaN
+ S3 pool + wrapper (RFECV)    0.8696  0.8472  0.8921      0.0569             23.4             0.7175           1.0           0.9                     NaN
+S3 pool + embedded (lasso)    0.8699  0.8482  0.8916      0.0566             34.9             0.8568           1.0           1.0                     NaN
+[   48.2s] E2 naive pool, top 15 selected raw variables:
+          selection_frequency  mean_abs_coef                     category                                     label
+RXQ510                    1.0          0.531                    treatment   Dr told to take daily low-dose aspirin?
+MCQ160B                   1.0          0.418        other heart diagnosis    Ever told had congestive heart failure
+RXQ050                    1.0          0.353                    treatment    Number of prescription medicines taken
+OSQ230                    1.0          0.338  other diagnosis / condition       Any metal objects inside your body?
+MCQ160D                   1.0          0.297        other heart diagnosis  Ever told you had angina/angina pectoris
+RIAGENDR                  1.0          0.271          risk factor / other                                    Gender
+BPQ101D                   1.0          0.216                    treatment   Taking meds to lower blood cholesterol?
+HUQ010                    1.0          0.213     health-care use / status                  General health condition
+RIDAGEYR                  1.0          0.177          risk factor / other                 Age in years at screening
+LBXTC                     1.0          0.167          risk factor / other                 Total Cholesterol (mg/dL)
+LBXPNL                    1.0          0.157          risk factor / other              Linoleic acid (C18:2n-6) (%)
+LBXPED                    1.0          0.126          risk factor / other    11,14-Eicosadienoic acid (C20:2n6) (%)
+PAD680                    1.0          0.118          risk factor / other                Minutes sedentary activity
+FNQ520                    1.0          0.116          risk factor / other  Level of feeling worried/nervous/anxious
+LBDTHGLC                  1.0          0.115          risk factor / other         Blood mercury, total comment code
+[   48.2s] E2 hybrid pool, share of folds in which each variable is selected:
+                filter  wrapper (RFECV)  embedded (lasso)
+age                1.0              1.0               1.0
+egfr               1.0              1.0               1.0
+diabetes           1.0              1.0               1.0
+log_uacr           1.0              1.0               1.0
+male               1.0              1.0               1.0
+log_nlr            1.0              1.0               1.0
+hypertension       1.0              1.0               1.0
+total_chol         1.0              1.0               1.0
+smoking            1.0              1.0               1.0
+told_high_chol     1.0              1.0               1.0
+rdw                1.0              0.9               1.0
+waist              1.0              0.6               1.0
+log_activity       0.8              0.7               1.0
+sbp                0.5              1.0               1.0
+race_eth           0.4              1.0               1.0
+log_ggt            0.4              1.0               1.0
+pulse              0.4              0.9               1.0
+education          0.7              0.6               1.0
+income_pir         0.3              0.9               0.9
+monocyte_pct       0.4              0.7               1.0
+glucose            0.9              0.1               1.0
+wbc                0.4              0.6               1.0
+phq9               0.0              0.9               1.0
+log_crp            0.0              0.9               1.0
+uric_acid          0.9              0.1               0.8
+dbp                0.8              0.1               0.9
+log_tg             0.3              0.4               1.0
+platelets          0.5              0.1               1.0
+sedentary_min      0.0              0.5               1.0
+hdl_chol           0.7              0.1               0.6
+log_drinks_wk      0.2              0.2               0.8
+albumin            0.5              0.1               0.6
+vitamin_d          0.4              0.0               0.7
+log_alt            0.0              0.3               0.7
+eosinophil_pct     0.0              0.1               0.8
+sleep_hours        0.0              0.1               0.8
+hemoglobin         0.0              0.2               0.5
+bmi                0.0              0.3               0.3
+log_cotinine       0.0              0.0               0.5
+[   49.1s] E3 class imbalance ...
+[   60.1s] E3 summary:
+learner       option   auc  pr_auc  brier  scaled_brier  cal_intercept  cal_slope  mean_pred  sens_at_0.5  spec_at_0.5  f1_at_0.5  accuracy_at_0.5  sens_at_prev  spec_at_prev  f1_at_prev
+     LR         none 0.862   0.342  0.058         0.163          0.001      0.954      0.074        0.088        0.991      0.146            0.924         0.817         0.761       0.341
+     LR class_weight 0.862   0.335  0.156        -1.265         -2.558      0.890      0.319        0.820        0.762      0.344            0.767         0.987         0.308       0.186
+     LR   oversample 0.861   0.333  0.156        -1.271         -2.561      0.887      0.319        0.812        0.761      0.340            0.765         0.985         0.306       0.186
+     LR  undersample 0.856   0.322  0.164        -1.387         -2.671      0.831      0.326        0.823        0.748      0.332            0.754         0.987         0.313       0.187
+     LR        smote 0.860   0.334  0.151        -1.192         -2.566      0.797      0.300        0.792        0.777      0.347            0.778         0.983         0.373       0.201
+     RF         none 0.861   0.336  0.058         0.159          0.004      1.315      0.074        0.000        1.000      0.000            0.926         0.859         0.708       0.313
+     RF class_weight 0.863   0.334  0.111        -0.611         -1.870      1.210      0.264        0.684        0.849      0.385            0.837         0.984         0.281       0.180
+     RF   oversample 0.860   0.328  0.108        -0.567         -1.825      1.162      0.255        0.663        0.859      0.388            0.844         0.983         0.302       0.184
+     RF  undersample 0.858   0.327  0.167        -1.430         -2.353      1.604      0.380        0.831        0.739      0.328            0.746         1.000         0.023       0.141
+     RF        smote 0.857   0.309  0.094        -0.365         -1.601      1.051      0.221        0.536        0.891      0.372            0.865         0.979         0.393       0.206
+[   60.1s] E3 decision: {'rule': 'correction only if AUC gain > 0.005 and Brier not worse', 'mean_auc': {'class_weight': 0.8626108587125847, 'none': 0.861668596522384, 'oversample': 0.8604780846741555, 'smote': 0.8586518468543177, 'undersample': 0.8570336388535379}, 'mean_brier': {'class_weight': 0.1334717061063785, 'none': 0.057772219638525135, 'oversample': 0.1321404814044497, 'smote': 0.12246641195823701, 'undersample': 0.16588331344802132}, 'decision': 'none'}
+[   60.4s] E4 single-split variability ...
+[   64.1s] E4: {'auc_M3_range_95': [np.float64(0.8310042552179907), np.float64(0.8940554723529691)], 'auc_M3_min_max': [np.float64(0.8021442495126706), np.float64(0.9228949745637807)], 'delta_auc_range_95': [np.float64(-0.005267020871963166), np.float64(0.004873294346978477)], 'share_splits_delta_negative': 0.295, 'share_splits_delta_above_0.01': 0.0}
+[   64.4s] done
+=== 03_design_experiments.py finished in 1.1 min ===
+
+=== 05_evaluate_models.py ===
+[    0.4s] Performance (15 outer folds):
+algo     fs           AUC (95% CI)  pr_auc  brier  scaled_brier  cal_slope  overfit_gap
+  DT     M2 0.808 (0.787 to 0.829)  0.2462 0.0612        0.1119     0.8351       0.0322
+  DT M2+CRP 0.808 (0.787 to 0.830)  0.2477 0.0611        0.1126     0.8336       0.0322
+  DT M2+NLR 0.806 (0.779 to 0.833)  0.2467 0.0610        0.1135     0.8462       0.0317
+  DT     M3 0.805 (0.780 to 0.831)  0.2456 0.0611        0.1127     0.8374       0.0326
+  EN     M2 0.862 (0.839 to 0.884)  0.3378 0.0577        0.1621     1.0108       0.0070
+  EN M2+CRP 0.861 (0.839 to 0.884)  0.3363 0.0577        0.1614     1.0083       0.0074
+  EN M2+NLR 0.863 (0.841 to 0.884)  0.3433 0.0575        0.1653     1.0094       0.0071
+  EN     M3 0.863 (0.841 to 0.885)  0.3410 0.0575        0.1646     1.0063       0.0073
+  LR     M0 0.801 (0.782 to 0.820)  0.2135 0.0629        0.0859     1.0047       0.0009
+  LR     M1 0.815 (0.797 to 0.832)  0.2325 0.0626        0.0910     0.9797       0.0056
+  LR     M2 0.861 (0.839 to 0.884)  0.3373 0.0578        0.1604     0.9640       0.0074
+  LR M2+CRP 0.861 (0.839 to 0.884)  0.3354 0.0579        0.1596     0.9614       0.0079
+  LR M2+NLR 0.863 (0.841 to 0.884)  0.3438 0.0576        0.1638     0.9640       0.0076
+  LR     M3 0.863 (0.840 to 0.885)  0.3418 0.0576        0.1629     0.9612       0.0079
+  RF     M2 0.856 (0.836 to 0.877)  0.3292 0.0581        0.1566     1.1336       0.0875
+  RF M2+CRP 0.856 (0.836 to 0.876)  0.3270 0.0582        0.1546     1.1197       0.0976
+  RF M2+NLR 0.860 (0.841 to 0.879)  0.3380 0.0576        0.1628     1.1445       0.0996
+  RF     M3 0.859 (0.838 to 0.879)  0.3340 0.0578        0.1605     1.1657       0.0926
+ SVM     M2 0.867 (0.845 to 0.888)  0.3406 0.0577        0.1623     0.9823       0.0144
+ SVM M2+CRP 0.867 (0.845 to 0.888)  0.3378 0.0577        0.1624     0.9853       0.0163
+ SVM M2+NLR 0.867 (0.846 to 0.887)  0.3421 0.0575        0.1647     0.9810       0.0174
+ SVM     M3 0.867 (0.845 to 0.889)  0.3447 0.0574        0.1670     0.9908       0.0194
+ kNN     M2 0.859 (0.837 to 0.881)  0.3265 0.0593        0.1388     1.3764       0.1245
+ kNN M2+CRP 0.862 (0.841 to 0.883)  0.3262 0.0596        0.1350     1.4613       0.1307
+ kNN M2+NLR 0.863 (0.843 to 0.883)  0.3368 0.0592        0.1402     1.4276       0.1368
+ kNN     M3 0.863 (0.843 to 0.882)  0.3377 0.0593        0.1387     1.4479       0.1371
+[    0.6s] Marker gain:
+ comparison algo  delta_auc      lo     hi  p_corrected_t  delta_brier  delta_log_loss  folds_with_gain  n_folds  p_bonferroni
+    M3 - M2   LR     0.0013 -0.0009 0.0035         0.2188      -0.0002         -0.0006               12       15           1.0
+    M3 - M2   EN     0.0015 -0.0008 0.0038         0.1962      -0.0002         -0.0007               12       15           1.0
+    M3 - M2   DT    -0.0030 -0.0123 0.0064         0.5060      -0.0001          0.0018                4       15           1.0
+    M3 - M2  kNN     0.0039 -0.0067 0.0144         0.4466       0.0000          0.0015               10       15           1.0
+    M3 - M2  SVM     0.0003 -0.0025 0.0030         0.8427      -0.0003         -0.0006                8       15           1.0
+    M3 - M2   RF     0.0022 -0.0055 0.0099         0.5472      -0.0003         -0.0007                9       15           1.0
+M2+NLR - M2   LR     0.0012 -0.0013 0.0036         0.3223      -0.0002         -0.0008               11       15           1.0
+M2+NLR - M2   EN     0.0012 -0.0012 0.0037         0.2959      -0.0002         -0.0008               11       15           1.0
+M2+NLR - M2   DT    -0.0021 -0.0113 0.0071         0.6320      -0.0001         -0.0003                5       15           1.0
+M2+NLR - M2  kNN     0.0041 -0.0039 0.0122         0.2922      -0.0001          0.0010               11       15           1.0
+M2+NLR - M2  SVM    -0.0001 -0.0023 0.0021         0.8880      -0.0002         -0.0003                5       15           1.0
+M2+NLR - M2   RF     0.0034 -0.0021 0.0089         0.2073      -0.0004         -0.0018               11       15           1.0
+M2+CRP - M2   LR    -0.0003 -0.0010 0.0005         0.4832       0.0001          0.0002                5       15           1.0
+M2+CRP - M2   EN    -0.0002 -0.0010 0.0006         0.6035       0.0001          0.0002                9       15           1.0
+M2+CRP - M2   DT     0.0003 -0.0004 0.0010         0.4311      -0.0001         -0.0001                3       15           1.0
+M2+CRP - M2  kNN     0.0026 -0.0055 0.0107         0.4986       0.0003          0.0041                9       15           1.0
+M2+CRP - M2  SVM    -0.0001 -0.0021 0.0020         0.9506      -0.0000          0.0000                7       15           1.0
+M2+CRP - M2   RF    -0.0004 -0.0050 0.0042         0.8579       0.0001          0.0021               10       15           1.0
+[    0.6s] Algorithms vs logistic regression (M3):
+algo  delta_auc_vs_LR      lo      hi      p  p_bonferroni
+  EN           0.0002 -0.0014  0.0017 0.8180        1.0000
+  DT          -0.0575 -0.0843 -0.0308 0.0004        0.0020
+ kNN           0.0001 -0.0073  0.0076 0.9745        1.0000
+ SVM           0.0041 -0.0017  0.0099 0.1483        0.7413
+  RF          -0.0041 -0.0154  0.0072 0.4452        1.0000
+[    0.6s] Final-model decision: {'rule': 'LR unless another algorithm is significantly better (Bonferroni p < 0.05)', 'highest_mean_auc': 'SVM', 'decision': 'LR', 'significantly_better': []}
+[    0.6s] Confusion-matrix metrics at the training-OOF Youden threshold:
+              algo fs  threshold  sensitivity  specificity  precision   npv    f1  accuracy
+                DT M2      0.066        0.731        0.747      0.192 0.972 0.302     0.746
+                DT M3      0.066        0.765        0.704      0.175 0.974 0.283     0.708
+                EN M2      0.073        0.827        0.746      0.209 0.982 0.333     0.752
+                EN M3      0.073        0.834        0.751      0.213 0.983 0.339     0.757
+                LR M2      0.073        0.822        0.751      0.211 0.981 0.335     0.757
+                LR M3      0.070        0.827        0.750      0.211 0.982 0.335     0.756
+                RF M2      0.086        0.809        0.749      0.208 0.980 0.330     0.753
+                RF M3      0.090        0.808        0.762      0.216 0.980 0.340     0.765
+               SVM M2      0.074        0.832        0.754      0.214 0.982 0.340     0.760
+               SVM M3      0.077        0.828        0.764      0.221 0.982 0.348     0.769
+               kNN M2      0.083        0.812        0.756      0.213 0.981 0.337     0.760
+               kNN M3      0.073        0.842        0.737      0.205 0.983 0.329     0.744
+Always 'no CHD/MI'  -        NaN        0.000        1.000        NaN 0.926 0.000     0.926
+   Always 'CHD/MI'  -        NaN        1.000        0.000      0.074   NaN 0.138     0.074
+[    2.4s] Key numbers: {'prevalence': np.float64(0.07439508847959553), 'lr_auc_m2': np.float64(0.8614915521158585), 'lr_auc_m3': np.float64(0.8627969137229871), 'lr_delta_m3_m2': np.float64(0.0013053616071283822), 'lr_delta_p': np.float64(0.2188030435634742), 'best_algorithm_auc_m3': 'SVM', 'best_auc_m3': np.float64(0.8669286120434742), 'final_model': 'LR'}
+=== 05_evaluate_models.py finished in 0.1 min ===
+
+=== 06_association.py ===
+[    0.4s] 1 SD of log NLR = factor 1.58; 1 SD of log CRP = factor 3.15
+[    0.5s] Median + indicator (primary): n = 5,538, cases = 412
+[    0.5s] Complete cases: n = 4,544, cases = 337
+[    0.5s] Income column dropped: n = 5,538, cases = 412
+[    1.1s] Odds ratios per SD:
+marker  adjusted_for_other_marker   model                     analysis    n               OR      P  significant_bonferroni
+   NLR                      False Model 1 Median + indicator (primary) 5538 1.30 (1.17-1.44) <0.001                    True
+   NLR                      False Model 1               Complete cases 4544 1.27 (1.13-1.43) <0.001                    True
+   NLR                      False Model 1        Income column dropped 5538 1.30 (1.17-1.44) <0.001                    True
+   NLR                      False Model 1              Survey-weighted 5538 1.32 (1.16-1.50) <0.001                    True
+   NLR                      False Model 2 Median + indicator (primary) 5538 1.20 (1.07-1.34)  0.002                    True
+   NLR                      False Model 2               Complete cases 4544 1.18 (1.04-1.34)  0.010                    True
+   NLR                      False Model 2        Income column dropped 5538 1.20 (1.08-1.35)  0.001                    True
+   NLR                      False Model 2              Survey-weighted 5538 1.18 (1.05-1.33)  0.008                    True
+   NLR                      False Model 3 Median + indicator (primary) 5538 1.21 (1.08-1.36)  0.001                    True
+   NLR                      False Model 3               Complete cases 4544 1.18 (1.04-1.35)  0.011                    True
+   NLR                      False Model 3        Income column dropped 5538 1.22 (1.08-1.36) <0.001                    True
+   NLR                      False Model 3              Survey-weighted 5538 1.19 (1.07-1.33)  0.004                    True
+hs-CRP                      False Model 1 Median + indicator (primary) 5538 1.11 (0.99-1.24)  0.066                   False
+hs-CRP                      False Model 1               Complete cases 4544 1.14 (1.01-1.29)  0.039                   False
+hs-CRP                      False Model 1        Income column dropped 5538 1.11 (0.99-1.24)  0.066                   False
+hs-CRP                      False Model 1              Survey-weighted 5538 1.14 (1.01-1.28)  0.037                   False
+hs-CRP                      False Model 2 Median + indicator (primary) 5538 0.96 (0.84-1.08)  0.483                   False
+hs-CRP                      False Model 2               Complete cases 4544 0.96 (0.83-1.11)  0.585                   False
+hs-CRP                      False Model 2        Income column dropped 5538 0.97 (0.85-1.10)  0.587                   False
+hs-CRP                      False Model 2              Survey-weighted 5538 0.91 (0.81-1.02)  0.103                   False
+hs-CRP                      False Model 3 Median + indicator (primary) 5538 0.99 (0.87-1.13)  0.916                   False
+hs-CRP                      False Model 3               Complete cases 4544 1.01 (0.88-1.17)  0.878                   False
+hs-CRP                      False Model 3        Income column dropped 5538 1.00 (0.88-1.14)  0.965                   False
+hs-CRP                      False Model 3              Survey-weighted 5538 0.95 (0.85-1.05)  0.290                   False
+   NLR                       True Model 1 Median + indicator (primary) 5538 1.28 (1.16-1.43) <0.001                    True
+   NLR                       True Model 1               Complete cases 4544 1.25 (1.11-1.41) <0.001                    True
+   NLR                       True Model 1        Income column dropped 5538 1.28 (1.16-1.43) <0.001                    True
+   NLR                       True Model 1              Survey-weighted 5538 1.30 (1.13-1.50)  0.001                    True
+hs-CRP                       True Model 1 Median + indicator (primary) 5538 1.06 (0.95-1.18)  0.322                   False
+hs-CRP                       True Model 1               Complete cases 4544 1.10 (0.97-1.24)  0.150                   False
+hs-CRP                       True Model 1        Income column dropped 5538 1.06 (0.95-1.18)  0.322                   False
+hs-CRP                       True Model 1              Survey-weighted 5538 1.08 (0.95-1.22)  0.242                   False
+   NLR                       True Model 2 Median + indicator (primary) 5538 1.21 (1.08-1.36) <0.001                    True
+   NLR                       True Model 2               Complete cases 4544 1.19 (1.05-1.36)  0.007                    True
+   NLR                       True Model 2        Income column dropped 5538 1.22 (1.09-1.37) <0.001                    True
+   NLR                       True Model 2              Survey-weighted 5538 1.22 (1.06-1.40)  0.008                    True
+hs-CRP                       True Model 2 Median + indicator (primary) 5538 0.92 (0.81-1.04)  0.195                   False
+hs-CRP                       True Model 2               Complete cases 4544 0.93 (0.81-1.07)  0.325                   False
+hs-CRP                       True Model 2        Income column dropped 5538 0.93 (0.82-1.05)  0.245                   False
+hs-CRP                       True Model 2              Survey-weighted 5538 0.87 (0.76-0.99)  0.041                   False
+   NLR                       True Model 3 Median + indicator (primary) 5538 1.22 (1.08-1.37) <0.001                    True
+   NLR                       True Model 3               Complete cases 4544 1.19 (1.04-1.35)  0.011                    True
+   NLR                       True Model 3        Income column dropped 5538 1.23 (1.09-1.38) <0.001                    True
+   NLR                       True Model 3              Survey-weighted 5538 1.22 (1.07-1.38)  0.005                    True
+hs-CRP                       True Model 3 Median + indicator (primary) 5538 0.95 (0.84-1.08)  0.460                   False
+hs-CRP                       True Model 3               Complete cases 4544 0.98 (0.85-1.13)  0.784                   False
+hs-CRP                       True Model 3        Income column dropped 5538 0.96 (0.84-1.09)  0.542                   False
+hs-CRP                       True Model 3              Survey-weighted 5538 0.91 (0.80-1.03)  0.112                   False
+[    1.5s] assoc_lr_test:
+added_to_model_2  df  loglik_model2  loglik_with_markers  lr_statistic      p
+             NLR   1     -1081.9645           -1077.0485        9.8318 0.0017
+          hs-CRP   1     -1081.9645           -1081.7169        0.4952 0.4816
+    NLR + hs-CRP   2     -1081.9645           -1076.2034       11.5221 0.0031
+[    1.5s] assoc_nonlinearity:
+marker  or_squared_term  p_squared_term
+   NLR           1.0132          0.6681
+hs-CRP           0.9884          0.7873
+[    1.5s] assoc_categories:
+                        marker          group  median_value       range     or     lo     hi      p    beta     se
+                           NLR Q1 (reference)        1.2302   0.29-1.51 1.0000 1.0000 1.0000    NaN     NaN    NaN
+                           NLR             Q2        1.7599   1.51-2.00 1.0775 0.7363 1.5767 0.7008  0.0746 0.1942
+                           NLR             Q3        2.2868   2.00-2.69 1.3758 0.9600 1.9718 0.0823  0.3190 0.1836
+                           NLR             Q4        3.3301  2.69-29.71 1.3259 0.9363 1.8777 0.1120  0.2821 0.1775
+                        hs-CRP Q1 (reference)        0.5200   0.11-0.81 1.0000 1.0000 1.0000    NaN     NaN    NaN
+                        hs-CRP             Q2        1.2200   0.82-1.81 0.8333 0.6011 1.1551 0.2737 -0.1824 0.1666
+                        hs-CRP             Q3        2.8200   1.82-4.18 0.9008 0.6434 1.2613 0.5430 -0.1045 0.1717
+                        hs-CRP             Q4        7.2500 4.19-150.92 0.8531 0.5988 1.2153 0.3789 -0.1589 0.1806
+hs-CRP clinical (ref < 1 mg/L)       1-3 mg/L           NaN         NaN 1.0129 0.7590 1.3517 0.9307  0.0128 0.1472
+hs-CRP clinical (ref < 1 mg/L)       > 3 mg/L           NaN         NaN 0.9358 0.6872 1.2744 0.6736 -0.0664 0.1576
+[    1.5s] assoc_vif:
+             variable    vif
+                  age 2.1626
+                 egfr 1.8955
+                  bmi 1.4784
+               crp_sd 1.4524
+             hdl_chol 1.4110
+         hypertension 1.3252
+        race_nh_black 1.2400
+                 male 1.2006
+           income_pir 1.1845
+          smk_current 1.1837
+             diabetes 1.1706
+           total_chol 1.1559
+               nlr_sd 1.1516
+           smk_former 1.1451
+  race_other_hispanic 1.1258
+race_mexican_american 1.1164
+        race_nh_asian 1.0876
+     race_other_multi 1.0668
+       income_missing 1.0103
+[    1.5s] assoc_decomposition:
+                adjustment marker     or     lo     hi      p    beta     se
+        Model 1 (age, sex)    NLR 1.2973 1.1693 1.4393 0.0000  0.2603 0.0530
+        Model 1 (age, sex) hs-CRP 1.1096 0.9933 1.2395 0.0655  0.1040 0.0565
+          + race/ethnicity    NLR 1.3014 1.1701 1.4473 0.0000  0.2634 0.0542
+          + race/ethnicity hs-CRP 1.1201 1.0017 1.2526 0.0467  0.1135 0.0570
+                  + income    NLR 1.2969 1.1694 1.4382 0.0000  0.2600 0.0528
+                  + income hs-CRP 1.0831 0.9693 1.2102 0.1589  0.0798 0.0566
+                     + BMI    NLR 1.2758 1.1488 1.4169 0.0000  0.2436 0.0535
+                     + BMI hs-CRP 0.9980 0.8843 1.1263 0.9740 -0.0020 0.0617
+                 + smoking    NLR 1.2832 1.1564 1.4238 0.0000  0.2493 0.0531
+                 + smoking hs-CRP 1.0627 0.9501 1.1885 0.2874  0.0608 0.0571
+                + diabetes    NLR 1.3052 1.1745 1.4503 0.0000  0.2663 0.0538
+                + diabetes hs-CRP 1.0758 0.9617 1.2034 0.2016  0.0731 0.0572
+            + hypertension    NLR 1.2908 1.1631 1.4324 0.0000  0.2552 0.0531
+            + hypertension hs-CRP 1.0655 0.9522 1.1924 0.2688  0.0635 0.0574
+       + total cholesterol    NLR 1.2587 1.1324 1.3992 0.0000  0.2301 0.0540
+       + total cholesterol hs-CRP 1.1254 1.0080 1.2565 0.0355  0.1182 0.0562
+         + HDL cholesterol    NLR 1.3229 1.1912 1.4693 0.0000  0.2799 0.0535
+         + HDL cholesterol hs-CRP 1.0230 0.9117 1.1479 0.6988  0.0227 0.0588
+                    + eGFR    NLR 1.2848 1.1578 1.4257 0.0000  0.2506 0.0531
+                    + eGFR hs-CRP 1.0759 0.9619 1.2035 0.2006  0.0732 0.0572
+    + lipid-lowering drugs    NLR 1.3064 1.1737 1.4541 0.0000  0.2673 0.0546
+    + lipid-lowering drugs hs-CRP 1.1477 1.0243 1.2859 0.0176  0.1378 0.0580
+Model 2 (all risk factors)    NLR 1.1970 1.0696 1.3396 0.0017  0.1798 0.0574
+Model 2 (all risk factors) hs-CRP 0.9557 0.8422 1.0845 0.4825 -0.0453 0.0645
+[    1.5s] assoc_interactions:
+marker      modifier  interaction_or     lo     hi      p  stratum_or  stratum_lo  stratum_hi  stratum_cases
+   NLR     lipid_med          1.0080 0.7959 1.2766 0.9474         NaN         NaN         NaN            NaN
+   NLR lipid_med = 0             NaN    NaN    NaN    NaN      1.2149      0.9878      1.4943           96.0
+   NLR lipid_med = 1             NaN    NaN    NaN    NaN      1.2273      1.0686      1.4094          316.0
+   NLR          male          0.8675 0.6908 1.0894 0.2213         NaN         NaN         NaN            NaN
+   NLR      male = 0             NaN    NaN    NaN    NaN      1.3000      1.0686      1.5815          146.0
+   NLR      male = 1             NaN    NaN    NaN    NaN      1.1407      0.9937      1.3093          266.0
+hs-CRP     lipid_med          1.0634 0.8245 1.3716 0.6359         NaN         NaN         NaN            NaN
+hs-CRP lipid_med = 0             NaN    NaN    NaN    NaN      0.9520      0.7419      1.2215           96.0
+hs-CRP lipid_med = 1             NaN    NaN    NaN    NaN      1.0112      0.8705      1.1746          316.0
+hs-CRP          male          1.0472 0.8265 1.3269 0.7026         NaN         NaN         NaN            NaN
+hs-CRP      male = 0             NaN    NaN    NaN    NaN      0.9834      0.7941      1.2179          146.0
+hs-CRP      male = 1             NaN    NaN    NaN    NaN      0.9334      0.7961      1.0943          266.0
+[    1.8s] Sensitivity (association):
+                               analysis    n  cases  NLR_or  NLR_lo  NLR_hi  NLR_p  hs-CRP_or  hs-CRP_lo  hs-CRP_hi  hs-CRP_p
+  Primary (Model 2, median + indicator) 5538    412   1.197   1.070   1.340  0.002      0.956      0.842      1.085     0.483
+     Complete cases (listwise deletion) 4544    337   1.181   1.041   1.341  0.010      0.961      0.834      1.108     0.585
+                  Income column dropped 5538    412   1.204   1.076   1.348  0.001      0.966      0.851      1.096     0.587
+       Model 3 (+ lipid-lowering drugs) 5538    412   1.209   1.078   1.356  0.001      0.993      0.874      1.128     0.916
+        Survey-weighted (US population) 5538    412   1.184   1.053   1.331  0.008      0.909      0.808      1.022     0.103
+                   Outcome incl. angina 5533    457   1.138   1.022   1.266  0.019      0.959      0.850      1.082     0.498
+                        Outcome MI only 5363    237   1.280   1.112   1.473  0.001      0.856      0.728      1.006     0.060
+                       Outcome CHD only 5423    297   1.178   1.034   1.342  0.014      1.002      0.867      1.157     0.979
+               Exclude hs-CRP > 10 mg/L 5132    381   1.189   1.054   1.340  0.005      0.962      0.824      1.124     0.628
+    Exclude IQR outliers of log markers 5421    392   1.146   1.007   1.304  0.039      0.939      0.819      1.076     0.363
+Untreated only (no lipid-lowering drug) 3948     96   1.215   0.988   1.494  0.065      0.952      0.742      1.221     0.699
+           Age 40-79 (risk-score range) 3834    328   1.208   1.065   1.370  0.003      0.961      0.835      1.105     0.575
+               NLR from absolute counts 5538    412   1.195   1.068   1.338  0.002      0.956      0.842      1.085     0.483
+[   15.4s] Sensitivity (prediction, LR dAUC):
+                                   analysis    n  cases  auc_m2  auc_m3  delta_auc      lo     hi      p
+                        Primary (CHD or MI) 5538    412  0.8615  0.8628     0.0013 -0.0009 0.0035 0.2188
+                       Outcome incl. angina 5533    457  0.8484  0.8486     0.0002 -0.0022 0.0026 0.8833
+                            Outcome MI only 5363    237  0.8644  0.8691     0.0047 -0.0007 0.0101 0.0843
+                           Outcome CHD only 5423    297  0.8703  0.8704     0.0001 -0.0029 0.0031 0.9322
+                   Exclude hs-CRP > 10 mg/L 5132    381  0.8637  0.8642     0.0005 -0.0020 0.0031 0.6612
+        Exclude IQR outliers of log markers 5421    392  0.8621  0.8623     0.0002 -0.0022 0.0026 0.8512
+                             Untreated only 3924     88  0.8368  0.8327    -0.0041 -0.0119 0.0037 0.2828
+                                  Age 40-79 3834    328  0.8312  0.8319     0.0006 -0.0048 0.0061 0.8053
+Treatment as predictor (+ lipid & BP drugs) 5538    412  0.8754  0.8762     0.0008 -0.0014 0.0030 0.4631
+  Without cholesterol (treatment-distorted) 5538    412  0.8487  0.8504     0.0017 -0.0026 0.0060 0.4152
+=== 06_association.py finished in 0.3 min ===
+
+=== 07_interpretation.py ===
+[    0.4s] Permutation importance (mean AUC drop):
+algo              LR      EN      DT     kNN     SVM      RF
+age           0.0990  0.0981  0.1849  0.0569  0.0957  0.0647
+male          0.0091  0.0083  0.0001  0.0046  0.0056  0.0042
+race_eth      0.0086  0.0063 -0.0005  0.0011  0.0033  0.0005
+income_pir    0.0020  0.0021 -0.0001  0.0028  0.0033  0.0014
+bmi           0.0023  0.0020  0.0001  0.0011  0.0012  0.0004
+smoking       0.0137  0.0130 -0.0001  0.0099  0.0086  0.0067
+diabetes      0.0071  0.0068  0.0216  0.0052  0.0070  0.0108
+hypertension  0.0143  0.0134  0.0119  0.0135  0.0152  0.0141
+total_chol    0.0333  0.0338  0.0542  0.0489  0.0390  0.0481
+hdl_chol      0.0008  0.0013  0.0001  0.0024  0.0031  0.0000
+egfr          0.0050  0.0052  0.0047  0.0127  0.0047  0.0107
+log_nlr       0.0038  0.0042  0.0021  0.0066  0.0043  0.0066
+log_crp       0.0003  0.0004  0.0002  0.0010  0.0011 -0.0002
+[    1.1s] final LR on all data: {}
+[   20.9s] final RF on all data: {'clf__max_features': 0.33, 'clf__min_samples_leaf': 10}
+[   22.4s] Partial dependence range (risk %):
+              min   max
+algo marker            
+LR   NLR     5.42  8.84
+     hs-CRP  6.53  8.01
+RF   NLR     6.36  9.29
+     hs-CRP  7.11  8.09
+[   22.9s] Variables used by the illustrative tree: ['Age', 'Diabetes', 'Total cholesterol', 'eGFR']
+[   31.2s] Learning curves:
+algo  n_train  auc_train  auc_cv
+  LR      443     0.9091  0.8343
+  LR     1107     0.8900  0.8541
+  LR     1772     0.8798  0.8601
+  LR     2436     0.8747  0.8636
+  LR     3101     0.8697  0.8634
+  LR     3765     0.8720  0.8630
+  LR     4430     0.8706  0.8637
+  RF      443     0.9282  0.8446
+  RF     1107     0.9236  0.8521
+  RF     1772     0.9230  0.8561
+  RF     2436     0.9223  0.8578
+  RF     3101     0.9193  0.8609
+  RF     3765     0.9204  0.8604
+  RF     4430     0.9205  0.8615
+=== 07_interpretation.py finished in 0.6 min ===

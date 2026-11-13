@@ -1,0 +1,9 @@
+,value
+prevalence,0.07439508847959553
+lr_auc_m2,0.8614915521158585
+lr_auc_m3,0.8627969137229871
+lr_delta_m3_m2,0.0013053616071283822
+lr_delta_p,0.2188030435634742
+best_algorithm_auc_m3,SVM
+best_auc_m3,0.8669286120434742
+final_model,LR

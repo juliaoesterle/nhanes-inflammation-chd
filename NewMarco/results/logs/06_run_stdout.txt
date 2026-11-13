@@ -1,0 +1,86 @@
+[    2.8s] 1 SD of log NLR = factor 1.58; 1 SD of log CRP = factor 3.15
+[  415.0s] 20 imputed data sets created (PMM)
+[  465.3s] Odds ratios per SD:
+marker  adjusted_for_other_marker   model             analysis               OR      P   fmi
+   NLR                      False Model 1       MICE (primary) 1.30 (1.17-1.44) <0.001 0.000
+   NLR                      False Model 1 Survey-weighted MICE 1.32 (1.16-1.51) <0.001 0.000
+   NLR                      False Model 1        Complete case 1.27 (1.13-1.43) <0.001 0.000
+   NLR                      False Model 2       MICE (primary) 1.20 (1.07-1.34)  0.002 0.002
+   NLR                      False Model 2 Survey-weighted MICE 1.19 (1.05-1.34)  0.009 0.003
+   NLR                      False Model 2        Complete case 1.18 (1.04-1.34)  0.010 0.000
+   NLR                      False Model 3       MICE (primary) 1.20 (1.07-1.35)  0.002 0.003
+   NLR                      False Model 3 Survey-weighted MICE 1.18 (1.05-1.33)  0.009 0.008
+   NLR                      False Model 3        Complete case 1.18 (1.04-1.35)  0.011 0.000
+hs-CRP                      False Model 1       MICE (primary) 1.11 (0.99-1.24)  0.066 0.000
+hs-CRP                      False Model 1 Survey-weighted MICE 1.14 (1.01-1.28)  0.039 0.000
+hs-CRP                      False Model 1        Complete case 1.14 (1.01-1.29)  0.039 0.000
+hs-CRP                      False Model 2       MICE (primary) 0.95 (0.84-1.08)  0.441 0.006
+hs-CRP                      False Model 2 Survey-weighted MICE 0.91 (0.80-1.02)  0.106 0.009
+hs-CRP                      False Model 2        Complete case 0.96 (0.83-1.11)  0.585 0.000
+hs-CRP                      False Model 3       MICE (primary) 0.99 (0.87-1.13)  0.883 0.008
+hs-CRP                      False Model 3 Survey-weighted MICE 0.94 (0.84-1.06)  0.285 0.017
+hs-CRP                      False Model 3        Complete case 1.01 (0.88-1.17)  0.878 0.000
+   NLR                       True Model 1       MICE (primary) 1.28 (1.16-1.43) <0.001 0.000
+   NLR                       True Model 1 Survey-weighted MICE 1.30 (1.13-1.50)  0.001 0.000
+   NLR                       True Model 1        Complete case 1.25 (1.11-1.41) <0.001 0.000
+hs-CRP                       True Model 1       MICE (primary) 1.06 (0.95-1.18)  0.322 0.000
+hs-CRP                       True Model 1 Survey-weighted MICE 1.08 (0.95-1.22)  0.245 0.000
+hs-CRP                       True Model 1        Complete case 1.10 (0.97-1.24)  0.150 0.000
+   NLR                       True Model 2       MICE (primary) 1.21 (1.08-1.36) <0.001 0.001
+   NLR                       True Model 2 Survey-weighted MICE 1.22 (1.06-1.40)  0.009 0.002
+   NLR                       True Model 2        Complete case 1.19 (1.05-1.36)  0.007 0.000
+hs-CRP                       True Model 2       MICE (primary) 0.91 (0.80-1.04)  0.173 0.005
+hs-CRP                       True Model 2 Survey-weighted MICE 0.87 (0.76-1.00)  0.044 0.006
+hs-CRP                       True Model 2        Complete case 0.93 (0.81-1.07)  0.325 0.000
+   NLR                       True Model 3       MICE (primary) 1.21 (1.08-1.36)  0.001 0.003
+   NLR                       True Model 3 Survey-weighted MICE 1.20 (1.05-1.38)  0.010 0.005
+   NLR                       True Model 3        Complete case 1.19 (1.04-1.35)  0.011 0.000
+hs-CRP                       True Model 3       MICE (primary) 0.95 (0.83-1.08)  0.449 0.007
+hs-CRP                       True Model 3 Survey-weighted MICE 0.90 (0.79-1.03)  0.122 0.010
+hs-CRP                       True Model 3        Complete case 0.98 (0.85-1.13)  0.784 0.000
+[  471.4s] Categories (Model 3):
+               marker category    or    lo    hi     p
+hs-CRP (ref < 1 mg/L)  crp_1_3 1.049 0.783 1.406 0.747
+hs-CRP (ref < 1 mg/L)  crp_gt3 1.012 0.739 1.385 0.941
+         NLR (ref Q1)   nlr_q2 1.035 0.705 1.520 0.861
+         NLR (ref Q1)   nlr_q3 1.343 0.933 1.934 0.112
+         NLR (ref Q1)   nlr_q4 1.334 0.938 1.897 0.109
+[  471.9s] Highest VIF: 2.38 (age)
+[  479.4s] Non-linearity tests: {'nlr': {'median_p_nonlinearity': 0.4173328810157787, 'min_p': 0.37473791765378184, 'max_p': 0.4802738402277452, 'reference_value': 1.9966721299891497}, 'crp': {'median_p_nonlinearity': 0.8903270241007497, 'min_p': 0.858760299823615, 'max_p': 0.9075620220061249, 'reference_value': 1.814993112934592}}
+[  490.2s] Effect modification:
+marker      modifier  interaction_or    lo    hi     p  stratum_or  stratum_lo  stratum_hi
+   nlr     lipid_med           1.007 0.788 1.285 0.958         NaN         NaN         NaN
+   nlr lipid_med = 0             NaN   NaN   NaN   NaN       1.211       0.975       1.505
+   nlr lipid_med = 1             NaN   NaN   NaN   NaN       1.218       1.062       1.396
+   nlr          male           0.871 0.690 1.098 0.242         NaN         NaN         NaN
+   nlr      male = 0             NaN   NaN   NaN   NaN       1.306       1.069       1.597
+   nlr      male = 1             NaN   NaN   NaN   NaN       1.144       0.994       1.317
+   crp     lipid_med           1.035 0.797 1.344 0.797         NaN         NaN         NaN
+   crp lipid_med = 0             NaN   NaN   NaN   NaN       0.974       0.753       1.260
+   crp lipid_med = 1             NaN   NaN   NaN   NaN       0.998       0.859       1.160
+   crp          male           1.068 0.840 1.360 0.590         NaN         NaN         NaN
+   crp      male = 0             NaN   NaN   NaN   NaN       0.994       0.800       1.236
+   crp      male = 1             NaN   NaN   NaN   NaN       0.975       0.829       1.147
+[  509.0s] Sensitivity (association):
+                               analysis    n  cases  NLR_or  NLR_lo  NLR_hi  NLR_p  hs-CRP_or  hs-CRP_lo  hs-CRP_hi  hs-CRP_p
+           Primary (CHD or MI, Model 3) 5538    412   1.201   1.070   1.347  0.002      0.990      0.871      1.126     0.883
+                   Outcome incl. angina 5533    457   1.137   1.020   1.269  0.021      0.992      0.878      1.122     0.902
+                        Outcome MI only 5363    237   1.282   1.112   1.478  0.001      0.884      0.750      1.042     0.141
+                       Outcome CHD only 5423    297   1.181   1.033   1.351  0.015      1.043      0.900      1.208     0.576
+               Exclude hs-CRP > 10 mg/L 5132    381   1.197   1.059   1.353  0.004      0.995      0.849      1.166     0.955
+    Exclude IQR outliers of log markers 5421    392   1.155   1.012   1.318  0.032      0.974      0.848      1.119     0.709
+Untreated only (no lipid-lowering drug) 3934     88   1.211   0.975   1.505  0.083      0.974      0.753      1.260     0.841
+           Age 40-79 (risk-score range) 3834    328   1.217   1.069   1.384  0.003      1.010      0.876      1.164     0.896
+               NLR from absolute counts 5538    412   1.199   1.069   1.346  0.002      0.990      0.871      1.126     0.883
+[  596.1s] Sensitivity (prediction, LR dAUC):
+                                   analysis    n  cases  delta_auc      lo     hi      p
+                        Primary (CHD or MI) 5538    412     0.0013 -0.0009 0.0035 0.2188
+                       Outcome incl. angina 5533    457     0.0002 -0.0022 0.0026 0.8833
+                            Outcome MI only 5363    237     0.0047 -0.0007 0.0101 0.0843
+                           Outcome CHD only 5423    297     0.0001 -0.0029 0.0031 0.9322
+                   Exclude hs-CRP > 10 mg/L 5132    381     0.0005 -0.0020 0.0031 0.6612
+        Exclude IQR outliers of log markers 5421    392     0.0002 -0.0022 0.0026 0.8512
+                             Untreated only 3924     88    -0.0041 -0.0119 0.0037 0.2828
+                                  Age 40-79 3834    328     0.0006 -0.0048 0.0061 0.8053
+Treatment as predictor (+ lipid & BP drugs) 5538    412     0.0008 -0.0014 0.0030 0.4631
+  Without cholesterol (treatment-distorted) 5538    412     0.0017 -0.0026 0.0060 0.4152

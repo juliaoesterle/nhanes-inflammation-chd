@@ -1,0 +1,9 @@
+{
+  "rule": "median + indicator (keeps everybody) unless another option is more than 0.005 AUC better on the same test people",
+  "mean_auc_common_subset": {
+    "complete_case": 0.8657970656628464,
+    "drop_income": 0.8666378411090683,
+    "median": 0.867408004282872
+  },
+  "decision": "median"
+}
