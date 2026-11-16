@@ -1,4 +1,4 @@
-reason,cells_set_to_nan
+reason,cells
 non_numeric,124640
 non_response,10439
-out_of_range,93
+out_of_range,92

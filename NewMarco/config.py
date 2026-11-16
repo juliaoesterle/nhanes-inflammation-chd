@@ -201,7 +201,15 @@ SVM_CLASS_WEIGHT = "balanced"
 # predictions of the TRAINING part only (never on the test fold), by Youden's J.
 THRESHOLD_RULE = "youden"
 
-# D14 outliers (course W2): keep (log scale) in the primary analysis;
-# sensitivity analyses: exclude hs-CRP > 10 mg/L, and exclude IQR-rule outliers
-# of the log markers.
+# D14 outliers (course W2): keep (log scale) in the primary analysis; the IQR rule is
+# only used to count outliers (02). Sensitivity analysis: exclude hs-CRP > 10 mg/L.
 IQR_FACTOR = 1.5
+
+# D16 sensitivity analyses (06): five checks, each one tied to a choice we made
+SENSITIVITY_ANALYSES = [
+    "Complete cases (listwise deletion)",   # D3 missing data
+    "Model 3 (+ lipid-lowering drugs)",      # D4 treatment
+    "Exclude hs-CRP > 10 mg/L",              # D14 outliers / acute inflammation
+    "Survey-weighted (US population)",       # representativeness (W3)
+    "Outcome incl. angina",                  # D2 outcome definition
+]

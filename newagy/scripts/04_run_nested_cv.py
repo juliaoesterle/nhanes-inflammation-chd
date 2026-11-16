@@ -1,174 +1,103 @@
 """
-Step 04: Repeated Nested Cross-Validation (The Main Modeling Pipeline).
+Step 04: repeated nested cross-validation (5 folds x 3 repeats outside, 5 folds inside).
 
-Executes a 5-fold Stratified Cross-Validation repeated 3 times (15 outer test folds)
-with nested 5-fold inner CV for hyperparameter tuning on log-loss.
-Evaluates 6 machine learning algorithms across nested feature subsets (M0, M1, M2, M3, M4).
+Six algorithms x feature sets M2, M3, M2+NLR, M2+CRP (+ M0, M1, M4 for LR).
+Inner loop: GridSearchCV on log-loss. Outer test fold: AUC, PR-AUC, Brier, calibration,
+metrics at the Youden threshold (chosen on the training part), and for M3 the
+permutation importance on the test fold. Takes about 30-60 minutes.
+
+    python scripts/04_run_nested_cv.py          # everything
+    python scripts/04_run_nested_cv.py SVM      # only one algorithm, keep the others
 """
 
 from __future__ import annotations
 
-import argparse
 import json
 import sys
 import time
 import warnings
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 from sklearn.base import clone
 from sklearn.inspection import permutation_importance
 from sklearn.metrics import roc_auc_score
-from sklearn.model_selection import GridSearchCV, RepeatedStratifiedKFold, StratifiedKFold, cross_val_predict
+from sklearn.model_selection import StratifiedKFold, cross_val_predict
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = SCRIPT_DIR.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 sys.path.insert(0, str(PROJECT_DIR / "modules"))
 
 import config as cfg
-from evaluation import (
-    compute_discrimination_metrics,
-    compute_threshold_metrics,
-    find_optimal_youden_threshold,
-)
-from models import ALL_ALGORITHMS, get_base_estimator, get_hyperparameter_grid
-from pipeline_factory import assemble_full_pipeline
+from evaluation import all_metrics, outer_folds, threshold_metrics, youden_threshold
+from models import fit_tuned
+from pipeline_factory import make_pipeline
+
+COST = {"RF": 6, "SVM": 4, "kNN": 2, "EN": 1, "DT": 1, "LR": 0}   # start the slow ones first
 
 
-def execute_single_fold_task(df, rep, fold, train_idx, test_idx, algo, fs):
-    """Executes inner tuning and outer evaluation for a single fold and model."""
+def task(df, rep, fold, tr, te, algo, fs, class_weight):
     warnings.filterwarnings("ignore")
-    features = cfg.FEATURE_SETS[fs]
+    feats = cfg.FEATURE_SETS[fs]
     y = df[cfg.PRIMARY_OUTCOME].astype(int).to_numpy()
-    X = df[features]
-    fold_seed = cfg.RANDOM_SEED + 100 * rep + fold
+    X = df[feats]
+    seed = cfg.RANDOM_SEED + 100 * rep + fold
+    t0 = time.time()
+    pipe, grid = make_pipeline(feats, algo, class_weight=class_weight)
+    est, best = fit_tuned(pipe, grid, X.iloc[tr], y[tr], seed=seed)
+    p_te = est.predict_proba(X.iloc[te])[:, 1]
+    p_tr = est.predict_proba(X.iloc[tr])[:, 1]
+    out = {"repeat": rep, "fold": fold, "algo": algo, "fs": fs,
+           **all_metrics(y[te], p_te, base_rate=y[tr].mean()),
+           "auc_train": roc_auc_score(y[tr], p_tr),
+           "best_params": json.dumps({k.replace("clf__", ""): v for k, v in best.items()}, default=str)}
+    if fs in ("M2", "M3"):
+        inner = StratifiedKFold(cfg.N_INNER_SPLITS, shuffle=True, random_state=seed)
+        oof = cross_val_predict(clone(est), X.iloc[tr], y[tr], cv=inner, method="predict_proba")[:, 1]
+        thr = youden_threshold(y[tr], oof)
+        out.update({f"thr_{k}": v for k, v in threshold_metrics(y[te], p_te, thr).items()})
+    if fs == "M3":
+        pi = permutation_importance(est, X.iloc[te], y[te], scoring="roc_auc", n_repeats=10,
+                                    random_state=seed, n_jobs=1)
+        out["perm"] = dict(zip(feats, pi.importances_mean))
+    out["fit_seconds"] = time.time() - t0
+    return out
+
+
+def main():
+    df = pd.read_parquet(cfg.ANALYSIS_SAMPLE_PARQUET)
+    imbalance = json.load(open(cfg.DECISIONS_DIR / "imbalance.json"))["decision"]
+    class_weight = "balanced" if imbalance == "class_weight" else None
+
+    folds = outer_folds(df[cfg.PRIMARY_OUTCOME].astype(int), cfg.N_OUTER_REPEATS)
+    combos = [(a, fs) for a in cfg.ALGORITHMS for fs in ("M2", "M3", "M2+NLR", "M2+CRP")]
+    combos += [("LR", fs) for fs in ("M0", "M1", "M4", "M4-NLR", "M4-CRP")]
+    only = [a for a in sys.argv[1:] if a in cfg.ALGORITHMS]
+    if only:
+        combos = [(a, fs) for a, fs in combos if a in only]
+    tasks = [(rep, fold, tr, te, a, fs) for a, fs in combos for rep, fold, tr, te in folds]
+    tasks.sort(key=lambda t: -COST[t[4]])
+    print(f"{len(tasks)} tasks, class_weight = {class_weight}")
 
     t0 = time.time()
-    estimator = get_base_estimator(algo, random_state=fold_seed)
-    pipe = assemble_full_pipeline(
-        estimator=estimator,
-        feature_list=features,
-        scale_continuous=True,
-        imputation_strategy="median",
-        include_indicators=True,
-    )
+    res = Parallel(n_jobs=cfg.N_JOBS, verbose=5)(delayed(task)(df, *t, class_weight) for t in tasks)
+    print(f"nested CV finished in {(time.time() - t0) / 60:.1f} min")
 
-    grid = get_hyperparameter_grid(algo)
-    if grid:
-        inner_cv = StratifiedKFold(n_splits=cfg.N_INNER_SPLITS, shuffle=True, random_state=fold_seed)
-        search = GridSearchCV(
-            estimator=pipe,
-            param_grid=grid,
-            scoring="neg_log_loss",
-            cv=inner_cv,
-            n_jobs=1,
-            refit=True,
-        )
-        search.fit(X.iloc[train_idx], y[train_idx])
-        best_model = search.best_estimator_
-        best_params = search.best_params_
-    else:
-        pipe.fit(X.iloc[train_idx], y[train_idx])
-        best_model = pipe
-        best_params = {}
+    fold_metrics = pd.DataFrame([{k: v for k, v in r.items() if k != "perm"} for r in res])
+    perm = pd.DataFrame([{"repeat": r["repeat"], "fold": r["fold"], "algo": r["algo"], **r["perm"]}
+                         for r in res if "perm" in r])
+    if only:   # keep the rows of the other algorithms
+        old_fm = pd.read_csv(cfg.CV_DIR / "fold_metrics.csv")
+        old_perm = pd.read_csv(cfg.CV_DIR / "permutation_importance_folds.csv")
+        fold_metrics = pd.concat([old_fm[~old_fm["algo"].isin(only)], fold_metrics], ignore_index=True)
+        perm = pd.concat([old_perm[~old_perm["algo"].isin(only)], perm], ignore_index=True)
+    fold_metrics.to_csv(cfg.CV_DIR / "fold_metrics.csv", index=False)
+    perm.to_csv(cfg.CV_DIR / "permutation_importance_folds.csv", index=False)
 
-    p_test = best_model.predict_proba(X.iloc[test_idx])[:, 1]
-    p_train = best_model.predict_proba(X.iloc[train_idx])[:, 1]
-
-    metrics = compute_discrimination_metrics(y[test_idx], p_test)
-    metrics["auc_train"] = float(roc_auc_score(y[train_idx], p_train))
-    metrics["best_params"] = json.dumps(best_params)
-    metrics["repeat"] = rep
-    metrics["fold"] = fold
-    metrics["algo"] = algo
-    metrics["fs"] = fs
-    metrics["fit_seconds"] = time.time() - t0
-
-    # Decision threshold metrics for M2 and M3
-    if fs in ("M2", "M3"):
-        inner_cv = StratifiedKFold(n_splits=cfg.N_INNER_SPLITS, shuffle=True, random_state=fold_seed)
-        oof_train_probs = cross_val_predict(
-            clone(best_model), X.iloc[train_idx], y[train_idx], cv=inner_cv, method="predict_proba"
-        )[:, 1]
-        thr = find_optimal_youden_threshold(y[train_idx], oof_train_probs)
-        thr_res = compute_threshold_metrics(y[test_idx], p_test, thr)
-        for k, v in thr_res.items():
-            metrics[f"thr_{k}"] = v
-
-    return metrics
-
-
-def run_nested_cv(recompute=False, target_algo=None):
-    start_time = time.time()
-    print("=" * 70)
-    print("STEP 04: REPEATED NESTED CROSS-VALIDATION")
-    print("=" * 70)
-
-    cv_metrics_path = cfg.CV_DIR / "fold_metrics.csv"
-
-    if cv_metrics_path.exists() and not recompute and target_algo is None:
-        print(f"Verified pre-computed CV fold metrics at: {cv_metrics_path}")
-        df_metrics = pd.read_csv(cv_metrics_path)
-        print(f"Total evaluated fold-configurations: {len(df_metrics)}")
-        # Print summary table of AUC across algorithms for M2 and M3
-        m2_m3 = df_metrics[df_metrics["fs"].isin(["M2", "M3"])]
-        summary = m2_m3.groupby(["algo", "fs"])["auc"].agg(["mean", "std"]).reset_index()
-        print("\nSummary Cross-Validation Performance (Mean AUC ± SD across 15 folds):")
-        print(summary.to_string(index=False))
-        print(f"\nStep 04 verified in {time.time() - start_time:.1f} seconds. (Use --recompute to re-run from scratch)\n")
-        return
-
-    df = pd.read_parquet(cfg.ANALYSIS_SAMPLE_PARQUET)
-    y = df[cfg.PRIMARY_OUTCOME].astype(int)
-
-    rskf = RepeatedStratifiedKFold(
-        n_splits=cfg.N_OUTER_SPLITS,
-        n_repeats=cfg.N_OUTER_REPEATS,
-        random_state=cfg.RANDOM_SEED,
-    )
-    folds = []
-    rep = 0
-    fold = 0
-    for train_idx, test_idx in rskf.split(df, y):
-        folds.append((rep, fold, train_idx, test_idx))
-        fold += 1
-        if fold == cfg.N_OUTER_SPLITS:
-            fold = 0
-            rep += 1
-
-    algos = [target_algo] if target_algo else ALL_ALGORITHMS
-    feature_subsets = ["M2", "M3", "M2+NLR", "M2+CRP"]
-    combos = [(a, fs) for a in algos for fs in feature_subsets]
-    if not target_algo or target_algo == "LR":
-        combos += [("LR", "M0"), ("LR", "M1"), ("LR", "M4"), ("LR", "M4-NLR"), ("LR", "M4-CRP")]
-
-    tasks = [(rep, fold, tr, te, a, fs) for a, fs in combos for rep, fold, tr, te in folds]
-    print(f"Dispatching {len(tasks)} nested cross-validation tasks across {cfg.N_JOBS} worker processes...")
-
-    results = Parallel(n_jobs=cfg.N_JOBS, verbose=5)(
-        delayed(execute_single_fold_task)(df, rep, fold, tr, te, a, fs)
-        for rep, fold, tr, te, a, fs in tasks
-    )
-
-    df_new = pd.DataFrame(results)
-    if cv_metrics_path.exists() and target_algo:
-        df_old = pd.read_csv(cv_metrics_path)
-        df_combined = pd.concat([df_old[df_old["algo"] != target_algo], df_new], ignore_index=True)
-        df_combined.to_csv(cv_metrics_path, index=False)
-    else:
-        df_new.to_csv(cv_metrics_path, index=False)
-
-    print(f"Saved nested CV fold metrics to: {cv_metrics_path}")
-    print(f"Step 04 completed in {time.time() - start_time:.1f} seconds.\n")
+    summary = fold_metrics.groupby(["algo", "fs"])[["auc", "pr_auc", "brier", "auc_train"]].mean()
+    print(summary.round(4).to_string())
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run repeated nested CV.")
-    parser.add_argument("--recompute", action="store_true", help="Recompute all fold evaluations from scratch.")
-    parser.add_argument("--algo", type=str, default=None, choices=ALL_ALGORITHMS, help="Recompute specific algorithm.")
-    args = parser.parse_args()
-
-    run_nested_cv(recompute=args.recompute, target_algo=args.algo)
+    main()

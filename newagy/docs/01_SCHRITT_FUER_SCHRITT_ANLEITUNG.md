@@ -1,7 +1,7 @@
-# Schritt-für-Schritt Anleitung: Von Rohdaten zur wissenschaftlichen Spitzenarbeit
+# Schritt-für-Schritt Anleitung: Von den Rohdaten zum Ergebnis
 
 **ETH Zürich — Foundations of Data Science (Herbstsemester)**  
-*Leitfaden für Marco: Methodik, 3-Optionen-Entscheidungslogik, Code-Bausteine und mündliche Verteidigung.*
+*Leitfaden fürs Team: Methodik, 3-Optionen-Entscheidungslogik und typische Fragen. Der Code dazu liegt in `newagy/scripts/` (Teil 1 auch einfach im Notebook `Final/nhanes_chd_analysis.ipynb`).*
 
 ---
 
@@ -24,13 +24,13 @@
 15. [Schritt 14: Beantwortung der Zusatzfrage (H1c: Diskrimination via ML)](#schritt-14-beantwortung-der-zusatzfrage-h1c-diskrimination-via-ml)
 16. [Schritt 15: Sensitivitätsanalysen & Robustheitsprüfung](#schritt-15-sensitivitätsanalysen--robustheitsprüfung)
 17. [Schritt 16: Modell-Interpretierbarkeit & Feature Attribution (W7, W8)](#schritt-16-modell-interpretierbarkeit--feature-attribution)
-18. [Schritt 17: Typische Prüfungsfragen für Marco & souveräne Antworten](#schritt-17-typische-prüfungsfragen--antworten)
+18. [Schritt 17: Typische Fragen & mögliche Antworten](#schritt-17-typische-fragen--mögliche-antworten)
 
 ---
 
 ## 1. Einleitung & Grundprinzip
 
-In Data-Science-Projekten an der ETH genügt es nicht, einfach ein Modell in Python zu trainieren und den besten Test-Score abzugeben. Was eine Bestnote (6.0) von einer durchschnittlichen Note unterscheidet, ist:
+Es genügt nicht, einfach ein Modell zu trainieren und den besten Test-Score abzugeben. Wichtig sind uns drei Dinge:
 
 1. **Systematische Begründung jeder Entscheidung:** Für jeden Schritt formulieren wir **3 sinnvolle Optionen**, definieren **vorab ein objektives Kriterium (Entscheidungsregel)** und begründen die Wahl transparent.
 2. **Kritische Selbstreflexion:** Wir decken methodische Fallstricke (z. B. Datenlecks durch Medikamente, Überanpassung, Kalibrierungsfehler) aktiv auf, anstatt sie zu vertuschen.
@@ -123,9 +123,9 @@ Wie unterscheiden sich herzkranke und gesunde Teilnehmende, bevor wir Modelle an
 * **Option C: Nur Effektstärken (SMD) ohne Signifikanztests:** Nützlich, aber unvollständig.
 
 ### Die drei wichtigsten klinischen Entdeckungen in Table 1
-1. **NLR ist bei Fällen deutlich erhöht:** Median 2.39 vs. 1.96 ($\text{SMD} = 0.53, p < 10^{-17}$).
+1. **NLR ist bei Fällen deutlich erhöht:** Median 2.39 vs. 1.96 ($\text{SMD} = 0.42$, Bonferroni-$p < 10^{-17}$).
 2. **hs-CRP unterscheidet sich bereits unadjustiert NICHT:** Median 1.97 vs. 1.81 mg/L ($\text{SMD} = 0.02, p = 0.256$, nach Bonferroni $p = 1.00$).
-3. **Das Statin-Paradoxon (Treatment Confounding):** Herzkranke haben *niedrigeres* Gesamtcholesterin (151.5 vs. 187.0 mg/dL, $\text{SMD} = -0.74$), weil **78.2%** von ihnen Cholesterinsenker (Statine) einnehmen (im Vergleich zu nur 24.9% der Kontrollgruppe).
+3. **Das Statin-Paradoxon (Treatment Confounding):** Herzkranke haben *niedrigeres* Gesamtcholesterin (151.5 vs. 187.0 mg/dL, $\text{SMD} = -0.72$), weil **78.2%** von ihnen Cholesterinsenker (Statine) einnehmen (im Vergleich zu nur 24.9% der Kontrollgruppe).
 
 ---
 
@@ -139,12 +139,12 @@ Wie gehen wir mit fehlenden Werten um (insbesondere beim Familieneinkommen: 12.7
 * Vorlesungsoptionen: Listwise Deletion, Spalte entfernen, Median-Imputation, Missing Indicator.
 
 ### Mechanismus-Prüfung
-Ein logistisches Modell für "Einkommen fehlt" zeigt: Das Fehlen hängt von Alter, Bildung und Ethnie ab, aber **nicht von der Herzkrankheit** ($\text{OR} = 1.03, p = 0.85$). Es liegt also **Missing at Random (MAR)** vor.
+Ein logistisches Modell für "Einkommen fehlt" zeigt: Das Fehlen hängt von Bildung, Ethnie und Rauchen ab (nicht vom Alter), aber **nicht von der Herzkrankheit** ($\text{OR} = 1.03, p = 0.87$). Das passt zu **Missing at Random (MAR)**; MNAR lässt sich mit den Daten allein nie ganz ausschliessen.
 
 ### Die drei Optionen (Experiment E1)
 | Strategie | Behaltene Personen | Test-AUC (LR) | Test-AUC (RF) | Beurteilung |
 |---|---:|---|---|---|
-| **Option A: Listwise Deletion (Complete Cases)** | 4'563 | 0.866 | 0.865 | Verliert 975 Personen (70 Fälle!). Verzerrt MAR-Daten. |
+| **Option A: Listwise Deletion (Complete Cases)** | 4'563 | 0.867 | 0.865 | Verliert 975 Personen (70 Fälle!). Verzerrt MAR-Daten. |
 | **Option B: Spalte Einkommen löschen** | 5'538 | 0.867 | 0.866 | Verliert den bekannten Risikofaktor Sozioökonomie. |
 | **Option C: Median-Imputation + Missing-Indikator** | **5'538** | **0.867** | **0.868** | **Erhält alle Fälle; Indikator nutzt die Information des Fehlens.** |
 
@@ -167,7 +167,13 @@ Soll ein Algorithmus (z. B. Lasso) frei aus allen verfügbaren Umfragevariablen 
 ### Die drei Strategien im Vergleich
 * **Strategie S1 (Literatur/Guideline):** Die etablierten Faktoren grosser Risikoscores (PCE, SCORE2, PREVENT): Alter, Geschlecht, Ethnie, Einkommen, BMI, Rauchen, Diabetes, Bluthochdruck, Cholesterin, eGFR.
 * **Strategie S2 (Naiver Lasso auf 342 Rohvariablen):** Vollautomatische Auswahl.
-* **Strategie S3 (Hybrider Pool aus 39 fachlich gescreenten Variablen):** Vorfilterung, dann RFECV / Lasso.
+* **Strategie S3 (Hybrider Pool aus 39 fachlich gescreenten Variablen):** Vorauswahl nach Fachwissen, dann Lasso.
+
+| Strategie | Test-AUC (10 Folds) | Variablen pro Fold | Stabilität (Jaccard) |
+|---|---|---|---|
+| S1 Literatur | 0.862 | 13 | 1.00 |
+| S2 naiver Lasso | 0.923 | ≈ 114 | 0.47 |
+| S3 hybrider Pool + Lasso | 0.870 | ≈ 35 | 0.86 |
 
 ### Die Entdeckung des massiven Datenlecks in S2
 Der naive Lasso (S2) erreicht scheinbar eine fantastische AUC von **0.923**. Bei der Inspektion der Koeffizienten zeigt sich jedoch ein massives **Label Leakage (Post-Diagnosis-Verzerrung)**:
@@ -235,7 +241,7 @@ Reicht ein einfacher 80/20 Train-Test-Split, oder brauchen wir wiederholte versc
 
 ### Die "80/20-Lotterie" (Experiment E4)
 Wir trainieren dasselbe Modell auf 200 verschiedenen zufälligen 80/20-Splits:
-* Die Test-AUC schwankt zwischen **0.803 und 0.918**!
+* Die Test-AUC schwankt zwischen **0.802 und 0.923** (mittlere 95 % der Splits: 0.831–0.894)!
 * In **29.5%** der zufälligen Splits sieht es so aus, als ob die Entzündungsmarker die Vorhersage *verschlechtern* ($\Delta\text{AUC} < 0$).
 * Ein einzelner Train/Test-Split ist reines Glücksspiel!
 
@@ -327,30 +333,28 @@ Verbessern die Marker die Modellanpassung signifikant?
 
 ## Schritt 15: Sensitivitätsanalysen & Robustheitsprüfung
 
-Um zu beweisen, dass unsere Schlussfolgerungen nicht an einer einzelnen willkürlichen Datenentscheidung hängen, prüfen wir 13 Variationen (`fig20_sensitivity.png`):
-1. Complete Cases ($n = 4'563$): NLR OR 1.18, CRP OR 0.96.
-2. Spalte Einkommen weggelassen: NLR OR 1.20, CRP OR 0.97.
-3. Einschluss von Statinen (Modell 3): NLR OR 1.21, CRP OR 0.99.
-4. Survey-Gewichte (Repräsentativ für US-Bevölkerung): NLR OR 1.18, CRP OR 0.91.
-5. Inklusive Angina Pectoris im Outcome: NLR OR 1.14, CRP OR 0.96.
-6. Nur akuter Herzinfarkt (MI): NLR OR 1.28, CRP OR 0.86.
-7. Ausschluss akuter Infektionen (hs-CRP $>10$ mg/L): NLR OR 1.19, CRP OR 0.96.
-8. Unbehandelte Personen ohne Statine ($n = 96$ Fälle): NLR OR 1.21, CRP OR 0.95.
-*Ergebnis:* In allen 13 Analysen bleibt NLR signifikant positiv und hs-CRP nicht signifikant.
+Um zu zeigen, dass unsere Schlussfolgerungen nicht an einer einzelnen Entscheidung hängen, ändern wir jeweils eine Entscheidung (`sensitivity_association.csv`, `sensitivity_prediction.csv`). Fünf Varianten, jede gehört zu einer unserer Entscheidungen:
+1. Complete Cases ($n = 4'563$, 342 Fälle; prüft E1): NLR OR 1.17 (1.03–1.32), CRP OR 0.96 (0.83–1.11).
+2. Einschluss von Statinen (Modell 3; prüft "Behandlung nicht im Hauptmodell"): NLR OR 1.21 (1.08–1.36), CRP OR 0.99 (0.87–1.13).
+3. Ausschluss akuter Infektionen (hs-CRP $>10$ mg/L; prüft "Ausreisser behalten"): NLR OR 1.19 (1.05–1.34), CRP OR 0.96 (0.82–1.12).
+4. Survey-Gewichte (repräsentativ für die US-Bevölkerung): NLR OR 1.18 (1.05–1.33), CRP OR 0.91 (0.81–1.02).
+5. Inklusive Angina Pectoris im Outcome (prüft die Outcome-Definition): NLR OR 1.14 (1.02–1.27), CRP OR 0.96 (0.85–1.08).
+
+*Ergebnis:* In allen fünf Varianten bleibt NLR signifikant (α = 0.025) und hs-CRP nicht signifikant. Der Marker-Gewinn ΔAUC der logistischen Regression bleibt in allen Varianten unter 0.002 (bei Variante 2 mit Statinen als zusätzlichem Prädiktor; für die Survey-Gewichte gibt es keine AUC-Variante).
 
 ---
 
 ## Schritt 16: Modell-Interpretierbarkeit & Feature Attribution
 
-1. **Permutation Feature Importance:** Alter dominiert mit weitem Abstand (AUC-Abfall $>0.10$). Auf Platz 2 folgt Cholesterin (invers, wegen Statinen). NLR belegt Rang 6–9 von 13; hs-CRP landet bei 5 von 6 Algorithmen auf dem **allerletzten Platz**.
-2. **Partial Dependence Plots:** Das Risiko steigt monoton mit steigendem NLR; die Kurve für hs-CRP verläuft vollkommen flach.
+1. **Permutation Feature Importance:** Alter dominiert mit weitem Abstand (AUC-Abfall 0.06–0.10, beim Entscheidungsbaum 0.18). Auf Platz 2 folgt Cholesterin (invers, wegen Statinen). NLR belegt Rang 6–9 von 13; hs-CRP landet bei 5 von 6 Algorithmen auf dem **allerletzten Platz**.
+2. **Partial Dependence Plots:** Das Risiko steigt monoton mit steigendem NLR; die Kurve für hs-CRP ist flach bis leicht fallend (logistische Regression: 8.0 % → 6.5 % vom 5. zum 95. Perzentil).
 3. **Illustrativer Baum (Tiefe 3):** Teilt ausschliesslich nach Alter, Diabetes, Cholesterin und eGFR auf. Kein einziger Entzündungsmarker wird verwendet!
 
 ---
 
-## Schritt 17: Typische Prüfungsfragen & souveräne Antworten
+## Schritt 17: Typische Fragen & mögliche Antworten
 
-Wenn der Professor oder Teaching Assistant dir in der Präsentation Fragen stellt, antworte exakt so:
+Fragen, die in der Präsentation kommen könnten, und wie man sie beantworten kann:
 
 ### Frage 1: "Warum haben Sie die Entzündungsmarker logarithmiert?"
 > **Antwort:** "Die Rohwerte von NLR und hs-CRP weisen extreme Rechtsschiefe auf (Schiefe 4.66 und 7.78). Wenige Extremwerte würden gradientenbasierte und distanzbasierte Verfahren wie kNN und SVM verzerren. Durch die Logarithmierung sinkt die Schiefe auf 0.15 und 0.23, was zu einer symmetrischen, normalverteilungsnahen Verteilung im Q-Q-Plot führt. Zudem erlaubt es die biologisch sinnvolle Interpretation als relatives Risiko: 1 SD entspricht einem festen Multiplikationsfaktor auf der Originalskala."

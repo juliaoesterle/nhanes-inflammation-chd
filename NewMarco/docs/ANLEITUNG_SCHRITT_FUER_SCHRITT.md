@@ -97,7 +97,7 @@
 | Im Untersuchungszentrum | 6'037 | 451 |
 | **NLR und hs-CRP gemessen** | **5'538** | **412 (7.4 %)** |
 
-**Outcome:** «Hat Ihnen je eine Ärztin gesagt, Sie hätten eine koronare Herzkrankheit / einen Herzinfarkt gehabt?» (MCQ160C oder MCQ160E). Varianten für die Sensitivitätsanalysen: nur Herzinfarkt, nur KHK, mit Angina pectoris.
+**Outcome:** «Hat Ihnen je eine Ärztin gesagt, Sie hätten eine koronare Herzkrankheit / einen Herzinfarkt gehabt?» (MCQ160C oder MCQ160E). Variante für die Sensitivitätsanalyse: mit Angina pectoris.
 
 **Wer fehlt, und ist das schlimm?** Wir vergleichen die Ausgeschlossenen mit der Stichprobe über die *standardisierte Mittelwertdifferenz* (SMD = Unterschied der Mittelwerte geteilt durch die Standardabweichung; |SMD| < 0.1 gilt als klein). Menschen ohne Blutprobe sind ärmer (SMD −0.36) und häufiger nicht-hispanisch schwarz (Abbildung `fig06`). Das schränkt die Übertragbarkeit ein und kommt in die Limitationen.
 
@@ -136,7 +136,7 @@
 
 **Warum kein Normalitätstest als Kriterium?** Bei n = 5'538 lehnt der Shapiro-Wilk-Test selbst kleinste Abweichungen ab (p < 0.001 auf beiden Skalen). Der Kurs (W3) zeigt genau das: Bei grossen Stichproben sagen Q-Q-Plot und Schiefe mehr als der p-Wert.
 
-**Ausreisser:** Extreme Entzündungswerte sind biologisch möglich (z. B. Infekt) und keine Messfehler. Wir behalten sie und prüfen in Schritt 15, ob das Ergebnis ohne sie anders wäre (IQR-Regel aus W2; hs-CRP > 10 mg/L als Hinweis auf akuten Infekt).
+**Ausreisser:** Extreme Entzündungswerte sind biologisch möglich (z. B. Infekt) und keine Messfehler. Wir behalten sie und prüfen in Schritt 15, ob das Ergebnis ohne hs-CRP > 10 mg/L (Hinweis auf akuten Infekt) anders wäre. Die IQR-Regel aus W2 nutzen wir nur, um die Ausreisser zu zählen.
 
 ![Verteilungen und Q-Q-Plots](../results/figures/fig07_qq_plots.png)
 
@@ -483,7 +483,7 @@ Alle Verfahren und Feature-Sets sehen **exakt dieselben Folds**. Das macht die V
 | Analyse | n | NLR: OR (95 %-KI) | hs-CRP: OR (95 %-KI) |
 |---|---:|---|---|
 | Median + Indikator (Haupt) | 5'538 | 1.20 (1.07–1.34) | 0.96 (0.84–1.08) |
-| Listwise deletion | 4'544 | 1.18 (1.04–1.34) | 0.96 (0.83–1.11) |
+| Listwise deletion | 4'563 | 1.17 (1.03–1.32) | 0.96 (0.83–1.11) |
 | Einkommen gelöscht | 5'538 | 1.20 (1.08–1.35) | 0.97 (0.85–1.10) |
 | Survey-gewichtet (US-Bevölkerung) | 5'538 | 1.18 (1.05–1.33) | 0.91 (0.81–1.02) |
 
@@ -600,44 +600,40 @@ Schon Alter und Geschlecht erreichen 0.80. Die klinischen Faktoren bringen +0.04
 
 **Ziel:** Zeigen, dass das Ergebnis nicht an einer einzelnen Entscheidung hängt.
 
-Wir ändern jeweils *eine* Entscheidung und rechnen neu (`sensitivity_association.csv`, `sensitivity_prediction.csv`, `fig20`):
+Wir ändern jeweils *eine* Entscheidung und rechnen neu (`sensitivity_association.csv`, `sensitivity_prediction.csv`, `fig20`). Fünf Varianten, jede gehört zu einer unserer Entscheidungen:
+
+| Variante | prüft die Entscheidung |
+|---|---|
+| Complete cases (listwise deletion) | fehlende Werte (E1) |
+| Modell 3 (+ Cholesterinsenker) | Behandlung nicht im Hauptmodell |
+| Ohne hs-CRP > 10 mg/L | Ausreisser / akute Entzündung behalten |
+| Survey-gewichtet | ungewichtete Hauptanalyse (Repräsentativität, W3) |
+| Outcome mit Angina | Outcome-Definition |
 
 **Zusammenhang** (Odds Ratio pro SD):
 
-| Variante | Fälle | NLR: OR (95 %-KI) | hs-CRP: OR (95 %-KI) |
-|---|---:|---|---|
-| Hauptanalyse (Modell 2) | 412 | 1.20 (1.07–1.34) | 0.96 (0.84–1.08) |
-| Listwise deletion | 337 | 1.18 (1.04–1.34) | 0.96 (0.83–1.11) |
-| Einkommen gelöscht | 412 | 1.20 (1.08–1.35) | 0.97 (0.85–1.10) |
-| Modell 3 (+ Cholesterinsenker) | 412 | 1.21 (1.08–1.36) | 0.99 (0.87–1.13) |
-| Survey-gewichtet | 412 | 1.18 (1.05–1.33) | 0.91 (0.81–1.02) |
-| Outcome mit Angina | 457 | 1.14 (1.02–1.27) | 0.96 (0.85–1.08) |
-| Nur Herzinfarkt | 237 | 1.28 (1.11–1.47) | 0.86 (0.73–1.01) |
-| Nur KHK | 297 | 1.18 (1.03–1.34) | 1.00 (0.87–1.16) |
-| Ohne hs-CRP > 10 mg/L | 381 | 1.19 (1.05–1.34) | 0.96 (0.82–1.12) |
-| Ohne IQR-Ausreisser | 392 | 1.15 (1.01–1.30) | 0.94 (0.82–1.08) |
-| Nur Unbehandelte | 96 | 1.21 (0.99–1.49) | 0.95 (0.74–1.22) |
-| Alter 40–79 | 328 | 1.21 (1.06–1.37) | 0.96 (0.84–1.11) |
-| NLR aus absoluten Zellzahlen | 412 | 1.20 (1.07–1.34) | 0.96 (0.84–1.08) |
+| Variante | n | Fälle | NLR: OR (95 %-KI), p | hs-CRP: OR (95 %-KI), p |
+|---|---:|---:|---|---|
+| Hauptanalyse (Modell 2) | 5'538 | 412 | 1.20 (1.07–1.34), 0.002 | 0.96 (0.84–1.08), 0.48 |
+| Complete cases | 4'563 | 342 | 1.17 (1.03–1.32), 0.015 | 0.96 (0.83–1.11), 0.57 |
+| Modell 3 (+ Cholesterinsenker) | 5'538 | 412 | 1.21 (1.08–1.36), 0.001 | 0.99 (0.87–1.13), 0.92 |
+| Ohne hs-CRP > 10 mg/L | 5'132 | 381 | 1.19 (1.05–1.34), 0.005 | 0.96 (0.82–1.12), 0.63 |
+| Survey-gewichtet | 5'538 | 412 | 1.18 (1.05–1.33), 0.008 | 0.91 (0.81–1.02), 0.10 |
+| Outcome mit Angina | 5'533 | 457 | 1.14 (1.02–1.27), 0.019 | 0.96 (0.85–1.08), 0.50 |
 
-NLR: OR zwischen 1.14 und 1.28; das Intervall schliesst 1 in 12 von 13 Varianten aus (Ausnahme: Nur Unbehandelte, wegen weniger Fälle). hs-CRP: OR zwischen 0.86 und 1.00, in keiner Variante signifikant.
+NLR: OR zwischen 1.14 und 1.21, in allen Varianten signifikant (auch bei α = 0.025). hs-CRP: OR zwischen 0.91 und 0.99, in keiner Variante signifikant.
 
-**Erkennung** (logistische Regression, wiederholte CV):
+**Erkennung** (logistische Regression, wiederholte CV; Survey-Gewichte gibt es für die AUC nicht, dafür Cholesterinsenker als zusätzlicher Prädiktor):
 
 | Variante | AUC M2 | AUC M3 | ΔAUC (95 %-KI) |
 |---|---|---|---|
 | Hauptanalyse | 0.861 | 0.863 | +0.0013 (-0.0009 bis +0.0035) |
-| Outcome mit Angina | 0.848 | 0.849 | +0.0002 (-0.0022 bis +0.0026) |
-| Nur Herzinfarkt | 0.864 | 0.869 | +0.0047 (-0.0007 bis +0.0101) |
-| Nur KHK | 0.870 | 0.870 | +0.0001 (-0.0029 bis +0.0031) |
+| Complete cases | 0.867 | 0.868 | +0.0011 (-0.0013 bis +0.0034) |
+| Cholesterinsenker als Prädiktor | 0.874 | 0.875 | +0.0009 (-0.0014 bis +0.0032) |
 | Ohne hs-CRP > 10 mg/L | 0.864 | 0.864 | +0.0005 (-0.0020 bis +0.0031) |
-| Ohne IQR-Ausreisser | 0.862 | 0.862 | +0.0002 (-0.0022 bis +0.0026) |
-| Nur Unbehandelte | 0.837 | 0.833 | -0.0041 (-0.0119 bis +0.0037) |
-| Alter 40–79 | 0.831 | 0.832 | +0.0006 (-0.0048 bis +0.0061) |
-| Medikamente als Prädiktor | 0.875 | 0.876 | +0.0008 (-0.0014 bis +0.0030) |
-| Ohne Cholesterin (durch Statine verzerrt) | 0.849 | 0.850 | +0.0017 (-0.0026 bis +0.0060) |
+| Outcome mit Angina | 0.848 | 0.849 | +0.0002 (-0.0022 bis +0.0026) |
 
-In keiner Variante ist der Gewinn signifikant. **Ohne Cholesterin** sinkt die AUC des Referenzmodells von 0.861 auf 0.849: So viel der Erkennungskraft kommt über das durch Statine veränderte Cholesterin. Der Marker-Gewinn bleibt aber klein (+0.0017).
+In keiner Variante ist der Gewinn signifikant, er bleibt überall unter 0.002.
 
 ![Sensitivität](../results/figures/fig20_sensitivity.png)
 
@@ -659,8 +655,8 @@ In keiner Variante ist der Gewinn signifikant. **Ohne Cholesterin** sinkt die AU
 | Grenze | Folge | Was wir getan haben |
 |---|---|---|
 | Momentaufnahme | Ursache und Wirkung unklar | Frage als Zusammenhang formuliert |
-| Selbstauskunft | Fehlklassifikation, unentdeckte Fälle fehlen | Drei Outcome-Varianten |
-| Statine verändern Cholesterin und CRP | Verzerrung | Modell 3, «nur Unbehandelte», «ohne Cholesterin» |
+| Selbstauskunft | Fehlklassifikation, unentdeckte Fälle fehlen | Outcome mit Angina als Variante |
+| Statine verändern Cholesterin und CRP | Verzerrung | Modell 3, Cholesterinsenker als Prädiktor |
 | Eine einzige CRP-Messung | Zusammenhang wird unterschätzt | Ausschluss CRP > 10 mg/L |
 | Ohne Blutprobe ausgeschlossen (499) | Eingeschränkte Übertragbarkeit | Mit SMD dokumentiert |
 | Ungewichtete Hauptanalyse | Aussage gilt für die Stichprobe | Gewichtete Sensitivität |

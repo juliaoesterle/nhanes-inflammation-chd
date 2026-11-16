@@ -55,7 +55,7 @@ Der Brier-Score misst die Genauigkeit probabilistischer Vorhersagen. Er zerfäll
 | **D5** | Referenz-Feature-Set | Vollautomatischer Lasso | Unüberwachte PCA | **Etablierte Guideline-Risikofaktoren (M2)** | Orientierung an PCE / SCORE2 / PREVENT | M2 vermeidet Behandlungslecks; M3 ergänzt Marker |
 | **D6** | Datenlecks bei Prädiktoren | Alle Variablen zulassen | Blindes Filtern | **Strikter Ausschluss von Post-Diagnose-Variablen** | Keine Variablen, die Folgen der Diagnose sind | Schliesst Stents, Aspirin-Rat und Medikamente aus |
 | **D7** | Evaluierungsdesign | Einfacher 80/20 Split | Standard 5-Fold CV | **Repeated Nested CV (5x3 Outer, 5 Inner)** | Stabilität über zufällige Splits nachweisen | E4 zeigt: 80/20 schwankt von 0.80 bis 0.92 |
-| **D8** | Fehlende Kovariaten (E1) | Listwise Deletion | Spalte Einkommen löschen | **Median-Imputation + Missing-Indikator** | Option C, wenn Deletion nicht um $>0.005$ AUC überlegen | AUC identisch (0.867); Option C erhält 70 Fälle |
+| **D8** | Fehlende Kovariaten (E1) | Listwise Deletion | Spalte Einkommen löschen | **Median-Imputation + Missing-Indikator** | Option C, wenn Deletion nicht um $>0.005$ AUC überlegen | AUC auf denselben Testpersonen gleich (LR 0.867 / 0.867 / 0.867); Option C erhält 70 Fälle |
 | **D9** | Klassen-Ungleichgewicht (E3) | SMOTE / Resampling | Klassengewichtung | **Keine Resampling-Korrektur (Ausser SVM)** | Korrektur nur bei $\Delta\text{AUC}>0.005$ & Brier stabil | Resampling verdoppelt Brier-Fehler; SVM erhält Weights |
 | **D10** | Optimierungsmetrik Inner CV | Accuracy | ROC-AUC | **Negative Log-Loss (Kreuzentropie)** | Belohne Rangordnung UND Kalibrierung | Verhindert die Wahl fehlkalibrierter Hyperparameter |
 | **D11** | Modellauswahl (ML Zoo) | Nur 1 komplexes Modell | Nur Lineare Regression | **Alle 6 ETH-Kursverfahren (W5–W9)** | Vollständige Kursabdeckung | LR, Penalized, Tree, kNN, SVM, RF |
@@ -64,7 +64,7 @@ Der Brier-Score misst die Genauigkeit probabilistischer Vorhersagen. Er zerfäll
 | **D14** | Multiples Testen | Unkorrigiert ($p < 0.05$) | FDR / Benjamini-Hochberg | **Bonferroni-Korrektur** | Strikte Kontrolle des FWER bei co-primären Tests | $\alpha = 0.025$ für H1a/H1b; $m=6$ für ML-Vergleiche |
 | **D15** | Entscheidungs-Schwellenwert | Feste 0.5 Schwelle | Schwellenwert auf Testfold | **Youden-Schwelle auf Trainingsfold** | Keine Schwellenwert-Optimierung auf Testdaten | Youden-Index maximiert Sensitivität + Spezifität |
 | **D16** | Confounder-Modellierung | Nur Gesamt-Adjustierung | Bivariate Tests | **Schrittweise Zerlegung (Decomposition)** | Mechanismus der Dämpfung aufdecken | Isoliert BMI als Ursache für Wegfall von hs-CRP |
-| **D17** | Nicht-Linearität & Interaktion | Splines (Nicht im Kurs) | Nicht geprüft | **Quadratische Terme & Quartile / Interaktion** | Kurskonforme Verfahren (W7) | Kein Hinweis auf Nicht-Linearität oder Modifikation |
+| **D17** | Nicht-Linearität & Interaktion | Splines (Nicht im Kurs) | Nicht geprüft | **Quadratische Terme / Interaktion** | Kurskonforme Verfahren (W7) | Kein Hinweis auf Nicht-Linearität (p = 0.67 / 0.79) oder Modifikation (Statine p = 0.95, Geschlecht p = 0.22) |
 | **D18** | Empfohlenes Modell | Komplexestes Modell | Bestes Test-Fold Modell | **Logistische Regression (Sparsamkeitsprinzip)** | Komplexes ML nur, wenn signifikant überlegen | Kein ML-Modell signifikant besser als LR |
 
 ---
@@ -101,3 +101,20 @@ Die Scikit-Learn-Pipeline ist strikt so konstruiert, dass keinerlei Testinformat
        ▼
 [Auswertung auf unberührtem Test-Fold]
 ```
+
+---
+
+## 4. Sensitivitätsanalysen (`06_association_analysis.py`)
+
+Fünf Varianten, jede gehört zu einer Entscheidung oben:
+
+| Variante | prüft | NLR: OR (95%-KI), p | hs-CRP: OR (95%-KI), p | ΔAUC LR |
+|---|---|---|---|---|
+| Hauptanalyse (Modell 2) | – | 1.20 (1.07–1.34), 0.002 | 0.96 (0.84–1.08), 0.48 | +0.0013 |
+| Complete Cases (n = 4'563) | D8 fehlende Werte | 1.17 (1.03–1.32), 0.015 | 0.96 (0.83–1.11), 0.57 | +0.0011 |
+| Modell 3 (+ Statine) bzw. Statine als Prädiktor | D6 Behandlung | 1.21 (1.08–1.36), 0.001 | 0.99 (0.87–1.13), 0.92 | +0.0009 |
+| Ohne hs-CRP > 10 mg/L | D4 Ausreisser / akute Entzündung | 1.19 (1.05–1.34), 0.005 | 0.96 (0.82–1.12), 0.63 | +0.0005 |
+| Survey-gewichtet | Repräsentativität (W3) | 1.18 (1.05–1.33), 0.008 | 0.91 (0.81–1.02), 0.10 | – |
+| Outcome mit Angina | D2 Outcome | 1.14 (1.02–1.27), 0.019 | 0.96 (0.85–1.08), 0.50 | +0.0002 |
+
+NLR bleibt in allen Varianten signifikant (α = 0.025), hs-CRP in keiner; der Marker-Gewinn bleibt überall unter 0.002.

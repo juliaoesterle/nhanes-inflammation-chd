@@ -10,7 +10,7 @@
 
 **Methods.** Cross-sectional analysis of 5,538 adults with both markers measured (412 with self-reported CHD or myocardial infarction, 7.4%). Every analytical choice compared three options against a rule written down before the analysis. The association was estimated by logistic regression (odds ratio per SD of the log marker; Bonferroni for the two co-primary markers). Discrimination was compared for six algorithms with and without the markers in repeated nested cross-validation (15 test folds).
 
-**Results.** After adjustment for established risk factors, NLR was associated with CHD/MI (OR 1.20, 95% CI 1.07–1.34, p = 0.002); hs-CRP was not (OR 0.96, 0.84–1.08, p = 0.48). The crude hs-CRP association was accounted for by body-mass index. Established risk factors discriminated well (logistic regression AUC 0.861), and adding both markers changed the AUC by +0.001 (95% CI −0.001 to +0.004). No algorithm showed a significant gain or outperformed logistic regression. The findings held in 13 sensitivity analyses.
+**Results.** After adjustment for established risk factors, NLR was associated with CHD/MI (OR 1.20, 95% CI 1.07–1.34, p = 0.002); hs-CRP was not (OR 0.96, 0.84–1.08, p = 0.48). The crude hs-CRP association was accounted for by body-mass index. Established risk factors discriminated well (logistic regression AUC 0.861), and adding both markers changed the AUC by +0.001 (95% CI −0.001 to +0.004). No algorithm showed a significant gain or outperformed logistic regression. The findings held in five sensitivity analyses.
 
 **Conclusion.** NLR carries a modest adjusted association with CHD/MI, hs-CRP none; on their own the markers discriminate weakly (AUC 0.63), and neither improves the discrimination of prevalent disease beyond established risk factors, whatever the learning algorithm.
 
@@ -40,7 +40,7 @@ Because NHANES 2021–2023 is cross-sectional, the outcome is *existing* disease
 
 NHANES is a stratified, multistage probability sample of the US civilian population with interviews, a physical examination in a mobile examination centre (MEC) and laboratory tests; protocols were approved by the NCHS Research Ethics Review Board and the data are public. Of 11,933 participants in 2021–2023, we included adults (≥ 20 years) who answered the CHD/MI questions, attended the MEC and had NLR and hs-CRP measured (n = 5,538; Figure 1). Analyses are unweighted and describe this sample; survey weights were used in a sensitivity analysis.
 
-**Outcome.** "Has a doctor ever told you that you had coronary heart disease / a heart attack?" (MCQ160C or MCQ160E): 412 cases (7.4%). Variants (MI only, CHD only, including angina) were used in sensitivity analyses.
+**Outcome.** "Has a doctor ever told you that you had coronary heart disease / a heart attack?" (MCQ160C or MCQ160E): 412 cases (7.4%). A broader outcome including angina (MCQ160D) was used as a sensitivity analysis.
 
 **Markers.** NLR = neutrophils / lymphocytes; hs-CRP in mg/L. Both are strongly right-skewed (skewness 4.66 and 7.78) and were log-transformed (0.15 and 0.23; Q-Q plots). Effects are reported per 1 SD of the log marker: a factor of 1.58 for NLR and 3.15 for hs-CRP on the original scale.
 
@@ -81,7 +81,7 @@ Odds ratios were estimated by logistic regression in three nested models: Model 
 
 ### 2.5 Sensitivity analyses
 
-Each sensitivity analysis changed one decision: the three missing-data options, Model 3, survey weights with design-based standard errors, three outcome definitions, exclusion of hs-CRP > 10 mg/L and of IQR outliers, untreated participants only, ages 40–79, and NLR from absolute cell counts. The gain in discrimination was re-estimated for the same variants and for two variants addressing treatment: lipid-lowering and blood-pressure drugs as predictors, and models without cholesterol, which statins distort.
+Each of five sensitivity analyses changed one decision: complete cases instead of imputation, adjustment for lipid-lowering drugs (Model 3), exclusion of hs-CRP > 10 mg/L (possible acute inflammation), survey weights with design-based standard errors, and an outcome including angina. The gain in discrimination was re-estimated for the same variants (with lipid-lowering drugs as an additional predictor instead of the survey weights, which do not apply to the AUC).
 
 ---
 
@@ -124,7 +124,7 @@ In the primary model, **NLR was associated with CHD/MI** (OR 1.20 per SD, 95% CI
 | Model 1 (age, sex) | 1.30 (1.17–1.44) | < 0.001 | 1.11 (0.99–1.24) | 0.066 |
 | **Model 2 (primary)** | **1.20 (1.07–1.34)** | **0.002** | **0.96 (0.84–1.08)** | **0.48** |
 | Model 3 (+ lipid-lowering drugs) | 1.21 (1.08–1.36) | 0.001 | 0.99 (0.87–1.13) | 0.92 |
-| Model 2, complete cases (n = 4,544) | 1.18 (1.04–1.34) | 0.010 | 0.96 (0.83–1.11) | 0.58 |
+| Model 2, complete cases (n = 4,563) | 1.17 (1.03–1.32) | 0.015 | 0.96 (0.83–1.11) | 0.57 |
 | Model 2, income column dropped | 1.20 (1.08–1.35) | 0.001 | 0.97 (0.85–1.10) | 0.59 |
 | Model 2, survey-weighted | 1.18 (1.05–1.33) | 0.008 | 0.91 (0.81–1.02) | 0.10 |
 
@@ -169,7 +169,7 @@ Permutation importance on the test folds gave the same ranking for all six algor
 
 ### 3.5 Sensitivity analyses
 
-Across the 13 association analyses, the OR of NLR ranged from 1.14 to 1.28, with confidence intervals excluding 1 in 12. The exception was untreated participants (OR 1.21, 0.99–1.49; 96 cases). The OR of hs-CRP ranged from 0.86 to 1.00 and was never significant. The gain in discrimination was not significant in any of the ten prediction variants. Removing cholesterol lowered the AUC of the reference model from 0.861 to 0.849, so part of its discrimination stems from treatment-distorted cholesterol values; the marker gain remained small (+0.002).
+Across the five sensitivity analyses, the OR of NLR ranged from 1.14 (outcome including angina) to 1.21 (Model 3) and stayed significant at α = 0.025 in all of them. The OR of hs-CRP ranged from 0.91 to 0.99 and was never significant. The gain in discrimination was below 0.002 and not significant in every variant.
 
 ![Figure 6](../results/figures/fig20_sensitivity.png)
 *Figure 6. Sensitivity analyses for the association (A) and the gain in discrimination (B).*
@@ -201,12 +201,12 @@ If the markers acted through thresholds, non-linearities or interactions, the ra
 - Performance was estimated by repeated nested cross-validation, which reduces the variance of a single split.
 - Nobody was excluded for missing covariates, and the three standard ways of handling missing values gave the same answer.
 - A naive feature-selection experiment exposed label leakage that would otherwise have produced a spuriously excellent model.
-- The conclusions held across six algorithms and 13 sensitivity analyses.
+- The conclusions held across six algorithms and five sensitivity analyses.
 
 **Limitations.**
 - *Cross-sectional design.* Markers and disease were measured at the same visit. Reverse causation is possible: an infarct or a stent may raise NLR, and statins lower hs-CRP and cholesterol. The study cannot address prediction of future events.
 - *Self-reported outcome.* The outcome misses undiagnosed disease; non-differential misclassification attenuates associations and AUCs.
-- *Treatment effects.* Treatment distorts several predictors: cholesterol contributed about 0.013 of the AUC of the reference model through the statin effect. The untreated subgroup was small (96 cases).
+- *Treatment effects.* Treatment distorts several predictors: cases have lower cholesterol because most of them take statins (OR 0.58 per SD). Adjusting for lipid-lowering drugs did not change the marker results.
 - *Single measurement.* hs-CRP was measured once, which dilutes its association.
 - *Selection.* People without a blood draw were poorer than those included. The main analyses are unweighted.
 - *Methods.* Missing covariates were imputed once with the median, which slightly understates uncertainty; complete-case and column-dropping analyses gave the same results.

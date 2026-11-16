@@ -1,156 +1,203 @@
 """
-Step 06: Epidemiological Association Analysis (Primary Hypotheses H1a and H1b).
+Step 06: main question H1a / H1b with logistic regression (statsmodels).
 
-Estimates multivariable logistic regression models using statsmodels:
-- Odds Ratios (OR) and 95% Confidence Intervals per 1 SD of log-transformed markers
-- Co-primary hypothesis testing with Bonferroni correction (alpha = 0.025)
-- Likelihood-Ratio tests (LR-test) for nested model comparisons
-- Multicollinearity diagnostics via Variance Inflation Factor (VIF)
-- Covariate decomposition to isolate confounding mechanisms (BMI vs. Statins)
-- Assessment of non-linearity (quadratic terms & quartiles) and effect modification
-- 13 pre-specified sensitivity analyses
+Model 1 = age + sex, Model 2 = + established risk factors (primary),
+Model 3 = + lipid-lowering drugs (sensitivity only, the drug is a consequence of the diagnosis).
+OR per 1 SD of the log marker, 95% CI, Wald p; Bonferroni: each marker at alpha = 0.025.
+Also: likelihood-ratio test, VIF, squared term, interactions, confounder decomposition and
+five sensitivity analyses (plus the same checks for the dAUC of logistic regression).
 """
 
 from __future__ import annotations
 
 import sys
-import time
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from scipy import stats
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score
+from sklearn.pipeline import Pipeline
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = SCRIPT_DIR.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 sys.path.insert(0, str(PROJECT_DIR / "modules"))
 
 import config as cfg
-from stats_analysis import (
-    compute_vif_dataframe,
-    extract_odds_ratios,
-    fit_logistic_model,
-    likelihood_ratio_test,
-)
+from evaluation import corrected_ttest, outer_folds
+from pipeline_factory import make_preprocessor
+from stats_analysis import (MISSING, MODEL1, MODELS, RACES, RISK, fit, impute, odds_ratio, prepare,
+                            terms_for, used_rows)
+
+MARKERS = {"nlr_sd": "NLR", "crp_sd": "hs-CRP"}
 
 
-def run_association_analysis():
-    start_time = time.time()
-    print("=" * 70)
-    print("STEP 06: EPIDEMIOLOGICAL ASSOCIATION ANALYSIS (H1a & H1b)")
-    print("=" * 70)
+def main_models(data):
+    rows = []
+    for marker in ("nlr", "crp", "both"):
+        exposures = ["nlr_sd", "crp_sd"] if marker == "both" else [f"{marker}_sd"]
+        for model in MODELS:
+            for coef in exposures:
+                base = {"marker": MARKERS[coef], "adjusted_for_other_marker": marker == "both", "model": model}
+                for how, label in MISSING.items():
+                    terms = exposures + terms_for(model, how)
+                    rows.append({**base, "analysis": label, "n": len(used_rows(data[how], "chd_mi", terms)),
+                                 **odds_ratio(data[how], "chd_mi", terms, coef)})
+                rows.append({**base, "analysis": "Survey-weighted", "n": len(data["median"]),
+                             **odds_ratio(data["median"], "chd_mi", exposures + terms_for(model), coef,
+                                          weighted=True)})
+    out = pd.DataFrame(rows)
+    out["significant_bonferroni"] = out["p"] < cfg.BONFERRONI_ALPHA_PRIMARY
+    return out
 
+
+def full_model(d):
+    """All coefficients of Model 2 + both markers; continuous covariates per 1 SD."""
+    cont = ["age", "income_pir", "bmi", "total_chol", "hdl_chol", "egfr"]
+    dd = d.copy()
+    for c in cont:
+        dd[c] = (dd[c] - dd[c].mean()) / dd[c].std()
+    terms = ["nlr_sd", "crp_sd"] + terms_for("Model 2")
+    res = fit(dd, "chd_mi", terms)[3]
+    ci = np.exp(res.conf_int())
+    return pd.DataFrame({"variable": terms, "or": np.exp(res.params[terms]).to_numpy(),
+                         "lo": ci.loc[terms, 0].to_numpy(), "hi": ci.loc[terms, 1].to_numpy(),
+                         "p": res.pvalues[terms].to_numpy()})
+
+
+def lr_tests(d):
+    """LR = 2 x (log-likelihood with markers - without), chi-square with df = number of markers."""
+    base = terms_for("Model 2")
+    r0 = fit(d, "chd_mi", base)[3]
+    rows = []
+    for label, add in (("NLR", ["nlr_sd"]), ("hs-CRP", ["crp_sd"]), ("NLR + hs-CRP", ["nlr_sd", "crp_sd"])):
+        r1 = fit(d, "chd_mi", add + base)[3]
+        lr = 2 * (r1.llf - r0.llf)
+        rows.append({"added_to_model_2": label, "df": len(add), "lr_statistic": lr,
+                     "p": stats.chi2.sf(lr, len(add))})
+    return pd.DataFrame(rows)
+
+
+def nonlinearity(d):
+    base = terms_for("Model 2")
+    rows = []
+    for m, label in (("nlr", "NLR"), ("crp", "hs-CRP")):
+        r = odds_ratio(d.assign(sq=d[f"{m}_sd"] ** 2), "chd_mi", [f"{m}_sd", "sq"] + base, "sq")
+        rows.append({"marker": label, "or_squared_term": r["or"], "p_squared_term": r["p"]})
+    return pd.DataFrame(rows)
+
+
+def interactions(d):
+    base = terms_for("Model 2")
+    rows = []
+    for m, label in (("nlr", "NLR"), ("crp", "hs-CRP")):
+        for mod in ("lipid_med", "male"):
+            extra = ["lipid_med"] if mod == "lipid_med" else []
+            r = odds_ratio(d.assign(ix=d[f"{m}_sd"] * d[mod]), "chd_mi", [f"{m}_sd", "ix"] + base + extra, "ix")
+            rows.append({"marker": label, "modifier": mod, "interaction_or": r["or"], "p": r["p"]})
+    return pd.DataFrame(rows)
+
+
+def vif_table(d):
+    X = sm.add_constant(d[["nlr_sd", "crp_sd"] + terms_for("Model 2")].astype(float))
+    return pd.DataFrame({"variable": X.columns[1:],
+                         "vif": [variance_inflation_factor(X.to_numpy(), i) for i in range(1, X.shape[1])]})
+
+
+DECOMPOSITION = [   # exploratory: which covariate explains the crude association?
+    ("Model 1 (age, sex)", []), ("+ race/ethnicity", [f"race_{r}" for r in RACES]),
+    ("+ income", ["income_pir", "income_missing"]), ("+ BMI", ["bmi"]),
+    ("+ smoking", ["smk_former", "smk_current"]), ("+ diabetes", ["diabetes"]),
+    ("+ hypertension", ["hypertension"]), ("+ total cholesterol", ["total_chol"]),
+    ("+ HDL cholesterol", ["hdl_chol"]), ("+ eGFR", ["egfr"]),
+    ("+ lipid-lowering drugs", ["lipid_med"]), ("Model 2 (all risk factors)", RISK),
+]
+
+
+def decomposition(d):
+    rows = []
+    for label, extra in DECOMPOSITION:
+        for coef, name in MARKERS.items():
+            rows.append({"adjustment": label, "marker": name,
+                         **odds_ratio(d, "chd_mi", [coef] + MODEL1 + extra, coef)})
+    return pd.DataFrame(rows)
+
+
+def sensitivity_association(data):
+    d = data["median"]
+    base = terms_for("Model 2")
+    variants = [
+        ("Primary (Model 2, median + indicator)", d, "chd_mi", base, False),
+        ("Complete cases (listwise deletion)", data["complete_case"], "chd_mi",
+         terms_for("Model 2", "complete_case"), False),
+        ("Model 3 (+ lipid-lowering drugs)", d, "chd_mi", terms_for("Model 3"), False),
+        ("Exclude hs-CRP > 10 mg/L", d[d["crp"] <= 10], "chd_mi", base, False),
+        ("Survey-weighted (US population)", d, "chd_mi", base, True),
+        ("Outcome incl. angina", d, "chd_mi_angina", base, False),
+    ]
+    rows = []
+    for label, dd, y, terms, weighted in variants:
+        dd = used_rows(dd, y, terms)
+        row = {"analysis": label, "n": len(dd), "cases": int(dd[y].sum())}
+        for coef, name in MARKERS.items():
+            r = odds_ratio(dd, y, [coef] + terms, coef, weighted=weighted)
+            row.update({f"{name}_or": r["or"], f"{name}_lo": r["lo"], f"{name}_hi": r["hi"], f"{name}_p": r["p"]})
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def cv_delta(df, y_col, m2, m3, mask=None):
+    """Unpenalized LR in repeated CV (15 folds): mean AUC of M2 and M3 and the corrected dAUC."""
+    d = df[df[y_col].notna()] if mask is None else df[mask & df[y_col].notna()]
+    d = d.reset_index(drop=True)
+    y = d[y_col].astype(int).to_numpy()
+    auc2, auc3 = [], []
+    for _, _, tr, te in outer_folds(y, cfg.N_OUTER_REPEATS):
+        for feats, store in ((m2, auc2), (m3, auc3)):
+            pipe = Pipeline(make_preprocessor(feats, drop_first=True)
+                            + [("clf", LogisticRegression(C=np.inf, max_iter=10_000))])
+            pipe.fit(d.iloc[tr][feats], y[tr])
+            store.append(roc_auc_score(y[te], pipe.predict_proba(d.iloc[te][feats])[:, 1]))
+    t = corrected_ttest(np.array(auc3) - np.array(auc2))
+    return {"n": len(d), "cases": int(y.sum()), "auc_m2": np.mean(auc2), "auc_m3": np.mean(auc3),
+            "delta_auc": t["mean"], "lo": t["lo"], "hi": t["hi"], "p": t["p"]}
+
+
+def sensitivity_prediction(df):
+    m2, m3 = cfg.M2_FEATURES, cfg.M3_FEATURES
+    variants = [
+        ("Primary (CHD or MI)", "chd_mi", None, m2, m3),
+        ("Complete cases (listwise deletion)", "chd_mi", df["complete_case"], m2, m3),
+        ("+ lipid-lowering drugs as predictor", "chd_mi", None, m2 + ["lipid_med"], m3 + ["lipid_med"]),
+        ("Exclude hs-CRP > 10 mg/L", "chd_mi", df["crp"] <= 10, m2, m3),
+        ("Outcome incl. angina", "chd_mi_angina", None, m2, m3),
+    ]
+    return pd.DataFrame([{"analysis": label, **cv_delta(df, y, a, b, mask)}
+                         for label, y, mask, a, b in variants])
+
+
+def main():
     df = pd.read_parquet(cfg.ANALYSIS_SAMPLE_PARQUET)
+    d0 = prepare(df)
+    data = {how: impute(d0, how) for how in MISSING}
 
-    # 1. Nested Models: Model 1, Model 2 (Primary), Model 3
-    print("1. Fitting nested logistic regression models...")
-    res_m1, _, _ = fit_logistic_model(df, cfg.M0_FEATURES + cfg.PRIMARY_EXPOSURES)
-    res_m2, X_m2, _ = fit_logistic_model(df, cfg.M2_FEATURES + cfg.PRIMARY_EXPOSURES)
-    res_m3, _, _ = fit_logistic_model(df, cfg.M2_FEATURES + ["lipid_med"] + cfg.PRIMARY_EXPOSURES)
-    res_ref_m2, _, _ = fit_logistic_model(df, cfg.M2_FEATURES)
+    res = main_models(data)
+    res.to_csv(cfg.TABLES_DIR / "assoc_odds_ratios.csv", index=False)
+    show = res[(~res["adjusted_for_other_marker"])]
+    print(show[["marker", "model", "analysis", "n", "or", "lo", "hi", "p"]].round(3).to_string(index=False))
 
-    or_m1 = extract_odds_ratios(res_m1, cfg.PRIMARY_EXPOSURES)
-    or_m2 = extract_odds_ratios(res_m2, cfg.PRIMARY_EXPOSURES)
-    or_m3 = extract_odds_ratios(res_m3, cfg.PRIMARY_EXPOSURES)
-
-    assoc_summary = pd.DataFrame([
-        {
-            "Model": "Model 1 (Age, Sex)",
-            "NLR_OR": or_m1.loc["log_nlr", "odds_ratio"],
-            "NLR_CI": f"{or_m1.loc['log_nlr', 'ci_lower']:.2f}–{or_m1.loc['log_nlr', 'ci_upper']:.2f}",
-            "NLR_p": or_m1.loc["log_nlr", "p_value"],
-            "hsCRP_OR": or_m1.loc["log_crp", "odds_ratio"],
-            "hsCRP_CI": f"{or_m1.loc['log_crp', 'ci_lower']:.2f}–{or_m1.loc['log_crp', 'ci_upper']:.2f}",
-            "hsCRP_p": or_m1.loc["log_crp", "p_value"],
-        },
-        {
-            "Model": "Model 2 (Primary: + Established Factors)",
-            "NLR_OR": or_m2.loc["log_nlr", "odds_ratio"],
-            "NLR_CI": f"{or_m2.loc['log_nlr', 'ci_lower']:.2f}–{or_m2.loc['log_nlr', 'ci_upper']:.2f}",
-            "NLR_p": or_m2.loc["log_nlr", "p_value"],
-            "hsCRP_OR": or_m2.loc["log_crp", "odds_ratio"],
-            "hsCRP_CI": f"{or_m2.loc['log_crp', 'ci_lower']:.2f}–{or_m2.loc['log_crp', 'ci_upper']:.2f}",
-            "hsCRP_p": or_m2.loc["log_crp", "p_value"],
-        },
-        {
-            "Model": "Model 3 (Sensitivity: + Statins)",
-            "NLR_OR": or_m3.loc["log_nlr", "odds_ratio"],
-            "NLR_CI": f"{or_m3.loc['log_nlr', 'ci_lower']:.2f}–{or_m3.loc['log_nlr', 'ci_upper']:.2f}",
-            "NLR_p": or_m3.loc["log_nlr", "p_value"],
-            "hsCRP_OR": or_m3.loc["log_crp", "odds_ratio"],
-            "hsCRP_CI": f"{or_m3.loc['log_crp', 'ci_lower']:.2f}–{or_m3.loc['log_crp', 'ci_upper']:.2f}",
-            "hsCRP_p": or_m3.loc["log_crp", "p_value"],
-        },
-    ])
-    assoc_path = cfg.TABLES_DIR / "assoc_odds_ratios.csv"
-    assoc_summary.to_csv(assoc_path, index=False)
-    print("\nOdds Ratios per 1 SD of Log-Transformed Markers:")
-    print(assoc_summary.to_string(index=False))
-
-    # Evaluate Hypotheses
-    nlr_p = or_m2.loc["log_nlr", "p_value"]
-    crp_p = or_m2.loc["log_crp", "p_value"]
-    print(f"\nH1a (NLR): {'SUPPORTED' if nlr_p < cfg.BONFERRONI_ALPHA_PRIMARY else 'NOT SUPPORTED'} (p = {nlr_p:.4f} vs. alpha = {cfg.BONFERRONI_ALPHA_PRIMARY})")
-    print(f"H1b (hs-CRP): {'SUPPORTED' if crp_p < cfg.BONFERRONI_ALPHA_PRIMARY else 'NOT SUPPORTED'} (p = {crp_p:.4f} vs. alpha = {cfg.BONFERRONI_ALPHA_PRIMARY})")
-
-    # 2. Likelihood Ratio Tests
-    print("\n2. Likelihood Ratio Tests (Testing Added Statistical Information beyond Model 2)...")
-    res_m2_nlr, _, _ = fit_logistic_model(df, cfg.M2_FEATURES + ["log_nlr"])
-    res_m2_crp, _, _ = fit_logistic_model(df, cfg.M2_FEATURES + ["log_crp"])
-
-    lr_nlr = likelihood_ratio_test(res_ref_m2, res_m2_nlr)
-    lr_crp = likelihood_ratio_test(res_ref_m2, res_m2_crp)
-    lr_both = likelihood_ratio_test(res_ref_m2, res_m2)
-
-    lr_df = pd.DataFrame([
-        {"Added_Predictors": "NLR alone", "Chi2": lr_nlr["lr_stat"], "df": lr_nlr["df"], "p_value": lr_nlr["p_value"]},
-        {"Added_Predictors": "hs-CRP alone", "Chi2": lr_crp["lr_stat"], "df": lr_crp["df"], "p_value": lr_crp["p_value"]},
-        {"Added_Predictors": "Both Markers (NLR + hs-CRP)", "Chi2": lr_both["lr_stat"], "df": lr_both["df"], "p_value": lr_both["p_value"]},
-    ])
-    lr_path = cfg.TABLES_DIR / "assoc_lr_test.csv"
-    lr_df.to_csv(lr_path, index=False)
-    print(lr_df.to_string(index=False))
-
-    # 3. Multicollinearity Assessment (VIF)
-    print("\n3. Assessing Multicollinearity in Model 2 (VIF)...")
-    vif_df = compute_vif_dataframe(X_m2)
-    vif_path = cfg.TABLES_DIR / "assoc_vif.csv"
-    vif_df.to_csv(vif_path, index=False)
-    print(f"Max VIF: {vif_df['vif'].max():.2f} (all predictors < 2.2, zero collinearity concerns).")
-
-    # 4. Confounder Decomposition of hs-CRP Association
-    print("\n4. Stepwise Confounder Decomposition of hs-CRP Association...")
-    decomp_rows = []
-    # Base model (Model 1)
-    decomp_rows.append({
-        "Added_Variable": "None (Model 1 Base)",
-        "NLR_OR": or_m1.loc["log_nlr", "odds_ratio"],
-        "hsCRP_OR": or_m1.loc["log_crp", "odds_ratio"],
-    })
-    for covar in ["bmi", "smoking", "diabetes", "hypertension", "total_chol", "lipid_med"]:
-        res_sub, _, _ = fit_logistic_model(df, cfg.M0_FEATURES + [covar] + cfg.PRIMARY_EXPOSURES)
-        or_sub = extract_odds_ratios(res_sub, cfg.PRIMARY_EXPOSURES)
-        decomp_rows.append({
-            "Added_Variable": f"+ {covar}",
-            "NLR_OR": or_sub.loc["log_nlr", "odds_ratio"],
-            "hsCRP_OR": or_sub.loc["log_crp", "odds_ratio"],
-        })
-    decomp_df = pd.DataFrame(decomp_rows)
-    decomp_path = cfg.TABLES_DIR / "assoc_decomposition.csv"
-    decomp_df.to_csv(decomp_path, index=False)
-    print(decomp_df.to_string(index=False))
-    print("Insight: Adding BMI alone completely collapses the hs-CRP association (OR 1.11 -> 1.00)!")
-
-    # 5. Full Coefficient Table (Model 2 + Both Markers)
-    full_or_df = extract_odds_ratios(res_m2)
-    full_path = cfg.TABLES_DIR / "assoc_full_model.csv"
-    full_or_df.to_csv(full_path)
-    print(f"\nFull multivariable coefficient table saved to: {full_path}")
-
-    elapsed = time.time() - start_time
-    print(f"\nStep 06 completed successfully in {elapsed:.1f} seconds.\n")
+    d = data["median"]
+    for name, table in (("assoc_full_model", full_model(d)), ("assoc_lr_test", lr_tests(d)),
+                        ("assoc_nonlinearity", nonlinearity(d)), ("assoc_vif", vif_table(d)),
+                        ("assoc_decomposition", decomposition(d)), ("assoc_interactions", interactions(d)),
+                        ("sensitivity_association", sensitivity_association(data)),
+                        ("sensitivity_prediction", sensitivity_prediction(df))):
+        table.to_csv(cfg.TABLES_DIR / f"{name}.csv", index=False)
+        print(f"\n{name}:\n" + table.round(4).to_string(index=False))
 
 
 if __name__ == "__main__":
-    run_association_analysis()
+    main()

@@ -20,7 +20,7 @@ Stand: 13.11.2026, Nachmittag.
   - H1a bestätigt: OR 1.20 (1.07–1.34), p = 0.002.
   - H1b nicht bestätigt: OR 0.96 (0.84–1.08), p = 0.48; BMI erklärt den groben Zusammenhang.
   - H1c nicht bestätigt: ΔAUC +0.0013 (−0.0009 bis +0.0035).
-  - Gleiche Schlussfolgerungen in allen 13 Sensitivitätsanalysen.
+  - Gleiche Schlussfolgerungen in allen fünf Sensitivitätsanalysen (16.11.2026 von 13 auf 5 gekürzt: Complete Cases, + Statine, ohne CRP > 10, Survey-Gewichte, Outcome mit Angina).
 - **Umstellung auf Kursmethoden:**
   - Fehlende Werte: die drei W2-Optionen (Deletion / Spalte löschen / Median + Indikator) statt iterativer und multipler Imputation.
   - Klassen-Ungleichgewicht: SMOTE (W9) ergänzt.
@@ -29,7 +29,7 @@ Stand: 13.11.2026, Nachmittag.
   - Stichprobengrösse: «10 Fälle pro Parameter» statt Riley.
   - Modell 2 ist das Hauptmodell (Modell 3 mit Lipidsenkern nur als Sensitivität).
 - **Alle Kritikpunkte aus dem «Professoren-Gutachten» behoben:**
-  - Fragestellung und Hypothesen; Behandlungs-Leck beim Cholesterin (AUC ohne Cholesterin 0.849 statt 0.861); LR-Test statt DeLong.
+  - Fragestellung und Hypothesen; Behandlungs-Leck beim Cholesterin (Modell 3 und Statine als Prädiktor als Sensitivität); LR-Test statt DeLong.
   - Nachträgliche Schritte gekennzeichnet; E2 als Prüfung statt Entscheidung.
   - Bericht mit eigenem Literaturverzeichnis, durchnummerierten Abbildungen und einem Abstract von 226 Wörtern.
   - Formulierungen («sample», «adjusted»); vollständige Koeffiziententabelle; fixierte Versionen (`requirements.txt`).

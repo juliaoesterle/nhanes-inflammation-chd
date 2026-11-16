@@ -1,89 +1,62 @@
 """
-Central Configuration for the NHANES CHD & Inflammation Project (newagy).
+Settings of the newagy analysis: paths, feature sets and the decision rules.
 
-This module defines all experimental settings, feature subsets, paths,
-and pre-specified decision rules before any modeling is conducted.
-Following the ETH Foundations of Data Science curriculum (W1-W9), all criteria
-are written down beforehand to avoid data snooping ('garden of forking paths').
+The decision rules are written down here before the experiments are run, so the
+result of an experiment cannot be re-interpreted afterwards.
 """
 
 from __future__ import annotations
+
 from pathlib import Path
 
-# =============================================================================
-# 1. Project Directory Structure & Paths
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Paths
+# -----------------------------------------------------------------------------
 HERE = Path(__file__).resolve().parent
 PROJECT_ROOT = HERE.parent
 
-# Raw data sources (course dataset)
 RAW_DATA_PATH = PROJECT_ROOT / "data" / "raw" / "nhanes_raw.csv"
 METADATA_PATH = PROJECT_ROOT / "data" / "raw" / "nhanes_metadata.csv"
 
-# Local directories
-DATA_DIR = HERE / "data"
+DATA_DIR = HERE / "data"                 # participant-level files, git-ignored
 RESULTS_DIR = HERE / "results"
 TABLES_DIR = RESULTS_DIR / "tables"
-FIGURES_DIR = RESULTS_DIR / "figures"
 CV_DIR = RESULTS_DIR / "cv"
-LOGS_DIR = RESULTS_DIR / "logs"
 DECISIONS_DIR = RESULTS_DIR / "decisions"
 
-for directory in (DATA_DIR, RESULTS_DIR, TABLES_DIR, FIGURES_DIR, CV_DIR, LOGS_DIR, DECISIONS_DIR):
+for directory in (DATA_DIR, TABLES_DIR, CV_DIR, DECISIONS_DIR):
     directory.mkdir(parents=True, exist_ok=True)
 
-# Parquet file paths
 ANALYSIS_SAMPLE_PARQUET = DATA_DIR / "analysis_sample.parquet"
 ADULTS_OUTCOME_PARQUET = DATA_DIR / "adults_with_outcome.parquet"
 CLEAN_RAW_PARQUET = DATA_DIR / "clean_raw_analysis_sample.parquet"
 
-# =============================================================================
-# 2. Computational Parameters & Reproducibility
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Reproducibility and cross-validation
+# -----------------------------------------------------------------------------
 RANDOM_SEED = 42
 N_JOBS = 18
 
-# Nested Cross-Validation structure
 N_OUTER_SPLITS = 5
-N_OUTER_REPEATS = 3
-N_OUTER_FOLDS = N_OUTER_SPLITS * N_OUTER_REPEATS  # 15 folds total
+N_OUTER_REPEATS = 3          # 15 outer folds for the main model comparison
 N_INNER_SPLITS = 5
+N_DESIGN_REPEATS = 2         # 10 outer folds for the cheaper design experiments E1-E3
+TEST_TRAIN_RATIO = 1 / (N_OUTER_SPLITS - 1)   # n_test / n_train for the Nadeau-Bengio correction
+TUNING_SCORING = "neg_log_loss"
 
-# =============================================================================
-# 3. Cohort & Variable Definitions
-# =============================================================================
-MIN_AGE = 20  # MCQ160 questions administered only to adults >= 20 years
-
-# Primary outcome: Self-reported doctor-diagnosed CHD or MI
+# -----------------------------------------------------------------------------
+# Outcome, markers and feature sets
+# -----------------------------------------------------------------------------
+MIN_AGE = 20                 # the MCQ160 heart questions are only asked from age 20
 PRIMARY_OUTCOME = "chd_mi"
-
-# Alternative outcome definitions for sensitivity checks
-SENSITIVITY_OUTCOMES = {
-    "chd_mi_angina": "CHD, MI, or Angina Pectoris (broader composite)",
-    "mi_strict": "Myocardial Infarction only (isolated)",
-    "chd_strict": "Coronary Heart Disease only (isolated)",
-}
-
-# Key Exposure Markers
 PRIMARY_EXPOSURES = ["log_nlr", "log_crp"]
 
-# Core Risk Factor Sets (Nested Modeling Strategy)
-# M0: Basic Demographics
 M0_FEATURES = ["age", "male"]
-
-# M1: Sociodemographics & Body Mass
 M1_FEATURES = M0_FEATURES + ["race_eth", "income_pir", "bmi"]
-
-# M2: Established Clinical Risk Factors (PCE / SCORE2 / PREVENT / QRISK3 guideline factors)
-# Note: Statins and anti-hypertensive drugs excluded from baseline to avoid post-treatment bias
-M2_FEATURES = M1_FEATURES + [
-    "smoking", "diabetes", "hypertension", "total_chol", "hdl_chol", "egfr"
-]
-
-# M3: Established Clinical Risk Factors + Both Inflammatory Markers
+# established risk factors of PCE / SCORE2 / PREVENT, without treatment variables
+M2_FEATURES = M1_FEATURES + ["smoking", "diabetes", "hypertension", "total_chol", "hdl_chol", "egfr"]
 M3_FEATURES = M2_FEATURES + PRIMARY_EXPOSURES
 
-# Predefined Feature Subsets for Comparative ML Experiments
 FEATURE_SETS = {
     "M0": M0_FEATURES,
     "M1": M1_FEATURES,
@@ -91,15 +64,13 @@ FEATURE_SETS = {
     "M2+NLR": M2_FEATURES + ["log_nlr"],
     "M2+CRP": M2_FEATURES + ["log_crp"],
     "M3": M3_FEATURES,
-    # Marker-only benchmarks (evaluates standalone signal without covariates)
-    "M4": PRIMARY_EXPOSURES,
+    "M4": PRIMARY_EXPOSURES,          # markers alone, no risk factors
     "M4-NLR": ["log_nlr"],
     "M4-CRP": ["log_crp"],
 }
 
-# Candidate pool for Hybrid Feature Selection (S3)
-# Selected based on domain literature (Life's Essential 8, INTERHEART, laboratory markers)
-# strictly excluding treatment and diagnostic consequences (leakage prevention).
+# hybrid pool (S3 in E2): cardiovascular risk domains, <= 15 % missing,
+# no treatment, health-care use or other heart diagnosis (leakage screen)
 S3_CANDIDATE_POOL = M3_FEATURES + [
     "education", "waist", "sbp", "dbp", "pulse", "told_high_chol",
     "log_tg", "glucose", "uric_acid", "albumin", "log_ggt", "log_alt",
@@ -108,26 +79,39 @@ S3_CANDIDATE_POOL = M3_FEATURES + [
     "sleep_hours", "sedentary_min", "log_activity", "log_drinks_wk", "phq9",
 ]
 
-# Variable Type Specifications for Scikit-Learn Preprocessing Pipelines
 CATEGORICAL_VARS = ["race_eth", "smoking"]
-BINARY_VARS = ["male", "diabetes", "hypertension", "told_high_chol"]
-INDICATOR_VARS = ["income_pir"]  # Covariates with dedicated missingness indicators
+BINARY_VARS = ["male", "diabetes", "hypertension", "told_high_chol", "lipid_med"]
+INDICATOR_VARS = ["income_pir"]       # gets a 0/1 "missing" column
 
-# Continuous variables derived dynamically
-EXCLUDE_FROM_CONTINUOUS = set(CATEGORICAL_VARS + BINARY_VARS + [PRIMARY_OUTCOME, "SEQN"])
+ALGORITHMS = ["LR", "EN", "DT", "kNN", "SVM", "RF"]
 
-# =============================================================================
-# 4. Pre-specified Decision Rules & Hypotheses
-# =============================================================================
-# Primary Hypotheses:
-# H1a: NLR is associated with CHD/MI after adjustment (alpha = 0.025, Bonferroni)
-# H1b: hs-CRP is associated with CHD/MI after adjustment (alpha = 0.025, Bonferroni)
-# H1c: NLR + hs-CRP improve discrimination beyond M2 (Delta-AUC >= 0.01 threshold)
+# -----------------------------------------------------------------------------
+# Hypotheses and pre-specified decision rules
+# -----------------------------------------------------------------------------
+# H1a / H1b: NLR / hs-CRP associated with CHD/MI after adjustment (Bonferroni: 0.05 / 2)
+# H1c: NLR + hs-CRP improve the discrimination beyond M2 (relevant gain: dAUC >= 0.01)
+BONFERRONI_ALPHA_PRIMARY = 0.05 / 2.0
+CLINICALLY_RELEVANT_DELTA_AUC = 0.010
 
-BONFERRONI_ALPHA_PRIMARY = 0.05 / 2.0  # 0.025 for two co-primary exposure tests
-
-# Minimum threshold for meaningful empirical difference in design experiments
+# E1: keep median + indicator unless another option is > 0.005 AUC better on the same people
+MISSING_OPTIONS = ["complete_case", "drop_income", "median"]
 DELTA_AUC_EXPERIMENT_RULE = 0.005
 
-# Minimum clinically meaningful improvement in discrimination
-CLINICALLY_RELEVANT_DELTA_AUC = 0.010
+# E3: use a correction only if it raises the AUC by > 0.005 and the Brier score is not worse
+IMBALANCE_OPTIONS = ["none", "class_weight", "oversample", "undersample", "smote"]
+RULE_WEIGHT_MIN_AUC_GAIN = 0.005
+# the RBF-SVM collapses to "everybody healthy" without class weights; its probabilities
+# come from Platt scaling afterwards, so the weights do not distort the calibration
+SVM_CLASS_WEIGHT = "balanced"
+
+# final model: the simplest one (LR) unless another algorithm is significantly better
+ALPHA = 0.05
+
+# five sensitivity analyses (06), each tied to one of our choices
+SENSITIVITY_ANALYSES = [
+    "Complete cases (listwise deletion)",
+    "Model 3 (+ lipid-lowering drugs)",
+    "Exclude hs-CRP > 10 mg/L",
+    "Survey-weighted (US population)",
+    "Outcome incl. angina",
+]

@@ -4,3 +4,5 @@ data/
 results/cv/*.parquet
 __pycache__/
 *.pyc
+# run logs (timing / joblib noise)
+results/logs/

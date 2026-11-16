@@ -1,0 +1,14 @@
+,LR,EN,DT,kNN,SVM,RF
+age,1,1,1,1,1,1
+male,5,5,8,8,6,8
+race_eth,6,7,13,12,10,10
+income_pir,11,10,11,9,9,9
+bmi,10,11,9,11,12,11
+smoking,4,4,12,5,4,6
+diabetes,7,6,3,7,5,4
+hypertension,3,3,4,3,3,3
+total_chol,2,2,2,2,2,2
+hdl_chol,12,12,10,10,11,12
+egfr,8,8,5,4,7,5
+log_nlr,9,9,6,6,8,7
+log_crp,13,13,7,13,13,13

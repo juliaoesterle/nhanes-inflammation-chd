@@ -157,7 +157,7 @@ Der erste Entwurf hat die Daten einmal zufällig in 80 % «Lernen» und 20 % «P
 
 Herzkranke haben in unseren Daten **tieferes** Cholesterin als Gesunde (Median 152 statt 187 mg/dL). Das heisst nicht, dass Cholesterin schützt: **78 % der Herzkranken nehmen Cholesterinsenker** (Statine), aber nur 25 % der übrigen. Die Diagnose führt zur Behandlung, die Behandlung senkt den Wert. Statine senken übrigens auch hs-CRP.
 
-Wir haben drei Möglichkeiten verglichen, damit umzugehen (Behandlung ignorieren, Behandlung als Merkmal ins Modell nehmen, nur Unbehandelte analysieren) und alle drei durchgerechnet. Der fehlende Zusatznutzen der Blutwerte zeigt sich in allen drei Varianten. Der Zusammenhang der NLR mit der Krankheit ist bei den Unbehandelten gleich gross (Odds Ratio 1.21), wegen nur 96 Fällen aber statistisch unsicher.
+Im Hauptmodell lassen wir die Behandlung weg. Zur Kontrolle haben wir sie einmal zusätzlich ins Modell genommen. Der Zusammenhang der NLR bleibt dann gleich (Odds Ratio 1.21 statt 1.20), und der fehlende Zusatznutzen der Blutwerte für die Erkennung zeigt sich ebenfalls.
 
 ![Statin-Paradox](../results/figures/fig03_statin_paradox.png)
 
@@ -238,7 +238,7 @@ Hier unterscheiden sich die beiden Werte deutlich:
 
 Beide Zahlen stammen aus dem Hauptmodell (alle etablierten Risikofaktoren berücksichtigt). Weil wir zwei Hypothesen gleichzeitig prüfen, muss jeder p-Wert unter 0.025 liegen (Bonferroni). Bei NLR ist p = 0.002, bei hs-CRP p = 0.48.
 
-Der NLR-Zusammenhang ist robust: Er bleibt bestehen, wenn man nur Herzinfarkte zählt, Angina pectoris dazunimmt, extreme Werte entfernt, nur 40–79-Jährige betrachtet oder die Stichprobe nach US-Bevölkerung gewichtet (Abbildung `fig20_sensitivity`). Nur bei den Unbehandelten (96 Fälle) ist er zwar gleich gross, aber nicht mehr gesichert. hs-CRP zeigt in keiner einzigen Variante einen Zusammenhang.
+Der NLR-Zusammenhang ist robust: Er bleibt bestehen, wenn man nur vollständige Fälle nimmt, die Statine berücksichtigt, sehr hohe CRP-Werte (über 10 mg/L, wohl akute Infekte) weglässt, die Stichprobe nach US-Bevölkerung gewichtet oder Angina pectoris zur Krankheit dazunimmt (Abbildung `fig20_sensitivity`). hs-CRP zeigt in keiner dieser fünf Varianten einen Zusammenhang.
 
 ![Zusammenhang der Blutwerte mit der Herzkrankheit](../results/figures/fig18_odds_ratios.png)
 
@@ -286,7 +286,7 @@ Eine ehrliche Arbeit benennt ihre Schwächen. Die wichtigsten:
 | Wenige Verfahren | Alle sechs Verfahren des Kurses, mit gleichem Prüfverfahren |
 | Nur Unterscheidung gemessen | Zusätzlich Kalibrierung, klinischer Nutzen, Schwellenwerte |
 | Behandlung nicht beachtet | Statin-Paradox erkannt; drei Varianten gerechnet |
-| Ergebnisse nicht hinterfragt | Rund zehn Sensitivitätsanalysen; Grenzen offen benannt |
+| Ergebnisse nicht hinterfragt | Fünf Sensitivitätsanalysen, je eine pro wichtige Entscheidung; Grenzen offen benannt |
 
 ---
 

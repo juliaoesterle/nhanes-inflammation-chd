@@ -19,10 +19,11 @@ Method (course W7): logistic regression (statsmodels). Result per marker: odds r
   Effect modification  marker x lipid-lowering drugs, marker x sex
   Collinearity         VIF (course W7)
   Decomposition        Model 1 + one covariate group at a time (exploratory, post hoc)
-  Sensitivity          outcome definitions, outlier rules (course W2), untreated only,
-                       age 40-79, NLR from absolute counts, survey weights (course W3:
-                       representativeness)
+  Sensitivity          five checks: complete cases, + lipid-lowering drugs, exclude
+                       hs-CRP > 10 mg/L (acute inflammation), survey weights (course W3:
+                       representativeness), outcome incl. angina
   Prediction check     logistic-regression dAUC M2 -> M3 for the same variants
+                       (survey weights are not used for the AUC)
 """
 from __future__ import annotations
 
@@ -74,18 +75,21 @@ def prepare(df):
     for level in ("former", "current"):
         d[f"smk_{level}"] = np.where(d.smoking.isna(), np.nan, (d.smoking == level).astype(float))
     d["income_missing"] = d.income_pir.isna().astype(float)
-    for m, col in (("nlr", "log_nlr"), ("crp", "log_crp"), ("nlr_counts", "log_nlr_counts")):
+    for m, col in (("nlr", "log_nlr"), ("crp", "log_crp")):
         d[f"{m}_sd"] = (d[col] - d[col].mean()) / d[col].std()
     return d
 
 
 def impute(d, how):
-    """complete_case: drop people with any gap; otherwise fill gaps with the median
-    (continuous) or the most frequent value (0/1). 'median' keeps income and its
-    missing indicator; 'drop_income' simply does not use the income column."""
+    """complete_case: drop people with a gap in any Model-2 covariate (the same 4,563
+    people as in E1; for Model 3 the few without drug information are dropped in fit());
+    otherwise fill gaps with the median (continuous) or the most frequent value (0/1).
+    'median' keeps income and its missing indicator; 'drop_income' simply does not use
+    the income column."""
     d = d.copy()
     if how == "complete_case":
-        return d[d[CONT + BIN].notna().all(axis=1)].copy()
+        model2_cols = [c for c in CONT + BIN if c != "lipid_med"]
+        return d[d[model2_cols].notna().all(axis=1)].copy()
     for c in CONT:
         d[c] = d[c].fillna(d[c].median())
     for c in BIN:
@@ -105,8 +109,12 @@ def terms_for(model, how="median"):
 # =============================================================================
 # Fitting: OR per SD with 95% CI and Wald p (statsmodels summary, course W7)
 # =============================================================================
+def used_rows(d, y, terms):
+    return d.dropna(subset=[y] + list(terms))
+
+
 def fit(d, y, terms, weighted=False):
-    dd = d[d[y].notna()]
+    dd = used_rows(d, y, terms)
     X = sm.add_constant(dd[terms].astype(float), has_constant="add")
     if weighted:   # NHANES weights + design (strata, PSUs) -> wider, honest CIs
         beta, cov, dfree = svy_logit(dd[y], X, dd.weight_mec, dd.strata, dd.psu)
@@ -135,8 +143,9 @@ def main_models(data):
                         "adjusted_for_other_marker": marker == "both", "model": mname}
                 for how, lab in MISSING.items():
                     d = data[how]
-                    rows.append({**base, "analysis": lab, "n": int(d.chd_mi.notna().sum()),
-                                 **odds_ratio(d, "chd_mi", exp + terms_for(mname, how), coef)})
+                    terms = exp + terms_for(mname, how)
+                    rows.append({**base, "analysis": lab, "n": len(used_rows(d, "chd_mi", terms)),
+                                 **odds_ratio(d, "chd_mi", terms, coef)})
                 rows.append({**base, "analysis": "Survey-weighted", "n": len(data["median"]),
                              **odds_ratio(data["median"], "chd_mi", exp + terms_for(mname), coef,
                                           weighted=True)})
@@ -265,39 +274,24 @@ def decomposition(d):
 # =============================================================================
 # Sensitivity analyses: do the conclusions depend on our choices?
 # =============================================================================
-def iqr_ok(v):
-    """Course W2 outlier rule: inside [Q1 - 1.5 IQR, Q3 + 1.5 IQR]."""
-    q1, q3 = np.quantile(v, [0.25, 0.75])
-    return (v >= q1 - cfg.IQR_FACTOR * (q3 - q1)) & (v <= q3 + cfg.IQR_FACTOR * (q3 - q1))
-
-
 def sensitivity_association(data):
+    """Primary Model 2 plus five pre-specified checks of our choices."""
     d = data["median"]
     base = terms_for("Model 2")
     variants = [
-        ("Primary (Model 2, median + indicator)", d, "chd_mi", base, "nlr_sd", False),
+        ("Primary (Model 2, median + indicator)", d, "chd_mi", base, False),
         ("Complete cases (listwise deletion)", data["complete_case"], "chd_mi",
-         terms_for("Model 2", "complete_case"), "nlr_sd", False),
-        ("Income column dropped", data["drop_income"], "chd_mi",
-         terms_for("Model 2", "drop_income"), "nlr_sd", False),
-        ("Model 3 (+ lipid-lowering drugs)", d, "chd_mi", terms_for("Model 3"), "nlr_sd", False),
-        ("Survey-weighted (US population)", d, "chd_mi", base, "nlr_sd", True),
-        ("Outcome incl. angina", d, "chd_mi_angina", base, "nlr_sd", False),
-        ("Outcome MI only", d, "mi_strict", base, "nlr_sd", False),
-        ("Outcome CHD only", d, "chd_strict", base, "nlr_sd", False),
-        ("Exclude hs-CRP > 10 mg/L", d[d.crp <= 10], "chd_mi", base, "nlr_sd", False),
-        ("Exclude IQR outliers of log markers", d[iqr_ok(d.log_nlr) & iqr_ok(d.log_crp)],
-         "chd_mi", base, "nlr_sd", False),
-        ("Untreated only (no lipid-lowering drug)", d[d.lipid_med == 0], "chd_mi", base, "nlr_sd", False),
-        ("Age 40-79 (risk-score range)", d[(d.age >= 40) & (d.age <= 79)], "chd_mi", base,
-         "nlr_sd", False),
-        ("NLR from absolute counts", d, "chd_mi", base, "nlr_counts_sd", False),
+         terms_for("Model 2", "complete_case"), False),
+        ("Model 3 (+ lipid-lowering drugs)", d, "chd_mi", terms_for("Model 3"), False),
+        ("Exclude hs-CRP > 10 mg/L", d[d.crp <= 10], "chd_mi", base, False),
+        ("Survey-weighted (US population)", d, "chd_mi", base, True),
+        ("Outcome incl. angina", d, "chd_mi_angina", base, False),
     ]
     rows = []
-    for lab, dd, y, terms, nlr_coef, weighted in variants:
-        dd = dd[dd[y].notna()]
+    for lab, dd, y, terms, weighted in variants:
+        dd = used_rows(dd, y, terms)
         row = {"analysis": lab, "n": len(dd), "cases": int(dd[y].sum())}
-        for coef, name in ((nlr_coef, "NLR"), ("crp_sd", "hs-CRP")):
+        for coef, name in (("nlr_sd", "NLR"), ("crp_sd", "hs-CRP")):
             r = odds_ratio(dd, y, [coef] + terms, coef, weighted=weighted)
             row.update({f"{name}_or": r["or"], f"{name}_lo": r["lo"], f"{name}_hi": r["hi"],
                         f"{name}_p": r["p"]})
@@ -328,21 +322,14 @@ def cv_delta(df, y_col, m2, m3, rows_mask=None):
 
 
 def sensitivity_prediction(df):
+    """Same checks for the discrimination question (survey weights do not apply to the AUC)."""
     m2, m3 = cfg.M2, cfg.M3
-    lq = (lambda v: iqr_ok(v.to_numpy()))
-    no_chol = [f for f in m2 if f not in ("total_chol", "hdl_chol")]
     variants = [
         ("Primary (CHD or MI)", "chd_mi", None, m2, m3),
-        ("Outcome incl. angina", "chd_mi_angina", None, m2, m3),
-        ("Outcome MI only", "mi_strict", None, m2, m3),
-        ("Outcome CHD only", "chd_strict", None, m2, m3),
+        ("Complete cases (listwise deletion)", "chd_mi", df.complete_case, m2, m3),
+        ("+ lipid-lowering drugs as predictor", "chd_mi", None, m2 + ["lipid_med"], m3 + ["lipid_med"]),
         ("Exclude hs-CRP > 10 mg/L", "chd_mi", df.crp <= 10, m2, m3),
-        ("Exclude IQR outliers of log markers", "chd_mi", lq(df.log_nlr) & lq(df.log_crp), m2, m3),
-        ("Untreated only", "chd_mi", df.lipid_med == 0, m2, m3),
-        ("Age 40-79", "chd_mi", (df.age >= 40) & (df.age <= 79), m2, m3),
-        ("Treatment as predictor (+ lipid & BP drugs)", "chd_mi", None,
-         m2 + cfg.TREATMENT_VARS, m3 + cfg.TREATMENT_VARS),
-        ("Without cholesterol (treatment-distorted)", "chd_mi", None, no_chol, no_chol + cfg.MARKERS),
+        ("Outcome incl. angina", "chd_mi_angina", None, m2, m3),
     ]
     return pd.DataFrame([{"analysis": lab, **cv_delta(df, y, a, b, mask)}
                          for lab, y, mask, a, b in variants])

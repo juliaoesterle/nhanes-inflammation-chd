@@ -1,4 +1,4 @@
-Strategy,Test_AUC,Stability,Label_Leakage
-S1: Literature-Guided Set (M3),0.862,1.0,None
-S2: Naive Lasso (342 raw features),0.923,0.54,"Severe (Stents, Aspirin advice, Statins)"
-S3: Hybrid Domain Screen + Lasso,0.87,0.74,Controlled
+strategy,auc_mean,auc_lo,auc_hi,brier_mean,n_selected_mean,jaccard_stability,share_leakage_in_top20
+S1 literature (M3),0.8622037616217293,0.8455035315947188,0.8789039916487398,0.05761998152172411,13.0,1.0,
+S2 all raw columns + lasso,0.9234273716271865,0.9030644263492511,0.9437903169051218,0.043578032778143136,114.2,0.47335879630721694,0.35
+S3 hybrid pool + lasso,0.8699070484358019,0.848244958630409,0.8915691382411948,0.05661621468045587,34.9,0.856830001391405,

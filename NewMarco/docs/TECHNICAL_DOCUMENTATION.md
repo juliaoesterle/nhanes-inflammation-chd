@@ -25,7 +25,7 @@
 - **H1a supported:** NLR OR 1.20 per SD of log NLR (95% CI 1.07–1.34, p = 0.002; likelihood-ratio p = 0.002).
 - **H1b not supported:** hs-CRP OR 0.96 (0.84–1.08, p = 0.48). The crude hs-CRP association is accounted for by BMI.
 - **H1c not supported:** logistic regression AUC 0.861 with established risk factors, +0.0013 (−0.0009 to +0.0035) with both markers. No significant gain for any of the six algorithms, and none beats logistic regression.
-- **Robustness:** all conclusions hold in 13 sensitivity analyses.
+- **Robustness:** all conclusions hold in five sensitivity analyses (complete cases, + lipid-lowering drugs, hs-CRP > 10 mg/L excluded, survey weights, outcome incl. angina).
 
 **Approach.** Every decision compares three (or, where the course taught more, all) options against a rule written in `config.py` before the corresponding experiment. All methods come from the course (W1–W9, tutorials) except for a few small, explained additions (Section 2).
 
@@ -43,8 +43,8 @@
 | 6 | Association only complete-case, no survey design | Three missing-data options and a survey-weighted analysis (D3, D13) |
 | 7 | No sample-size consideration | Events per parameter (D18) |
 | 8 | Inconsistent methods between team members | One pipeline, identical folds for all algorithms |
-| 9 | Outcome definition not discussed | Three outcome variants as sensitivity analyses (D2) |
-| 10 | Statin problem noticed but not handled | Model 2 primary, Model 3 / untreated / no-cholesterol analyses (D4, D17) |
+| 9 | Outcome definition not discussed | Outcome incl. angina as sensitivity analysis (D2) |
+| 10 | Statin problem noticed but not handled | Model 2 primary, Model 3 and lipid drugs as predictor as sensitivity (D4, D17) |
 | 11 | Accuracy reported at threshold 0.5 | Threshold chosen in the training part; accuracy paradox shown (E3, D8) |
 | 12 | Physical-activity units lost in cleaning | Units read separately (`01_prepare_data.py`) |
 | 13 | Selection-bias analysis unchecked | Recomputed with SMDs (`02_descriptives.py`) |
@@ -83,8 +83,8 @@
 
 - **Source:** NHANES 2021–2023 course export (11,933 participants × 763 columns), cleaned by the team's `prepare_data.py` (`clean_raw`). `01_prepare_data.py` builds the analysis variables.
 - **Inclusion:** age ≥ 20 → CHD/MI questions answered → MEC exam attended → NLR and hs-CRP measured: **5,538 adults, 412 cases (7.4%)**. The old complete-case sample had 4,563 adults (342 cases).
-- **Outcome:** MCQ160C (CHD) or MCQ160E (MI). Variants: MI only, CHD only, including angina (MCQ160D).
-- **Markers:** NLR = neutrophils / lymphocytes (percentages; absolute counts as sensitivity); hs-CRP in mg/L; both log-transformed.
+- **Outcome:** MCQ160C (CHD) or MCQ160E (MI). Sensitivity variant: including angina (MCQ160D).
+- **Markers:** NLR = neutrophils / lymphocytes (percentages); hs-CRP in mg/L; both log-transformed.
 - **Covariates:**
   - age, sex, race/ethnicity (6 groups), income-to-poverty ratio, BMI;
   - smoking (never/former/current), diabetes;
@@ -102,9 +102,9 @@ Each record: options → choice → evidence. The empirical rules are written in
 | ID | Decision | Options | Choice | Evidence |
 |---|---|---|---|---|
 | D1 | Question / estimand | prediction of future events · detection as main question · **association primary, detection secondary** | association primary | Cross-sectional data cannot predict; detecting known diagnoses is not meaningful on its own (W1, W4 checklist); aligned with the group README |
-| D2 | Outcome | **CHD or MI** · MI only · incl. angina | CHD or MI | Group definition; variants as sensitivity |
-| D3 | Missing covariates (E1) | listwise deletion · drop income column · **median + missing indicator** | median + indicator | Same test persons: AUC 0.866 / 0.867 / 0.867; keeps 975 people (70 cases); missingness unrelated to outcome (OR 1.03) |
-| D4 | Treatment variables | ignore · **adjust (Model 3) as sensitivity** · untreated only | sensitivity analyses | Treatment is a consequence of the diagnosis (78% vs. 25%) |
+| D2 | Outcome | **CHD or MI** · MI only · incl. angina | CHD or MI | Group definition; incl. angina as sensitivity |
+| D3 | Missing covariates (E1) | listwise deletion · drop income column · **median + missing indicator** | median + indicator | Same test persons: AUC 0.867 / 0.867 / 0.867; keeps 975 people (70 cases); missingness unrelated to outcome (OR 1.03) |
+| D4 | Treatment variables | ignore · **adjust (Model 3) as sensitivity** · untreated only | Model 3 + lipid drugs as predictor as sensitivity | Treatment is a consequence of the diagnosis (78% vs. 25%) |
 | D5 | Reference feature set (E2 checks it) | **literature (risk scores)** · all variables + lasso · knowledge pool + filter / wrapper / lasso | literature | Fixed by the research question; naive lasso AUC 0.923 through leakage (35% of the top 20 variables); hybrid +0.008, less stable (Jaccard 0.69–0.86) |
 | D6 | Marker scale | raw · **log** · categories | log (+ quartiles shown) | Skewness 4.66 / 7.78 → 0.15 / 0.23; squared term p = 0.67 / 0.79 |
 | D7 | Evaluation (E4) | single split · CV · **repeated nested CV** | repeated nested CV | Same model on 200 splits: AUC 0.80–0.92; ΔAUC < 0 in 29.5% |
@@ -114,7 +114,7 @@ Each record: options → choice → evidence. The empirical rules are written in
 | D11 | Algorithms | **six course classifiers** (LR, penalised LR, tree, kNN, SVM, RF) | all six | W4 checklist: simple before complex |
 | D12 | Final model | **LR unless another is significantly better** | LR | SVM +0.004 (−0.002 to +0.010, Bonferroni p = 0.74); tree −0.058 (p = 0.002) |
 | D13 | Survey weights | unweighted · weighted everywhere · **weighted sensitivity** | unweighted primary | Results describe the sample; survey-weighted ORs agree (NLR 1.18, hs-CRP 0.91) |
-| D14 | Outliers | **keep** · IQR rule · hs-CRP > 10 mg/L | keep | Plausible values; both exclusions as sensitivity |
+| D14 | Outliers | **keep** · IQR rule · hs-CRP > 10 mg/L | keep | Plausible values; exclusion of hs-CRP > 10 mg/L as sensitivity |
 | D15 | Interpretation | impurity importance · LR coefficients · **permutation importance (+ coefficients)** | permutation importance | Works for every algorithm, measured on test folds |
 | D16 | Hypertension | **diagnosed or ≥ 140/90** · continuous BP · 130/80 | diagnosed or ≥ 140/90 | Captures treated hypertension without a treatment variable |
 | D17 | Primary association model | Model 1 · **Model 2** · Model 3 (+ lipid drugs) | Model 2 | Avoids adjusting for a consequence of the outcome; Model 3 as sensitivity |
@@ -161,7 +161,7 @@ Cases are older (median 70 vs. 55 years), more often male (65% vs. 44%), diabeti
 | Model 1 | 1.30 (1.17–1.44), < 0.001 | 1.11 (0.99–1.24), 0.066 |
 | **Model 2 (primary)** | **1.20 (1.07–1.34), 0.002** | **0.96 (0.84–1.08), 0.48** |
 | Model 3 (+ lipid drugs) | 1.21 (1.08–1.36), 0.001 | 0.99 (0.87–1.13), 0.92 |
-| Model 2, complete cases (n = 4,544) | 1.18 (1.04–1.34), 0.010 | 0.96 (0.83–1.11), 0.58 |
+| Model 2, complete cases (n = 4,563) | 1.17 (1.03–1.32), 0.015 | 0.96 (0.83–1.11), 0.57 |
 | Model 2, income dropped | 1.20 (1.08–1.35), 0.001 | 0.97 (0.85–1.10), 0.59 |
 | Model 2, survey-weighted | 1.18 (1.05–1.33), 0.008 | 0.91 (0.81–1.02), 0.10 |
 
@@ -194,8 +194,18 @@ Cases are older (median 70 vs. 55 years), more often male (65% vs. 44%), diabeti
 
 ### 6.4 Sensitivity
 
-- **Association (13 variants):** NLR OR 1.14–1.28, CI excludes 1 in 12 (untreated: 1.21, 0.99–1.49, 96 cases); hs-CRP 0.86–1.00, never significant.
-- **Prediction (10 variants):** no significant gain. Without cholesterol, the reference AUC drops from 0.861 to 0.849 (treatment-distorted cholesterol carries 0.013), and the marker gain stays +0.002.
+Five checks, each tied to one decision (D3 missing data, D4 treatment, D14 outliers, D13 weights, D2 outcome):
+
+| Variant | n (cases) | NLR OR (95% CI), p | hs-CRP OR (95% CI), p | ΔAUC LR (95% CI) |
+|---|---|---|---|---|
+| Primary (Model 2) | 5,538 (412) | 1.20 (1.07–1.34), 0.002 | 0.96 (0.84–1.08), 0.48 | +0.0013 (−0.0009, +0.0035) |
+| Complete cases | 4,563 (342) | 1.17 (1.03–1.32), 0.015 | 0.96 (0.83–1.11), 0.57 | +0.0011 (−0.0013, +0.0034) |
+| Model 3 (+ lipid drugs) / lipid drugs as predictor | 5,538 (412) | 1.21 (1.08–1.36), 0.001 | 0.99 (0.87–1.13), 0.92 | +0.0009 (−0.0014, +0.0032) |
+| hs-CRP > 10 mg/L excluded | 5,132 (381) | 1.19 (1.05–1.34), 0.005 | 0.96 (0.82–1.12), 0.63 | +0.0005 (−0.0020, +0.0031) |
+| Survey-weighted | 5,538 (412) | 1.18 (1.05–1.33), 0.008 | 0.91 (0.81–1.02), 0.10 | – |
+| Outcome incl. angina | 5,533 (457) | 1.14 (1.02–1.27), 0.019 | 0.96 (0.85–1.08), 0.50 | +0.0002 (−0.0022, +0.0026) |
+
+NLR stays significant at α = 0.025 in all variants; hs-CRP is never significant; the marker gain stays below 0.002.
 
 ---
 
@@ -203,9 +213,9 @@ Cases are older (median 70 vs. 55 years), more often male (65% vs. 44%), diabeti
 
 | Threat | Consequence | Handling |
 |---|---|---|
-| Cross-sectional design | reverse causation (infarct raises NLR; statins lower CRP) | framed as association; Model 3, untreated-only |
-| Self-reported outcome | misclassification, undiagnosed disease missing | three outcome variants |
-| Treatment distorts predictors | cholesterol inverse (0.58 per SD), CRP lowered | Model 2 primary; no-cholesterol and treatment-as-predictor variants |
+| Cross-sectional design | reverse causation (infarct raises NLR; statins lower CRP) | framed as association; Model 3 |
+| Self-reported outcome | misclassification, undiagnosed disease missing | outcome incl. angina |
+| Treatment distorts predictors | cholesterol inverse (0.58 per SD), CRP lowered | Model 2 primary; Model 3 and lipid drugs as predictor |
 | Single hs-CRP measurement | regression dilution | exclusion of hs-CRP > 10 mg/L |
 | Exclusion without blood draw | limited generalisability | documented with SMDs |
 | Unweighted primary analysis | describes the sample | survey-weighted sensitivity |

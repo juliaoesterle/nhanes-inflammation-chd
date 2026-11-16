@@ -1,78 +1,50 @@
 """
-Step 01: Cohort Extraction & Data Cleaning.
-
-Executes codebook-based raw data cleaning, derives engineered clinical
-covariates, applies eligibility criteria, and records the participant flow.
+Step 01: cleaning with the codebook, analysis variables, study sample (flowchart).
 """
 
 from __future__ import annotations
 
 import sys
-import time
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
-# Setup import path
-SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = SCRIPT_DIR.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 sys.path.insert(0, str(PROJECT_DIR / "modules"))
 
 import config as cfg
-from data_processing import (
-    build_analysis_variables,
-    clean_raw_data,
-    generate_cohort_and_flowchart,
-)
+from data_processing import build_analysis_variables, clean_raw_data, select_cohort
 
 
-def run_cohort_preparation():
-    start_time = time.time()
-    print("=" * 70)
-    print("STEP 01: COHORT PREPARATION & DATA CLEANING")
-    print("=" * 70)
+def main():
+    raw = pd.read_csv(cfg.RAW_DATA_PATH, dtype=str, low_memory=False)
+    meta = pd.read_csv(cfg.METADATA_PATH)
+    print(f"raw data: {raw.shape[0]} rows, {raw.shape[1]} columns")
 
-    print(f"Reading raw data from: {cfg.RAW_DATA_PATH}")
-    raw_df = pd.read_csv(cfg.RAW_DATA_PATH, low_memory=False)
-    print(f"Raw dataset shape: {raw_df.shape[0]} rows, {raw_df.shape[1]} columns")
+    clean, counts = clean_raw_data(raw, meta)
+    print("cells set to NaN / 0:", counts)
+    pd.DataFrame({"reason": list(counts), "cells": list(counts.values())}).to_csv(
+        cfg.TABLES_DIR / "cleaning_summary.csv", index=False)
 
-    print("Cleaning raw variables against metadata codebook...")
-    clean_df = clean_raw_data(cfg.RAW_DATA_PATH, cfg.METADATA_PATH)
+    variables = build_analysis_variables(clean, raw)
+    sample, adults, flow = select_cohort(variables, cfg.M2_FEATURES)
+    print(flow.to_string(index=False))
+    flow.to_csv(cfg.TABLES_DIR / "flowchart.csv", index=False)
 
-    print("Engineering clinical variables and inflammatory markers...")
-    engineered_df = build_analysis_variables(clean_df, raw_df)
+    cc = sample["complete_case"]
+    print(f"complete on all M2 covariates: {cc.sum()} people, {int(sample.loc[cc, 'chd_mi'].sum())} cases")
 
-    print("Filtering study cohort according to protocol criteria...")
-    analysis_sample, adults_outcome, flowchart_df = generate_cohort_and_flowchart(engineered_df)
+    missing = sample[cfg.S3_CANDIDATE_POOL + ["lipid_med"]].isna().agg(["sum", "mean"]).T
+    missing.columns = ["n_missing", "pct_missing"]
+    missing["pct_missing"] = (100 * missing["pct_missing"]).round(1)
+    missing.sort_values("n_missing", ascending=False).to_csv(cfg.TABLES_DIR / "missingness.csv")
+    print("missing in M3 (%):\n" + missing.loc[cfg.M3_FEATURES, "pct_missing"].sort_values(ascending=False).to_string())
 
-    # Save outputs
-    print(f"Saving analysis cohort (n = {len(analysis_sample)}) to {cfg.ANALYSIS_SAMPLE_PARQUET}")
-    analysis_sample.to_parquet(cfg.ANALYSIS_SAMPLE_PARQUET, index=False)
-    adults_outcome.to_parquet(cfg.ADULTS_OUTCOME_PARQUET, index=False)
-
-    flowchart_path = cfg.TABLES_DIR / "flowchart.csv"
-    flowchart_df.to_csv(flowchart_path, index=False)
-    print(f"Flowchart saved to: {flowchart_path}")
-    print(flowchart_df.to_string(index=False))
-
-    # Missingness summary
-    key_vars = cfg.M3_FEATURES + [cfg.PRIMARY_OUTCOME]
-    missing_data = []
-    for var in key_vars:
-        if var in analysis_sample.columns:
-            n_miss = int(analysis_sample[var].isna().sum())
-            pct_miss = 100.0 * n_miss / len(analysis_sample)
-            missing_data.append({"variable": var, "n_missing": n_miss, "percent_missing": pct_miss})
-    missing_df = pd.DataFrame(missing_data).sort_values(by="percent_missing", ascending=False)
-    missing_path = cfg.TABLES_DIR / "missingness.csv"
-    missing_df.to_csv(missing_path, index=False)
-    print(f"Missingness table saved to: {missing_path}")
-
-    elapsed = time.time() - start_time
-    print(f"Step 01 completed successfully in {elapsed:.1f} seconds.\n")
+    sample.to_parquet(cfg.ANALYSIS_SAMPLE_PARQUET, index=False)
+    adults.to_parquet(cfg.ADULTS_OUTCOME_PARQUET, index=False)
+    clean[clean["SEQN"].isin(sample["SEQN"])].to_parquet(cfg.CLEAN_RAW_PARQUET, index=False)
 
 
 if __name__ == "__main__":
-    run_cohort_preparation()
+    main()

@@ -1,6 +1,6 @@
-step,n,cases
-Total enrolled participants,11933,559
-Adults (age >= 20 years),7809,559
-Answered CHD/MI medical question,7773,559
-Examined in Mobile Examination Center (MEC),6037,451
-Both NLR and hs-CRP measured (Analysis Sample),5538,412
+step,n,cases,excluded,prevalence_pct
+All participants,11933,559,0,4.68
+Age >= 20 years,7809,559,4124,7.16
+Answered the CHD/MI questions,7773,559,36,7.19
+Examined in the MEC,6037,451,1736,7.47
+NLR and hs-CRP measured (analysis sample),5538,412,499,7.44

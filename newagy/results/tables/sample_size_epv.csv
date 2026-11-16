@@ -1,4 +1,4 @@
-Sample Split,Cases,Parameters,EPV
-Full Analytic Sample,412,19,21.68421052631579
-Outer CV Training Fold (4/5),329,19,17.347368421052632
-Inner CV Training Fold (4/5 of 4/5),263,19,13.877894736842105
+sample,cases,parameters,epv
+full analysis sample,412.0,19,21.68421052631579
+outer training fold (4/5),329.6,19,17.347368421052632
+inner training fold (4/5 of 4/5),263.68,19,13.877894736842105

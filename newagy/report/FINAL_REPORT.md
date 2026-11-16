@@ -15,7 +15,7 @@
 
 **Methods.** We conducted a cross-sectional study of 5,538 non-institutionalized US adults from NHANES 2021–2023 with complete biomarker profiles (412 cases of self-reported doctor-diagnosed CHD/MI, 7.4% prevalence). Every analytical step followed a pre-specified protocol evaluating three candidate options. Missing covariates (12.7% missing family income) were handled using median imputation with dedicated missingness indicators, strictly fitted within cross-validation folds to prevent data leakage. Independent associations were evaluated using multivariable logistic regression (reporting odds ratios [OR] per 1 standard deviation of log-transformed biomarkers; co-primary significance threshold $\alpha = 0.025$ via Bonferroni correction). Discriminative performance was evaluated across six algorithms taught in the course (unpenalized logistic regression, penalized elastic net, CART decision trees, $k$-nearest neighbors, RBF support vector machines, and random forests) using repeated nested cross-validation (15 outer test folds, 5 inner tuning folds). Model comparisons utilized the Nadeau & Bengio resampled paired $t$-test.
 
-**Results.** After adjusting for established clinical risk factors (age, sex, race/ethnicity, income, BMI, smoking, diabetes, hypertension, total and HDL cholesterol, and eGFR), higher NLR was independently associated with CHD/MI ($\text{OR} = 1.20$ per SD, 95% CI: 1.07–1.34, $p = 0.002$; H1a supported). Conversely, hs-CRP was not independently associated ($\text{OR} = 0.96$ per SD, 95% CI: 0.84–1.08, $p = 0.48$; H1b not supported); its crude association was completely accounted for by body mass index. Established clinical risk factors discriminated prevalent CHD/MI accurately (baseline logistic regression ROC-AUC = 0.861). Adding both inflammatory biomarkers yielded negligible incremental discrimination ($\Delta\text{AUC} = +0.0013$, 95% CI: −0.0009 to +0.0035, $p = 1.00$; H1c not supported), with zero improvement in Brier calibration score ($\Delta\text{Brier} = -0.0002$). Standalone biomarkers exhibited poor discriminative ability (AUC = 0.631 for both markers, 0.506 for hs-CRP alone). No complex machine learning algorithm significantly outperformed logistic regression (SVM $\Delta\text{AUC} = +0.0041, p = 0.74$; Random Forest $\Delta\text{AUC} = -0.0041$; Decision Tree $\Delta\text{AUC} = -0.0575, p = 0.002$). Permutation importance confirmed that age and cholesterol dominated predictions, while hs-CRP ranked last. Findings remained consistent across 13 pre-specified sensitivity analyses.
+**Results.** After adjusting for established clinical risk factors (age, sex, race/ethnicity, income, BMI, smoking, diabetes, hypertension, total and HDL cholesterol, and eGFR), higher NLR was independently associated with CHD/MI ($\text{OR} = 1.20$ per SD, 95% CI: 1.07–1.34, $p = 0.002$; H1a supported). Conversely, hs-CRP was not independently associated ($\text{OR} = 0.96$ per SD, 95% CI: 0.84–1.08, $p = 0.48$; H1b not supported); its crude association was completely accounted for by body mass index. Established clinical risk factors discriminated prevalent CHD/MI accurately (baseline logistic regression ROC-AUC = 0.861). Adding both inflammatory biomarkers yielded negligible incremental discrimination ($\Delta\text{AUC} = +0.0013$, 95% CI: −0.0009 to +0.0035, $p = 1.00$; H1c not supported), with zero improvement in Brier calibration score ($\Delta\text{Brier} = -0.0002$). Standalone biomarkers exhibited poor discriminative ability (AUC = 0.631 for both markers, 0.506 for hs-CRP alone). No complex machine learning algorithm significantly outperformed logistic regression (SVM $\Delta\text{AUC} = +0.0041, p = 0.74$; Random Forest $\Delta\text{AUC} = -0.0041$; Decision Tree $\Delta\text{AUC} = -0.0575, p = 0.002$). Permutation importance confirmed that age and cholesterol dominated predictions, while hs-CRP ranked last. Findings remained consistent across five pre-specified sensitivity analyses.
 
 **Conclusion.** In a representative US adult sample, elevated NLR is independently associated with prevalent coronary heart disease, whereas hs-CRP reflects underlying adiposity rather than independent vascular risk. Neither biomarker incrementally enhances individual risk discrimination beyond conventional risk factors, irrespective of algorithmic complexity.
 
@@ -84,23 +84,23 @@ Final Analytic Sample (N = 5,538; 412 cases, 7.4% prevalence)
 
 All analytical decisions evaluated three competing options against pre-specified decision rules:
 
-* **Experiment E1: Missing Data Strategy.** Covariates exhibited low missingness ($< 3\%$) with the exception of income PIR (12.7% missing). Logistic modeling confirmed data were Missing at Random (MAR; missingness was associated with ethnicity and education, but not with heart disease: $\text{OR} = 1.03, p = 0.85$). We compared:
+* **Experiment E1: Missing Data Strategy.** Covariates exhibited low missingness ($< 3\%$) with the exception of income PIR (12.7% missing). A logistic model for the missingness was consistent with Missing at Random (MAR; missingness was associated with ethnicity and education, but not with heart disease: $\text{OR} = 1.03, p = 0.87$). We compared:
   * *Option A:* Listwise deletion (complete cases, dropping 975 patients / 70 cases).
   * *Option B:* Dropping the income variable.
   * *Option C:* Median imputation with a dedicated binary missingness indicator (`income_missing`).
   * *Decision Rule:* Select Option C unless Option A or B improves out-of-fold AUC by $> 0.005$ on identical complete test cases.
-  * *Outcome:* AUC on complete cases was identical across all three strategies (0.866 vs. 0.867 vs. 0.867). Option C was chosen, preserving the full cohort ($n = 5,538$) and maintaining valid risk estimates for patients with missing demographic data.
+  * *Outcome:* AUC on the same complete-case test persons was identical across all three strategies (logistic regression 0.867 vs. 0.867 vs. 0.867; random forest 0.865 vs. 0.866 vs. 0.868). Option C was chosen, preserving the full cohort ($n = 5,538$) and maintaining valid risk estimates for patients with missing demographic data.
 
 * **Experiment E2: Feature Selection & Label Leakage Check.** We compared:
   * *Strategy S1:* Literature-guided clinical risk set (M2/M3).
   * *Strategy S2:* Naive Lasso regression across 342 raw survey variables.
-  * *Strategy S3:* Hybrid domain-screened pool (39 candidate variables) with regularized selection.
-  * *Outcome:* Strategy S2 achieved an apparent AUC of 0.923, but inspectable coefficients revealed severe **label leakage**: the algorithm selected post-diagnostic clinical consequences ("metal objects in body" [coronary stents], "advised to take aspirin", "congestive heart failure", "statin prescriptions"). Strategy S1 avoided circular post-diagnostic confounding and was selected.
+  * *Strategy S3:* Hybrid domain-screened pool (39 candidate variables) with lasso selection.
+  * *Outcome:* Strategy S2 achieved an apparent AUC of 0.923, but inspectable coefficients revealed severe **label leakage**: the algorithm selected post-diagnostic clinical consequences ("metal objects in body" [coronary stents], "advised to take aspirin", "congestive heart failure", "statin prescriptions"). 35% of its 20 strongest variables were consequences or treatment of the disease, and the selection was unstable (about 114 variables per fold, Jaccard similarity 0.47). Strategy S3 gained only +0.007 (AUC 0.870 vs. 0.862) with about 35 variables. Strategy S1 avoided circular post-diagnostic confounding and was selected.
 
 * **Experiment E3: Class Imbalance Handling (7.4% Case Prevalence).** We tested: (1) natural prevalence, (2) balanced class weights, (3) random oversampling, (4) random undersampling, and (5) SMOTE.
   * *Outcome:* Resampling techniques produced negligible changes in ranking discrimination (AUC 0.856–0.863), but severely degraded probability calibration (Brier score doubled from 0.058 to 0.156; mean predicted risk inflated from 7.4% to 32%). Resampling was rejected for tree and linear models; natural prevalence was preserved, and decision thresholds were optimized post-hoc via Youden's $J$ statistic. Only the RBF support vector machine received balanced class weights, as unweighted SVMs collapsed towards the trivial majority class due to margin penalties.
 
-* **Experiment E4: Evaluation Design & Split Variability.** Simulating 200 random 80/20 train/test splits revealed severe partition instability: test AUC fluctuated between 0.803 and 0.918, and 29.5% of splits spuriously suggested negative marker utility. Consequently, repeated nested cross-validation was adopted as mandatory.
+* **Experiment E4: Evaluation Design & Split Variability.** Simulating 200 random 80/20 train/test splits revealed severe partition instability: test AUC fluctuated between 0.802 and 0.923 (middle 95% of splits: 0.831–0.894), and 29.5% of splits spuriously suggested negative marker utility. Consequently, repeated nested cross-validation was adopted as mandatory.
 
 ### 3.4 Machine Learning Modeling Zoo & Nested Cross-Validation
 
@@ -124,32 +124,32 @@ Adjustments for multiple comparisons across algorithms utilized the family-wise 
 
 ### 4.1 Study Cohort Characteristics (Table 1)
 
-Among 5,538 participants, individuals with CHD/MI were significantly older (median 70 vs. 55 years, $\text{SMD} = 0.97, p < 10^{-78}$), more frequently male (64.6% vs. 43.5%, $\text{SMD} = 0.43$), and had higher prevalences of diabetes (37.4% vs. 12.2%, $\text{SMD} = 0.61$) and hypertension (78.2% vs. 42.2%, $\text{SMD} = 0.79$; Table 1).
+Among 5,538 participants, individuals with CHD/MI were significantly older (median 70 vs. 55 years, $\text{SMD} = 1.14, p < 10^{-78}$), more frequently male (64.6% vs. 43.5%, $\text{SMD} = 0.43$), and had higher prevalences of diabetes (37.4% vs. 12.2%, $\text{SMD} = 0.61$) and hypertension (78.2% vs. 42.2%, $\text{SMD} = 0.79$; Table 1).
 
-Crucially, **NLR was substantially elevated in CHD/MI cases** (median 2.39 [IQR: 1.84, 3.29] vs. 1.96 [IQR: 1.49, 2.65], $\text{SMD} = 0.53$, Bonferroni-adjusted $p < 10^{-17}$). In sharp contrast, **hs-CRP showed virtually no difference between cases and controls** even unadjusted (median 1.97 [IQR: 0.90, 4.48] vs. 1.81 [IQR: 0.81, 4.18] mg/L, $\text{SMD} = 0.02$, Bonferroni-adjusted $p = 1.00$).
+**NLR was elevated in CHD/MI cases** (median 2.39 [IQR: 1.84, 3.29] vs. 1.96 [IQR: 1.49, 2.65], $\text{SMD} = 0.42$, Bonferroni-adjusted $p < 10^{-17}$). In sharp contrast, **hs-CRP showed virtually no difference between cases and controls** even unadjusted (median 1.97 [IQR: 0.90, 4.48] vs. 1.81 [IQR: 0.81, 4.18] mg/L, $\text{SMD} = 0.02$, Bonferroni-adjusted $p = 1.00$).
 
-A key methodological finding was the **statin treatment paradox**: cases displayed paradoxically *lower* total cholesterol than non-cases (151.5 vs. 187.0 mg/dL, $\text{SMD} = -0.74, p < 10^{-48}$) because 78.2% of cases were receiving statin pharmacotherapy compared to 24.9% of controls.
+A key methodological finding was the **statin treatment paradox**: cases displayed paradoxically *lower* total cholesterol than non-cases (151.5 vs. 187.0 mg/dL, $\text{SMD} = -0.72, p < 10^{-48}$) because 78.2% of cases were receiving statin pharmacotherapy compared to 24.9% of controls.
 
 **Table 1. Baseline Characteristics of the Analytic Cohort (NHANES 2021–2023).**
 
 | Characteristic | Controls ($n = 5,126$) | Cases ($n = 412$) | SMD | Raw $p$-value | Bonferroni $p$ |
 |---|---|---|---|---|---|
-| Age, years | 55.0 [38.0, 67.0] | 70.0 [63.0, 77.2] | +0.97 | $7.7 \times 10^{-79}$ | $< 0.001$ |
-| Male sex, $n$ (%) | 2,228 (43.5%) | 266 (64.6%) | +0.43 | $2.3 \times 10^{-15}$ | $< 0.001$ |
-| Non-Hispanic White, $n$ (%) | 3,016 (58.8%) | 286 (69.4%) | +0.22 | $2.6 \times 10^{-5}$ | $< 0.001$ |
-| Income PIR | 2.94 [1.48, 5.00] | 2.46 [1.36, 4.21] | −0.18 | $9.0 \times 10^{-3}$ | $0.009$ |
-| Body Mass Index, kg/m² | 28.3 [24.6, 33.5] | 29.5 [25.8, 34.4] | +0.16 | $3.4 \times 10^{-3}$ | $0.003$ |
-| Current cigarette smoker, $n$ (%) | 721 (14.1%) | 80 (19.4%) | +0.14 | $4.7 \times 10^{-3}$ | $0.005$ |
-| Doctor-diagnosed diabetes, $n$ (%) | 624 (12.2%) | 154 (37.4%) | +0.61 | $5.2 \times 10^{-44}$ | $< 0.001$ |
-| Hypertension, $n$ (%) | 2,119 (42.2%) | 320 (78.2%) | +0.79 | $6.2 \times 10^{-45}$ | $< 0.001$ |
-| Total cholesterol, mg/dL | 187.0 [162.0, 216.0] | 151.5 [131.0, 181.2] | −0.74 | $1.6 \times 10^{-49}$ | $< 0.001$ |
-| HDL cholesterol, mg/dL | 53.0 [44.0, 63.0] | 48.0 [41.0, 58.0] | −0.32 | $3.3 \times 10^{-9}$ | $< 0.001$ |
-| eGFR, mL/min/1.73 m² | 94.5 [79.5, 107.1] | 74.8 [57.0, 93.0] | −0.88 | $1.8 \times 10^{-51}$ | $< 0.001$ |
-| Statin medication, $n$ (%) | 1,274 (24.9%) | 316 (78.2%) | +1.26 | $2.7 \times 10^{-109}$ | $< 0.001$ |
-| **Neutrophil-to-Lymphocyte Ratio (NLR)** | **1.96 [1.49, 2.65]** | **2.39 [1.84, 3.29]** | **+0.53** | **$3.1 \times 10^{-18}$** | **$< 0.001$** |
+| Age, years | 55.0 [38.0, 67.0] | 70.0 [63.0, 77.2] | +1.14 | $6.4 \times 10^{-80}$ | $< 0.001$ |
+| Male sex, $n$ (%) | 2,228 (43.5%) | 266 (64.6%) | +0.43 | $1.9 \times 10^{-16}$ | $< 0.001$ |
+| Non-Hispanic White, $n$ (%) | 3,016 (58.8%) | 286 (69.4%) | +0.22 | $3.2 \times 10^{-5}$ | $< 0.001$ |
+| Income PIR | 2.94 [1.48, 5.00] | 2.46 [1.36, 4.21] | −0.18 | $7.5 \times 10^{-4}$ | $0.010$ |
+| Body Mass Index, kg/m² | 28.3 [24.6, 33.5] | 29.5 [25.8, 34.4] | +0.16 | $2.8 \times 10^{-4}$ | $0.004$ |
+| Current cigarette smoker, $n$ (%) | 721 (14.1%) | 80 (19.4%) | +0.14 | $3.9 \times 10^{-3}$ | $0.055$ |
+| Doctor-diagnosed diabetes, $n$ (%) | 624 (12.2%) | 154 (37.4%) | +0.61 | $4.3 \times 10^{-45}$ | $< 0.001$ |
+| Hypertension, $n$ (%) | 2,119 (42.2%) | 320 (78.2%) | +0.79 | $8.7 \times 10^{-45}$ | $< 0.001$ |
+| Total cholesterol, mg/dL | 187.0 [162.0, 216.0] | 151.5 [131.0, 181.2] | −0.72 | $1.3 \times 10^{-50}$ | $< 0.001$ |
+| HDL cholesterol, mg/dL | 53.0 [44.0, 63.0] | 48.0 [41.0, 58.0] | −0.34 | $2.7 \times 10^{-10}$ | $< 0.001$ |
+| eGFR, mL/min/1.73 m² | 94.5 [79.5, 107.1] | 74.8 [57.0, 93.0] | −0.86 | $1.5 \times 10^{-52}$ | $< 0.001$ |
+| Statin medication, $n$ (%) | 1,274 (24.9%) | 316 (78.2%) | +1.26 | $4.1 \times 10^{-114}$ | $< 0.001$ |
+| **Neutrophil-to-Lymphocyte Ratio (NLR)** | **1.96 [1.49, 2.65]** | **2.39 [1.84, 3.29]** | **+0.42** | **$2.6 \times 10^{-19}$** | **$< 0.001$** |
 | **hs-CRP, mg/L** | **1.81 [0.81, 4.18]** | **1.97 [0.90, 4.48]** | **+0.02** | **$0.256$** | **$1.000$** |
 
-*Values are median [IQR] for continuous variables and n (%) for categorical variables. $p$-values calculated via Mann-Whitney U test (continuous) and Pearson Chi-Square test (categorical). Bonferroni correction applied across all 14 baseline characteristics.*
+*Values are median [IQR] for continuous variables and n (%) for categorical variables. $p$-values calculated via Mann-Whitney U test (continuous) and Pearson Chi-Square test (categorical). Bonferroni correction applied across all 14 baseline characteristics. SMD = difference of the means divided by the square root of the mean of the two group variances.*
 
 ### 4.2 Epidemiological Association Analysis (H1a & H1b)
 
@@ -164,7 +164,7 @@ Conversely, **hs-CRP showed no independent association with CHD/MI** ($\text{OR}
 | Model 1: Demographics (Age, Sex) | 1.30 (1.17–1.44) | $< 0.001$ | 1.11 (0.99–1.24) | $0.066$ |
 | **Model 2: Primary (+ Established Risk Factors)** | **1.20 (1.07–1.34)** | **$0.002$** | **0.96 (0.84–1.08)** | **$0.480$** |
 | Model 3: Sensitivity (+ Statin Medication) | 1.21 (1.08–1.36) | $0.001$ | 0.99 (0.87–1.13) | $0.920$ |
-| Model 2 Complete-Case Cohort ($n = 4,544$) | 1.18 (1.04–1.34) | $0.010$ | 0.96 (0.83–1.11) | $0.580$ |
+| Model 2 Complete-Case Cohort ($n = 4,563$) | 1.17 (1.03–1.32) | $0.015$ | 0.96 (0.83–1.11) | $0.574$ |
 | Model 2 Survey-Weighted (US Population) | 1.18 (1.05–1.33) | $0.008$ | 0.91 (0.81–1.02) | $0.100$ |
 
 *Significance evaluated at Bonferroni-adjusted $\alpha = 0.025$ for co-primary exposures.*
@@ -200,9 +200,9 @@ At the optimal training-fold Youden threshold, logistic regression M3 identified
 
 ### 4.4 Model Interpretability & Sensitivity Analyses
 
-Permutation feature importance across outer test folds confirmed identical predictive hierarchies across all algorithms: age was overwhelmingly the most important feature (AUC drop $> 0.10$), followed by total cholesterol (treatment artifact), blood pressure, and smoking. NLR ranked between 6th and 9th among the 13 predictors; hs-CRP ranked last (13th of 13) in five of the six algorithms. Partial dependence plots showed predicted risk increasing monotonically with NLR (from 5.4% to 8.8% across its empirical range) and remaining flat across hs-CRP percentiles. An optimal depth-3 decision tree split exclusively on age, diabetes, cholesterol, and renal function, omitting both inflammatory markers entirely.
+Permutation feature importance across outer test folds gave similar predictive hierarchies across all algorithms: age was by far the most important feature (AUC drop 0.06–0.10, 0.18 for the decision tree), followed by total cholesterol (treatment artifact) and hypertension. NLR ranked between 6th and 9th among the 13 predictors; hs-CRP ranked last (13th of 13) in five of the six algorithms. Partial dependence plots showed predicted risk increasing monotonically with NLR (logistic regression: from 5.4% to 8.8% between the 5th and 95th percentile) and remaining flat to slightly decreasing across hs-CRP percentiles (8.0% to 6.5%). An optimal depth-3 decision tree split exclusively on age, diabetes, cholesterol, and renal function, omitting both inflammatory markers entirely.
 
-Across all 13 sensitivity analyses (including complete-case restriction, survey weighting, alternative outcome definitions, exclusion of acute inflammation hs-CRP $> 10$ mg/L, exclusion of IQR outliers, untreated participants only, and age restriction to 40–79 years), the adjusted OR of NLR remained stable between 1.14 and 1.28 (statistically significant in 12 of 13 models), while hs-CRP remained consistently non-significant (OR 0.86 to 1.00). In all prediction variants, incremental $\Delta\text{AUC}$ remained $< 0.005$. Removing total cholesterol from the baseline model reduced its AUC from 0.861 to 0.849 (quantifying the statin-induced predictive signal), but did not increase the marginal utility of the inflammatory markers ($\Delta\text{AUC} = +0.0017$).
+Five pre-specified sensitivity analyses each changed one decision: complete cases instead of imputation ($n = 4,563$), adjustment for statins (Model 3), exclusion of possible acute inflammation (hs-CRP $> 10$ mg/L, $n = 5,132$), survey weights with design-based standard errors, and an outcome including angina pectoris (457 cases). The adjusted OR of NLR remained stable between 1.14 and 1.21 and significant at $\alpha = 0.025$ in all five, while hs-CRP remained non-significant (OR 0.91 to 0.99). The incremental $\Delta\text{AUC}$ of logistic regression stayed below 0.002 in all prediction variants (statins entered as an additional predictor instead of the survey weights).
 
 ---
 
@@ -230,7 +230,7 @@ Our SVM experiment also highlights a critical lesson in machine learning diagnos
 
 ### 5.5 Strengths and Limitations
 
-**Strengths.** This investigation adhered to a pre-specified decision protocol where every analytical choice compared three explicit options. We eliminated data leakage by executing all imputation, standardization, and tuning strictly within cross-validation folds. We exposed and avoided catastrophic label leakage in naive feature selection (post-diagnostic treatments and interventions). We accounted for partition variance through 15-fold repeated nested cross-validation and evaluated statistical significance using the Nadeau & Bengio resampled paired $t$-test. Finally, we confirmed the invariance of our findings across 13 sensitivity analyses.
+**Strengths.** This investigation adhered to a pre-specified decision protocol where every analytical choice compared three explicit options. We eliminated data leakage by executing all imputation, standardization, and tuning strictly within cross-validation folds. We exposed and avoided catastrophic label leakage in naive feature selection (post-diagnostic treatments and interventions). We accounted for partition variance through 15-fold repeated nested cross-validation and evaluated statistical significance using the Nadeau & Bengio resampled paired $t$-test. Finally, we confirmed our findings in five sensitivity analyses, each tied to one analytical decision.
 
 **Limitations.**
 1. *Cross-sectional study design:* Exposure and outcome were ascertained simultaneously. Consequently, reverse causality cannot be excluded: acute myocardial necrosis or post-infarction remodeling may elevate NLR, while post-diagnostic lifestyle modifications or medications alter biomarker concentrations. Prospective cohort designs are required to evaluate incident cardiovascular event prediction.

@@ -17,7 +17,7 @@ Redesigned analysis for the ETH *Foundations of Data Science* group project (Dat
 | Markers alone | AUC 0.631 (NLR alone 0.633, hs-CRP alone 0.506 = chance) vs. 0.801 for age + sex |
 | **H1c not supported** | Logistic regression AUC 0.861 → +0.0013 (−0.0009 to +0.0035) with both markers; no significant gain for any of six algorithms |
 | Algorithms | None significantly better than logistic regression (SVM highest, 0.867, Bonferroni p = 0.74) → logistic regression recommended |
-| Robustness | Same conclusions in 13 sensitivity analyses |
+| Robustness | Same conclusions in five sensitivity analyses |
 
 ## Documents
 

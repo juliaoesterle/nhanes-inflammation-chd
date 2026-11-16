@@ -1,58 +1,28 @@
-# Data Cleaning, Cohort Selection & Preprocessing Pipeline
+# Final: our code for the hand-in
 
-**Foundations of Data Science — Group Project (Dataset 5: NHANES 2021–2023)**  
-*Lead Author: Marco*
+Foundations of Data Science, group project (NHANES 2021-2023, dataset 5)
 
----
+## Notebooks
 
-## Executive Overview for the Team
+| Notebook | Content | Status |
+|---|---|---|
+| `nhanes_chd_analysis.ipynb` | Part 1: data cleaning with the codebook, variables, study sample (flowchart, selection bias), log transform of the markers, missing data (E1), feature selection (E2) | done |
+| (next) | Part 2: Table 1, class imbalance (E3), evaluation design (E4), nested CV with the six models, M2 vs M3 | open |
+| (next) | Part 3: association analysis (logistic regression, Models 1-3) and the five sensitivity analyses | open |
 
-This folder contains the complete, scientifically validated foundation for our group project's **Data Cleaning**, **Participant Selection**, **Missing Data Strategy**, and **Feature Selection**:
+The template for parts 2 and 3 is `newagy/scripts/` (explained in `newagy/docs/01_SCHRITT_FUER_SCHRITT_ANLEITUNG.md`).
 
-1. **Cohort & Participant Flow (`01_cohort_selection.py`):**
-   * We start with **11,933** total NHANES participants.
-   * We end with **5,538** participants in our final analytic sample (**412 cases of CHD/MI, 7.4% prevalence**).
-   * Exclusions follow 4 transparent protocol steps (Adults $\ge 20$, non-missing outcome, attended MEC, both NLR and hs-CRP measured).
-   * A selection bias check via Standardized Mean Difference (SMD) confirms excluded participants without blood draws had lower income ($\text{SMD} = -0.36$), which we document as an explicit limitation.
+The scripts `01_`-`03_*.py`, `config.py`, `preprocessing.py` and `results/` in this folder are the older first version. The notebook replaces them: in that version the E2 numbers are typed in instead of computed, and in E1 all options were trained on the complete cases only.
 
-2. **Missing Data Strategy (`02_missing_data_experiment.py`):**
-   * We evaluated **3 competing strategies** for handling missing income (12.7% missing):
-     * *Option A:* Listwise deletion (complete cases).
-     * *Option B:* Dropping the income column.
-     * *Option C:* Median imputation with a dedicated missingness indicator (`income_pir_missing`).
-   * *Experiment E1 Result:* Test AUC on identical complete cases is virtually identical across all 3 options ($\text{AUC} \approx 0.865$).
-   * *Decision:* We choose **Option C**. It prevents dropping **909 participants and 70 real heart disease cases (17% of all cases!)**, and allows our models to generate predictions for patients with incomplete survey data.
+## How to run
 
-3. **Feature Selection & Leakage Prevention (`03_feature_selection_experiment.py`):**
-   * We evaluated **3 feature selection approaches**:
-     * *Strategy 1:* Literature / Guideline risk factor set (M2/M3: Framingham / PCE / SCORE2 / PREVENT).
-     * *Strategy 2:* Naive Lasso across all 342 raw survey variables.
-     * *Strategy 3:* Hybrid domain-screened pool (39 candidate variables) + regularized selection.
-   * *Experiment E2 Result:* Naive Lasso reaches an apparent AUC of 0.923, but inspectable coefficients expose **severe label leakage**: it selects post-diagnostic consequences ("metal objects in body" [stents], "advised to take aspirin", "heart failure diagnosed", "statin prescriptions").
-   * *Decision:* We choose **Strategy 1 (Literature Set)**. It directly answers our research question (*"do inflammatory markers add value beyond established clinical risk scores?"*) while completely avoiding circular post-treatment bias.
+Put the two course files in `data/raw/` (`nhanes_raw.csv`, `nhanes_metadata.csv`) and run part 1 from this folder. It takes about one minute and saves the analysis sample to `Final/data/analysis_sample.csv`, which the next parts can load. The `data/` folder is not pushed (course data).
 
-4. **Shared Preprocessing Module (`preprocessing.py`):**
-   * Ready-to-import module for everyone in the team:
-     ```python
-     from preprocessing import load_cohort, get_preprocessor, make_pipeline
-     df = load_cohort() # returns the clean 5,538 cohort
-     ```
+## Results of part 1
 
----
+- 11,933 participants -> 5,538 adults with NLR and hs-CRP, 412 cases (7.4 %)
+- NLR and hs-CRP on the log scale (skewness 4.66 / 7.78 -> 0.15 / 0.23)
+- E1: listwise deletion, dropping income and median + missing indicator give the same AUC on the same people (LR 0.867), so we use median + indicator and keep 975 people (70 cases)
+- E2: the literature set M3 (AUC 0.862); a lasso on all 342 raw columns reaches 0.923 only through label leakage (aspirin advice, heart failure, stents, statins), the hybrid pool gives only +0.007
 
-## Quickstart & Reproducibility
-
-To run the experiments and inspect the generated tables:
-
-```bash
-# 1. Run cohort selection & flowchart
-python 01_cohort_selection.py
-
-# 2. Run missing data experiment (E1)
-python 02_missing_data_experiment.py
-
-# 3. Run feature selection & leakage check (E2)
-python 03_feature_selection_experiment.py
-```
-
-All generated tables are stored in `results/tables/`, and publication-quality figures are stored in `results/figures/`.
+Planned sensitivity analyses (part 3): complete cases, + statins (Model 3), excluding hs-CRP > 10 mg/L, survey weights, outcome including angina.

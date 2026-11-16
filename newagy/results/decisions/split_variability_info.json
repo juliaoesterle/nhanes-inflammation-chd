@@ -1,7 +1,11 @@
 {
   "n_splits": 200,
-  "auc_min": 0.803,
-  "auc_max": 0.918,
-  "auc_mean": 0.861,
-  "percent_splits_with_negative_marker_gain": 29.5
+  "auc_M3_min": 0.8021442495126706,
+  "auc_M3_max": 0.9228949745637807,
+  "auc_M3_mean": 0.861295999144202,
+  "auc_M3_middle_95_percent": [
+    0.8310042552179907,
+    0.8940554723529691
+  ],
+  "share_splits_delta_negative": 0.295
 }
