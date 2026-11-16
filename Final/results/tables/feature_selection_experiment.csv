@@ -1,0 +1,4 @@
+Strategy,Number_of_Features,CV_Test_AUC,Selection_Stability,Label_Leakage_Risk,Clinical_Relevance
+Strategy 1: Literature / Guideline Set (M3) [CHOSEN],13,0.863,1.00 (Perfect: Defined by clinical consensus),None (Only pre-diagnostic risk factors),High: Answers our exact research question (gain beyond standard care)
+Strategy 2: Naive Data-Driven Lasso (all 342 survey vars),18–25 per fold,0.923,0.54 (Unstable across folds),SEVERE LEAKAGE: 35% of top features are post-diagnostic consequences!,"Zero: Model learns to detect treatment, not disease etiology"
+Strategy 3: Hybrid Domain Screen + Regularization,15–22 per fold,0.87,0.74 (Moderate),Controlled (Variables screened for post-diagnostic status),"Moderate: Adds +0.007 AUC, but complicates clinical translation"

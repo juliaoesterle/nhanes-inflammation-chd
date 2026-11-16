@@ -1,0 +1,247 @@
+,selection_frequency,mean_abs_coef,label,category
+RXQ510,1.0,0.5306563788800522,Dr told to take daily low-dose aspirin?,treatment
+MCQ160B,1.0,0.4182145229727635,Ever told had congestive heart failure,other heart diagnosis
+RXQ050,1.0,0.3527405176475892,Number of prescription medicines taken,treatment
+OSQ230,1.0,0.3383619116081194,Any metal objects inside your body?,other diagnosis / condition
+MCQ160D,1.0,0.2973145019360384,Ever told you had angina/angina pectoris,other heart diagnosis
+RIAGENDR,1.0,0.27060623251877935,Gender,risk factor / other
+BPQ101D,1.0,0.215554591170645,Taking meds to lower blood cholesterol?,treatment
+HUQ010,1.0,0.21349354371660673,General health condition,health-care use / status
+RIDAGEYR,1.0,0.17692487887379865,Age in years at screening,risk factor / other
+LBXTC,1.0,0.1668109997840266,Total Cholesterol (mg/dL),risk factor / other
+LBXPNL,1.0,0.15748629711610346,Linoleic acid (C18:2n-6) (%),risk factor / other
+LBXPED,1.0,0.1259015865476704,"11,14-Eicosadienoic acid (C20:2n6) (%)",risk factor / other
+PAD680,1.0,0.11810051845711984,Minutes sedentary activity,risk factor / other
+FNQ520,1.0,0.11590374349326767,Level of feeling worried/nervous/anxious,risk factor / other
+LBDTHGLC,1.0,0.11525409819526522,"Blood mercury, total comment code",risk factor / other
+BPQ020,1.0,0.10548705293846743,Ever told you had high blood pressure,risk factor / other
+LBDHCI,1.0,0.10243496168218306,Hepatitis C Antibody (confirmed),risk factor / other
+LBDHCOLC,1.0,0.09631996349863046,"Hydroxycotinine, Serum Comment Code",risk factor / other
+ALQ111,1.0,0.09180362017515058,Ever had a drink of any kind of alcohol,risk factor / other
+LBDNENO,1.0,0.09027704668096943,Segmented neutrophils num (1000 cell/uL),risk factor / other
+OHQ620,1.0,0.08692906312126608,How often last yr. had aching in mouth?,risk factor / other
+LBXLYPCT,1.0,0.08268568903155164,Lymphocyte percent (%),risk factor / other
+SMQ020,1.0,0.07853547822126437,Smoked at least 100 cigarettes in life,risk factor / other
+LBXHA,1.0,0.06947442775031318,Hepatitis A antibody,risk factor / other
+ALQ151,1.0,0.06436975863711156,Ever have 4/5 or more drinks every day,risk factor / other
+MCQ160P,1.0,0.05528861019571012,"Ever told you had COPD, emphysema, ChB",other diagnosis / condition
+LBDSTBSI,1.0,0.03230082820660758,Total Bilirubin (umol/L),risk factor / other
+LBXMAGN,1.0,0.025732371582191632,Magnesium (mg/dL),risk factor / other
+URDACT,0.9,0.13932923777978584,Albumin creatinine ratio (mg/g),risk factor / other
+LBXSF6SI,0.9,0.06561764561798701,Mefox oxidation product (nmol/L),risk factor / other
+LBXVD2MS,0.9,0.0641887913305907,25OHD2 (nmol/L),risk factor / other
+OCD150,0.9,0.0529179335366468,Type of work done last week,health-care use / status
+DIQ180,0.9,0.052500225695731505,Had blood tested past three years,risk factor / other
+FSD032B,0.9,0.04978494448103374,HH Food didn't last,risk factor / other
+BPXODI2,0.9,0.04477001126623683,Diastolic - 2nd oscillometric reading,risk factor / other
+BAQ150,0.9,0.04382976985213001,Do you have neck pain now?,risk factor / other
+FSD162,0.9,0.03949490588854444,HH WIC benefit: receive in last 12 month,risk factor / other
+BAQ132,0.9,0.03936615395878555,"Problems with dizzy, past 24 hours",risk factor / other
+LBXSF2SI,0.9,0.035464615980287925,Folic acid (nmol/L),risk factor / other
+DPQ030,0.9,0.03291584970547312,Trouble sleeping or sleeping too much,risk factor / other
+LBXSC3SI,0.9,0.03289137454037291,Bicarbonate (mmol/L),risk factor / other
+LBXHCR,0.9,0.030681651352707957,Hepatitis C RNA,risk factor / other
+BAXPF21,0.9,0.02633000363626558,"MRT cond. 2, trial 1, eyes closed",risk factor / other
+LBDBGMSI,0.9,0.024988134029744036,"Mercury, methyl (nmol/L)",risk factor / other
+LBXPD3,0.9,0.021356117412999316,Docosapentaenoic acid 3 (C22:5n-3) (%),risk factor / other
+LBDTCSI,0.8,0.08336011494486505,Total Cholesterol (mmol/L),risk factor / other
+BAXPF11,0.8,0.08201663189573448,"MRT cond. 1, trial 1, eyes open",risk factor / other
+BPXOPLS1,0.8,0.04773562435797276,Pulse - 1st oscillometric reading,risk factor / other
+LBDPMRLC,0.8,0.04383457177409199,Myristic acid (C14:0) comment code,risk factor / other
+RXQ033,0.8,0.035864304001580506,"Taken prescription medicine, past month",treatment
+URXUMA,0.8,0.03554781895406937,"Albumin, urine (ug/mL)",risk factor / other
+LBXPGH,0.8,0.03409648027938469,homo-gamma-Linolenic acid(C20:3n-6) (%),risk factor / other
+IMQ011,0.8,0.032190834618230815,Received Hepatitis A vaccine,risk factor / other
+HSQ590,0.8,0.031755882148582965,Blood ever tested for HIV virus?,risk factor / other
+LBXVE3MS,0.8,0.029512783895097157,epi-25OHD3 (nmol/L),risk factor / other
+DMQMILIZ,0.8,0.029256475205939582,Served active duty in US Armed Forces,risk factor / other
+LBDHBG,0.8,0.02773586477090379,Hepatitis B surface antigen,risk factor / other
+ALQ130,0.8,0.027113873980224336,Avg # alcoholic drinks/day/past 12 mos,risk factor / other
+LUAXSTAT,0.8,0.024878678709824374,Elastography exam status,risk factor / other
+BAQ125,0.8,0.024360945007465457,"Injury to foot, leg, or hip",risk factor / other
+KIQ022,0.8,0.022066551995663312,Ever told you had weak/failing kidneys?,other diagnosis / condition
+URXUMS,0.8,0.021442166392385595,"Albumin, urine (mg/L)",risk factor / other
+WHD020,0.7,0.05195395118140685,Current self-reported weight (pounds),risk factor / other
+PHAFSTHR,0.7,0.045717054737189275,Total length of 'food fast' (hours),risk factor / other
+LBXPOL,0.7,0.03910921651307453,Oleic acid (C18:1n-9) (%),risk factor / other
+LBDBGELC,0.7,0.037696618669308644,"Mercury, ethyl comment code",risk factor / other
+LBXPD6,0.7,0.03737097665679919,Docosapentaenoic acid (C22:5n-6) (%),risk factor / other
+LBXHSCRP,0.7,0.0362912666012141,HS C-Reactive Protein (mg/L),risk factor / other
+MCQ160A,0.7,0.03284376425624485,Doctor ever said you had arthritis,other diagnosis / condition
+SMQ846,0.7,0.03214205717643564,Used last 5 days - E-cigarettes,risk factor / other
+LBDSF2LC,0.7,0.029012485981752923,Folic acid cmt,risk factor / other
+DBQ940,0.7,0.024822289504810826,Main food shopper,risk factor / other
+LBXPPM,0.7,0.02365167922965282,Palmitic acid (C16:0) (%),risk factor / other
+RIDRETH3,0.7,0.023234062103655702,Race/Hispanic origin w/ NH Asian,risk factor / other
+FNQ460,0.7,0.022304308885077468,Difficulty remembering or concentrating,risk factor / other
+LBXSF5SI,0.7,0.022129714447359797,"5,10-Methenyl-tetrahydrofolate (nmol/L)",risk factor / other
+SMQ863,0.7,0.018079824279125672,Used nicotine replacement last 5 days?,risk factor / other
+PHQ060,0.7,0.013781028329674072,Dietary supplements?,risk factor / other
+LBDBMNSI,0.7,0.013030774561214917,Blood manganese (nmol/L),risk factor / other
+WHD050,0.6,0.04224053731178516,Self-reported weight - 1 yr ago (pounds),risk factor / other
+BMXHIP,0.6,0.038176515602710924,Hip Circumference (cm),risk factor / other
+LBXMC,0.6,0.030773830547852522,Mean Cell Hgb Conc. (g/dL),risk factor / other
+LUXSMED,0.6,0.03000265198980821,"Median stiffness (E), kilopascals (kPa)",risk factor / other
+BAQ321C,0.6,0.023151978903764782,"Past 12 months, problems with unsteady",risk factor / other
+DPQ100,0.6,0.01879031591296016,Difficulty these problems have caused,risk factor / other
+DPQ050,0.6,0.01813989123519821,Poor appetite or overeating,risk factor / other
+DBQ945,0.6,0.017283458753917357,Shared food shopping duty,risk factor / other
+BAQ140,0.6,0.014318004184121033,"Last 12 months, fallen due to dizziness",risk factor / other
+LBXMOPCT,0.6,0.013167960406252002,Monocyte percent (%),risk factor / other
+LBDIHGLC,0.6,0.012168728305906453,"Mercury, inorganic comment code",risk factor / other
+LBXRF3SI,0.6,0.011746433225203032,"5-Formyl-tetrahydrofolate, RBC (nmol/L)",risk factor / other
+LBDBANO,0.6,0.011605989335818549,Basophils number (1000 cells/uL),risk factor / other
+LBXSPH,0.6,0.009586573211516559,Phosphorus (mg/dL),risk factor / other
+LBDHDDSI,0.5,0.02005253419478112,Direct HDL-Cholesterol (mmol/L),risk factor / other
+FNDADI,0.5,0.01993110210533199,WG-SS Disability Indicator 18+,risk factor / other
+PAD800,0.5,0.019619843716589154,Minutes moderate LTPA,risk factor / other
+LBXSBU,0.5,0.019349435248188482,Blood Urea Nitrogen (mg/dL),risk factor / other
+LBXPHA,0.5,0.018365642106958412,Docosahexaenoic acid (C22:6n-3) (%),risk factor / other
+PUQ100,0.5,0.017899328885186503,Products used in home to control insects,risk factor / other
+LBXPNR,0.5,0.016825969382639853,15-Tetracosenoic acid (C24:1n9) (%),risk factor / other
+LBDSGBSI,0.5,0.015377034346550873,Globulin (g/L),risk factor / other
+HEQ010,0.5,0.014726975418869633,Ever told you have Hepatitis B?,risk factor / other
+LBXSGB,0.5,0.011772076241560589,Globulin (g/dL),risk factor / other
+FNQ430,0.5,0.01146753524744674,Difficulty hearing even w/hearing aids,risk factor / other
+AUQ144,0.5,0.00883765104685645,Last time hearing tested by specialist?,risk factor / other
+MCQ560,0.5,0.008481484697912973,Ever had gallbladder surgery?,other diagnosis / condition
+PHQ020,0.5,0.008163992770819887,Coffee or tea with cream or sugar?,risk factor / other
+LUXCAPM,0.4,0.020215552574335657,"Median CAP, decibels per meter (dB/m)",risk factor / other
+DIQ160,0.4,0.014416941573138498,Ever told you have prediabetes,risk factor / other
+RIDEXMON,0.4,0.010982661296688533,Six-month time period,risk factor / other
+LBXSKSI,0.4,0.010521754295585665,Potassium (mmol/L),risk factor / other
+PUQ110,0.4,0.010000998362246272,Products used to kill weeds?,risk factor / other
+BAQ160,0.4,0.009894121545960621,Have you ever had surgery on your neck?,risk factor / other
+ALQ121,0.4,0.009380887685051537,Past 12 mos how often drink alc bev,risk factor / other
+LBXHBC,0.4,0.008322235526506294,Hepatitis B core antibody,risk factor / other
+LBDSCRSI,0.4,0.007955329262986258,"Creatinine, refrigerated serum (umol/L)",risk factor / other
+URXCRS,0.4,0.007716770280151004,"Creatinine, urine (umol/L)",risk factor / other
+INQ300,0.4,0.006298334472025801,"Family has savings more than $20,000",risk factor / other
+LUXSIQRM,0.4,0.006271044678841334,Ratio: Stiffness IQRe / median E,risk factor / other
+SMQ851,0.4,0.006196202697805536,Used smokeless tobacco last 5 days?,risk factor / other
+LBXMCVSI,0.4,0.0055949936376319225,Mean cell volume (fL),risk factor / other
+URXUCR,0.4,0.004442250524927219,"Creatinine, urine (mg/dL)",risk factor / other
+LBDSTRSI,0.3,0.015706664152739587,"Triglycerides, refrig serum (mmol/L)",risk factor / other
+BAQ321A,0.3,0.015407023642083354,"Past 12 months, problems with vertigo",risk factor / other
+LBXSF1SI,0.3,0.01451716235716503,5-Methyl-tetrahydrofolate (nmol/L),risk factor / other
+RIDRETH1,0.3,0.013409624185744842,Race/Hispanic origin,risk factor / other
+LBXPPE,0.3,0.012995709280843721,Eicosapentaenoic acid (C20:5n-3) (%),risk factor / other
+LBXSCLSI,0.3,0.012002255990217519,Chloride (mmol/L),risk factor / other
+LUXSIQR,0.3,0.011986528578017552,Stiffness E interquartile range (IQRe),risk factor / other
+KIQ042,0.3,0.009614070299372843,Leak urine during physical activities?,other diagnosis / condition
+BAQ321D,0.3,0.008903015681855487,"Past 12 months, problems w/light-headed",risk factor / other
+FNQ510,0.3,0.008900077661290542,How often feel worried/nervous/anxious,risk factor / other
+MCQ053,0.3,0.00837575324739557,Taking treatment for anemia/past 3 mos,other diagnosis / condition
+LBDVD2LC,0.3,0.007468222315582217,25OHD2 comment code,risk factor / other
+LBDSCASI,0.3,0.007422587409730121,Total Calcium (mmol/L),risk factor / other
+FNQ470,0.3,0.007365061524352029,Difficulty with self-care,risk factor / other
+FNQ490,0.3,0.007047144454515408,Difficulty using hands and fingers,risk factor / other
+LBXSAPSI,0.3,0.006028135000389579,Alkaline Phosphatase (ALP) (IU/L),risk factor / other
+MCQ160L,0.3,0.005934932604176173,Ever told you had any liver condition,other diagnosis / condition
+LBXCH,0.3,0.005801693849740947,Butyrylcholinesterase Con (ng/mL),risk factor / other
+BMDSTATS,0.3,0.005728813764603015,Body Measures Component Status Code,risk factor / other
+LBXMPSI,0.3,0.005669108650120073,Mean platelet volume (fL),risk factor / other
+FNQ480,0.3,0.005567881556157518,Difficulty raising a 2-liter bottle,risk factor / other
+LUXCPIQR,0.3,0.005544643221803454,CAP interquartile range (IQRc),risk factor / other
+LBDBGMLC,0.3,0.005495114619207997,"Mercury, methyl comment code",risk factor / other
+LBDSBUSI,0.3,0.005290576597735843,Blood Urea Nitrogen (mmol/L),risk factor / other
+SLD012,0.3,0.004970795698488359,Sleep hours - weekdays or workdays,risk factor / other
+LBXSUA,0.3,0.004881838712849585,Uric acid (mg/dL),risk factor / other
+PAD810Q,0.3,0.004493613345389262,Frequency of vigorous LTPA,risk factor / other
+FNQ440,0.3,0.004289261116050223,Difficulty walking or climbing steps,risk factor / other
+LBDSUASI,0.3,0.004281189882310698,Uric acid (umol/L),risk factor / other
+DPQ010,0.3,0.0038151137351877277,Have little interest in doing things,risk factor / other
+BMXARMC,0.3,0.003064784445143961,Arm Circumference (cm),risk factor / other
+LUANMVGP,0.3,0.002956837208158102,Count:complete measures from final wand,risk factor / other
+DPQ080,0.3,0.0026329046433892014,Moving or speaking slowly or too fast,risk factor / other
+FSQ165,0.3,0.002630447506411472,HH FS benefit: ever received,risk factor / other
+PHQ040,0.3,0.0019626313961302916,"Gum, mints, lozenges or cough drops",risk factor / other
+DPQ070,0.3,0.001771306586642042,Trouble concentrating on things,risk factor / other
+LBXSF4SI,0.3,0.0013974383500534654,Tetrahydrofolate (nmol/L),risk factor / other
+LBXSCK,0.2,0.01881536765560287,Creatine Phosphokinase (CPK) (U/L),risk factor / other
+LBXNEPCT,0.2,0.014910575124393935,Segmented neutrophils percent (%),risk factor / other
+INDFMMPI,0.2,0.010366982155640971,Family monthly poverty level index,risk factor / other
+PHQ050,0.2,0.007706391044708954,"Antacids, laxatives, or anti-diarrheals?",risk factor / other
+LBXPRA,0.2,0.006976185060524975,Arachidonic acid (C20:4n-6) (%),risk factor / other
+SLD013,0.2,0.006666445465159296,Sleep hours - weekends,risk factor / other
+FNQ540,0.2,0.006398605236893322,Level of feeling depressed,risk factor / other
+LBXP1E,0.2,0.0062038277824297515,11-Eicosenoic acid (C20:1n-9) (%),risk factor / other
+LBXHCT,0.2,0.006060001254308912,Hematocrit (%),risk factor / other
+DIQ010,0.2,0.005618138774788173,Doctor told you have diabetes,risk factor / other
+LBDRF4LC,0.2,0.005529293208824225,"Tetrahydrofolate, RBC cmt",risk factor / other
+LBXPLG,0.2,0.00538612142192074,gamma-Linolenic acid (C18:3n-6) (%),risk factor / other
+LBXSCR,0.2,0.005247344486956809,"Creatinine, refrigerated serum (mg/dL)",risk factor / other
+BAQ530,0.2,0.005116640243271695,"Past 5 years, how many times fallen?",risk factor / other
+BAXMSTAT,0.2,0.0050321538889146426,MRT exam status,risk factor / other
+LBXPPL,0.2,0.004932772294512539,Palmitoleic acid (16:1n-7) (%),risk factor / other
+MCQ550,0.2,0.004734228160418543,Has DR ever said you have gallstones,other diagnosis / condition
+LBXEOPCT,0.2,0.004361539644879043,Eosinophils percent (%),risk factor / other
+PAD790Q,0.2,0.004143902362124233,Frequency of moderate LTPA,risk factor / other
+DPQ020,0.2,0.004040635050435984,"Feeling down, depressed, or hopeless",risk factor / other
+LBDHEG,0.2,0.003937479270334385,Hepatitis E IgG (anti-HEV),risk factor / other
+LBXBAPCT,0.2,0.00370237788238284,Basophils percent (%),risk factor / other
+BMXARML,0.2,0.003560287695590257,Upper Arm Length (cm),risk factor / other
+FNQ410,0.2,0.0032190252959784166,Difficulty seeing even w/glasses,risk factor / other
+BAQ121,0.2,0.0029547729225492744,Are you currently wearing a leg brace?,risk factor / other
+LBXPAN,0.2,0.002861946248480168,alpha-Linolenic acid (C18:3n-3) (%),risk factor / other
+LBXSAL,0.2,0.002739488786522244,"Albumin, refrigerated serum (g/dL)",risk factor / other
+LBXBCD,0.2,0.002538198419070862,Blood cadmium (ug/L),risk factor / other
+OHQ630,0.2,0.002267781910950519,How often felt bad because of mouth?,risk factor / other
+LBXSLDSI,0.2,0.0022351277632014247,Lactate Dehydrogenase (LDH) (U/L),risk factor / other
+MCQ160M,0.2,0.0022310386874663905,Ever told you had thyroid problem,other diagnosis / condition
+BPXOSY3,0.2,0.0022219121915789146,Systolic - 3rd oscillometric reading,risk factor / other
+LBXP1A,0.2,0.0021966782234971983,Arachidic acid (C20:0) (%),risk factor / other
+LBDSF3LC,0.2,0.002120090769529838,5-Formyl-tetrahydrofolate cmt,risk factor / other
+KIQ005,0.2,0.001937883069609987,How often have urinary leakage?,other diagnosis / condition
+OHQ640,0.2,0.001846934743045789,Last yr had diff w/ job because of mouth,risk factor / other
+LBDCOTLC,0.2,0.001797512922263918,"Cotinine, Serum Comment Code",risk factor / other
+INDFMMPC,0.2,0.0015408025592281622,Family monthly poverty level category,risk factor / other
+LBDVE3LC,0.2,0.0012381372905981229,epi-25OHD3 comment code,risk factor / other
+LBDSGLSI,0.2,0.00105315249291995,"Glucose, refrigerated serum (mmol/L)",risk factor / other
+BAQ173,0.2,0.0009711114672655903,Are you okay to begin this balance test?,risk factor / other
+DMDEDUC2,0.2,0.000729344590511827,Education level - Adults 20+,risk factor / other
+FNDAEDI,0.1,0.00600872108469349,WG-SS Enhanced Disability Indicator 18+,risk factor / other
+LBXPDA,0.1,0.004010399412412469,Docosanoic acid (C22:0) (%),risk factor / other
+LBDSIRSI,0.1,0.003670804819134295,"Iron, refrigerated serum (umol/L)",risk factor / other
+LBXCOT,0.1,0.003489667765702141,"Cotinine, Serum (ng/mL)",risk factor / other
+LBXPLTSI,0.1,0.0034161860947799277,Platelet count (1000 cells/uL),risk factor / other
+LBDSALSI,0.1,0.003245953052751445,"Albumin, refrigerated serum (g/L)",risk factor / other
+BPAOCSZ,0.1,0.003149706514919705,Coded cuff size - oscillometric,risk factor / other
+LBXBGE,0.1,0.0030845711915305552,"Mercury, ethyl (ug/L)",risk factor / other
+LBXBMN,0.1,0.003042056968562126,Blood manganese (ug/L),risk factor / other
+LBXRDW,0.1,0.0029938960516586793,Red cell distribution width (%),risk factor / other
+LBXSTP,0.1,0.002769457410016972,Total Protein (g/dL),risk factor / other
+LBXSGTSI,0.1,0.002451915521186391,Gamma Glutamyl Transferase (GGT) (IU/L),risk factor / other
+LBXSTR,0.1,0.002439246713809402,"Triglycerides, refrig serum (mg/dL)",risk factor / other
+BAXTC11,0.1,0.0023400612632686634,"MRT cond. 1, trial 1, time",risk factor / other
+WHQ070,0.1,0.002308906252403192,Tried to lose weight in past year,risk factor / other
+LBDBGESI,0.1,0.0019859288251621522,"Mercury, ethyl (nmol/L)",risk factor / other
+LBDBCDSI,0.1,0.0019648494857112345,Blood cadmium (nmol/L),risk factor / other
+LBDBSESI,0.1,0.001879658001715546,Blood selenium (umol/L),risk factor / other
+DBQ930,0.1,0.0016118776210217243,Main meal planner/preparer,risk factor / other
+LBXRF5SI,0.1,0.0015979198125012008,"5,10-Methenyl-tetrahydrofolate (nmol/L)",risk factor / other
+LBXRF4SI,0.1,0.0014243268916831022,"Tetrahydrofolate, RBC (nmol/L)",risk factor / other
+BAXPF41,0.1,0.0014226697480820634,"MRT cond. 4, trial 1, eyes closed",risk factor / other
+FNQ450,0.1,0.0014097821815011037,Difficulty communicating,risk factor / other
+LBXSCA,0.1,0.00140326767593003,Total Calcium (mg/dL),risk factor / other
+LBXP1G,0.1,0.001392807888553107,Tetracosanoic acid (C24:0) (%),risk factor / other
+LBXSGL,0.1,0.0013018001994918832,"Glucose, refrigerated serum (mg/dL)",risk factor / other
+BPQ080,0.1,0.001229649025607499,Doctor told you - high cholesterol level,risk factor / other
+LBDBCDLC,0.1,0.0011890758256749416,Blood cadmium comment code,risk factor / other
+PHDSESNZ,0.1,0.0011682243943062335,Session in which SP was examined,risk factor / other
+LBDTHGSI,0.1,0.0011065948942308615,"Blood mercury, total (nmol/L)",risk factor / other
+URDUMALC,0.1,0.001103627471071861,"Albumin, urine comment code",risk factor / other
+LBXBGM,0.1,0.0009385686618483878,"Mercury, methyl (ug/L)",risk factor / other
+LBXNRBC,0.1,0.0009116672037769397,Nucleated red blood cells (/100 WBC),risk factor / other
+LBDSF5LC,0.1,0.0008169506047722193,"5,10-Methenyl-tetrahydrofolate cmt",risk factor / other
+LBDSF4LC,0.1,0.0007804098629701359,Tetrahydrofolate cmt,risk factor / other
+DMDMARTZ,0.1,0.0007405167248221531,Marital status,risk factor / other
+LBXHBS,0.1,0.0007340157094444472,Hepatitis B Surface Antibody,risk factor / other
+LBXSNASI,0.1,0.0007316686025673143,Sodium (mmol/L),risk factor / other
+LBXBPB,0.1,0.0006348249639342039,Blood lead (ug/dL),risk factor / other
+BAXPF31,0.1,0.0003660259042727945,"MRT cond. 3, trial 1, eyes open",risk factor / other
+LBXTHG,0.1,0.0002837913441221094,"Blood mercury, total (ug/L)",risk factor / other
+HUQ055,0.1,0.00021433543917476886,Past 12 months had video conf w/Dr?,health-care use / status
+HOD051,0.1,0.0001871299766408793,Number of rooms in home,risk factor / other
+PHQ030,0.1,0.00012108363525761343,"Alcohol, such as beer, wine, or liquor?",risk factor / other
+LBXRBCSI,0.1,4.927867942929766e-05,Red blood cell count (million cells/uL),risk factor / other

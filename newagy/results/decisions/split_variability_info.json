@@ -1,0 +1,7 @@
+{
+  "n_splits": 200,
+  "auc_min": 0.803,
+  "auc_max": 0.918,
+  "auc_mean": 0.861,
+  "percent_splits_with_negative_marker_gain": 29.5
+}

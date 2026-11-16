@@ -1,0 +1,6 @@
+Method,LR_AUC,RF_AUC,Brier_Score,Mean_Pred_Risk
+No Correction (Natural Prevalence),0.862,0.861,0.058,7.4%
+Class Weights (Balanced),0.862,0.863,0.156,31.9%
+Random Oversampling,0.861,0.86,0.156,31.9%
+Random Undersampling,0.856,0.858,0.164,32.6%
+SMOTE (Synthetic Oversampling),0.86,0.857,0.151,30.0%

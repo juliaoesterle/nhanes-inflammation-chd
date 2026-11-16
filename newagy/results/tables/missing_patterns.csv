@@ -1,0 +1,16 @@
+missing_variables,n,pct,chd_mi_prevalence_pct
+complete,4563,82.39,7.495069033530571
+income_pir,661,11.94,7.564296520423601
+total_chol + hdl_chol + egfr,80,1.44,10.0
+hypertension,69,1.25,1.4492753623188406
+egfr,48,0.87,0.0
+bmi,42,0.76,14.285714285714285
+bmi + hypertension,19,0.34,5.263157894736842
+income_pir + hypertension,15,0.27,0.0
+income_pir + total_chol + hdl_chol + egfr,12,0.22,0.0
+income_pir + bmi,9,0.16,22.22222222222222
+smoking,7,0.13,0.0
+income_pir + egfr,7,0.13,14.285714285714285
+bmi + total_chol + hdl_chol + egfr,2,0.04,0.0
+income_pir + bmi + hypertension,2,0.04,50.0
+hypertension + total_chol + hdl_chol + egfr,2,0.04,0.0

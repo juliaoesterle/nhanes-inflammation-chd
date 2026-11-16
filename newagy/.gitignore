@@ -1,0 +1,6 @@
+# participant-level derived data (course data must not be redistributed)
+data/
+# out-of-fold predictions contain SEQN + outcome per person
+results/cv/*.parquet
+__pycache__/
+*.pyc

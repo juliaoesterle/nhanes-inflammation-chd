@@ -1,0 +1,15 @@
+variable,n_missing,percent_missing
+income_pir,706,12.748284579270495
+diabetes,197,3.5572408811845433
+egfr,151,2.726616106897797
+hdl_chol,96,1.733477789815818
+total_chol,96,1.733477789815818
+bmi,74,1.3362224629830264
+smoking,7,0.12639942217407008
+hypertension,4,0.07222824124232576
+age,0,0.0
+male,0,0.0
+race_eth,0,0.0
+log_nlr,0,0.0
+log_crp,0,0.0
+chd_mi,0,0.0

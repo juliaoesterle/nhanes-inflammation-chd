@@ -1,0 +1,5 @@
+# participant-level derived data (course data must not be redistributed)
+data/
+*.parquet
+__pycache__/
+*.pyc

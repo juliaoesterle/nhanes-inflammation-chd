@@ -1,0 +1,4 @@
+Strategy,Retained_Sample,Lost_Cases,LR_Test_AUC,RF_Test_AUC,Pros_and_Cons
+Option A: Listwise Deletion,4629,70,0.8654969991337115,0.8570308289035442,"Simple, but throws away 975 patients (70 cases); biased under MAR"
+Option B: Drop Income Column,5538,0,0.8658478872024904,0.8440906087131544,"Retains all people, but discards established socio-economic risk factor"
+Option C: Median Imputation + Missing Indicator (CHOSEN),5538,0,0.8654969991337115,0.8532018809532561,"Retains all 5,538 people & 412 cases; indicator extracts signal of non-response"

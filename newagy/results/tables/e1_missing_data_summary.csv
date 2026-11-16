@@ -1,0 +1,4 @@
+Strategy,Complete_Test_AUC,Retained_Sample
+Option A: Listwise Deletion,0.8705314198527537,4463
+Option B: Drop Income Column,0.870522593084252,5538
+Option C: Median Imputation + Indicator,0.8705314198527537,5538

@@ -1,0 +1,6 @@
+Step,Participants,Excluded,CHD_MI_Cases,Reason
+1. Total enrolled NHANES participants,11933,4124,559,Baseline survey population
+2. Adults (Age >= 20 years),7809,36,559,Heart disease questions asked only from age 20
+3. Answered CHD/MI question,7773,1736,559,Non-missing primary medical outcome
+4. Mobile Center Examination (MEC),6037,499,451,Required for biological & physical examination
+5. Both NLR & hs-CRP Measured (Final Analytic Cohort),5538,0,412,Complete primary exposure biomarker measurement

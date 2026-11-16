@@ -1,0 +1,4 @@
+Strategy,Test_AUC,Stability,Label_Leakage
+S1: Literature-Guided Set (M3),0.862,1.0,None
+S2: Naive Lasso (342 raw features),0.923,0.54,"Severe (Stents, Aspirin advice, Statins)"
+S3: Hybrid Domain Screen + Lasso,0.87,0.74,Controlled
