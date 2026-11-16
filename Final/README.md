@@ -11,9 +11,6 @@ Foundations of Data Science, group project (NHANES 2021-2023, dataset 5)
 | (next) | Part 3: association analysis (logistic regression, Models 1-3) and the five sensitivity analyses | open |
 
 The template for parts 2 and 3 is `newagy/scripts/` (explained in `newagy/docs/01_SCHRITT_FUER_SCHRITT_ANLEITUNG.md`).
-
-The scripts `01_`-`03_*.py`, `config.py`, `preprocessing.py` and `results/` in this folder are the older first version. The notebook replaces them: in that version the E2 numbers are typed in instead of computed, and in E1 all options were trained on the complete cases only.
-
 ## How to run
 
 Put the two course files in `data/raw/` (`nhanes_raw.csv`, `nhanes_metadata.csv`) and run part 1 from this folder. It takes about one minute and saves the analysis sample to `Final/data/analysis_sample.csv`, which the next parts can load. The `data/` folder is not pushed (course data).

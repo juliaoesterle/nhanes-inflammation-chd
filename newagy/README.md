@@ -32,8 +32,7 @@ by hand. The methods are the same as in `NewMarco/`, and the results agree with 
 `modules/` holds the shared code (cleaning, preprocessing pipeline, models, metrics, logistic
 regression). All settings and the decision rules are in `config.py`. The output is written to
 `results/tables`, `results/cv` and `results/decisions`; participant-level data goes to `data/`
-(not pushed). newagy has no plotting code: `results/figures/` still holds the old copies from
-NewMarco, the current figures are in `NewMarco/results/figures/`.
+(not pushed). newagy has no plotting code; the figures are in `NewMarco/results/figures/`.
 
 ## Run
 
