@@ -1,0 +1,9 @@
+Model,Feature set,Best C,Mean CV ROC-AUC
+Lasso,M0,1.0,0.7977
+Lasso,M1,0.1,0.8107
+Lasso,M2,0.1,0.8587
+Lasso,M3,0.1,0.8594
+Ridge,M0,0.1,0.798
+Ridge,M1,0.1,0.8066
+Ridge,M2,0.1,0.8583
+Ridge,M3,0.1,0.858
