@@ -20,6 +20,6 @@ Put the two course files in `data/raw/` (`nhanes_raw.csv`, `nhanes_metadata.csv`
 - 11,933 participants -> 5,538 adults with NLR and hs-CRP, 412 cases (7.4 %)
 - NLR and hs-CRP on the log scale (skewness 4.66 / 7.78 -> 0.15 / 0.23)
 - E1: listwise deletion, dropping income and median + missing indicator give the same AUC on the same people (LR 0.867), so we use median + indicator and keep 975 people (70 cases)
-- E2: the literature set M3 (AUC 0.862); a lasso on all 342 raw columns reaches 0.923 only through label leakage (aspirin advice, heart failure, stents, statins), the hybrid pool gives only +0.007
+- E2: the literature set M3 (AUC 0.862). Rule: keep it unless another strategy has no post-diagnosis variables and is clearly better (more than 0.005 AUC, 95% CI above 0). A lasso on all 342 raw columns reaches 0.923 only through label leakage (aspirin advice, heart failure, stents, lipid-lowering medication); the hybrid pool gives +0.007 (95% CI -0.007 to +0.020)
 
-Planned sensitivity analyses (part 3): complete cases, + statins (Model 3), excluding hs-CRP > 10 mg/L, survey weights, outcome including angina.
+Planned sensitivity analyses (part 3): complete cases, + lipid-lowering medication (Model 3), excluding hs-CRP > 10 mg/L, survey weights, outcome including angina.

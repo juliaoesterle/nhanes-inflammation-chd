@@ -1,0 +1,23 @@
+{
+  "rule": "keep S1 unless another strategy has no post-diagnosis variables and is more than 0.005 AUC better than S1 with a corrected 95% CI above 0",
+  "share_leakage_in_s2_top20": 0.35,
+  "comparisons_vs_s1": {
+    "S2 all raw columns + lasso": {
+      "delta_auc_vs_s1": 0.061223610005457306,
+      "lo": 0.04993728491224328,
+      "hi": 0.07250993509867133,
+      "p": 6.363444046944375e-07,
+      "leakage_free": false,
+      "clearly_better": true
+    },
+    "S3 hybrid pool + lasso": {
+      "delta_auc_vs_s1": 0.0077032868140725404,
+      "lo": -0.004704428730466408,
+      "hi": 0.02011100235861149,
+      "p": 0.19374208569022577,
+      "leakage_free": true,
+      "clearly_better": false
+    }
+  },
+  "decision": "S1 literature (M3)"
+}

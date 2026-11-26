@@ -32,7 +32,7 @@
 
 Es genügt nicht, einfach ein Modell zu trainieren und den besten Test-Score abzugeben. Wichtig sind uns drei Dinge:
 
-1. **Systematische Begründung jeder Entscheidung:** Für jeden Schritt formulieren wir **3 sinnvolle Optionen**, definieren **vorab ein objektives Kriterium (Entscheidungsregel)** und begründen die Wahl transparent.
+1. **Systematische Begründung jeder Entscheidung:** Für jeden Schritt formulieren wir **3 sinnvolle Optionen**, definieren **ein explizites Kriterium (Entscheidungsregel)** und begründen die Wahl transparent.
 2. **Kritische Selbstreflexion:** Wir decken methodische Fallstricke (z. B. Datenlecks durch Medikamente, Überanpassung, Kalibrierungsfehler) aktiv auf, anstatt sie zu vertuschen.
 3. **Strikte Trennung von Assoziation und Vorhersage:** Eine Querschnittsstudie (NHANES) kann Zusammenhänge bei bestehenden Krankheiten messen, aber keine Zukunftsprognose liefern.
 
@@ -125,7 +125,7 @@ Wie unterscheiden sich herzkranke und gesunde Teilnehmende, bevor wir Modelle an
 ### Die drei wichtigsten klinischen Entdeckungen in Table 1
 1. **NLR ist bei Fällen deutlich erhöht:** Median 2.39 vs. 1.96 ($\text{SMD} = 0.42$, Bonferroni-$p < 10^{-17}$).
 2. **hs-CRP unterscheidet sich bereits unadjustiert NICHT:** Median 1.97 vs. 1.81 mg/L ($\text{SMD} = 0.02, p = 0.256$, nach Bonferroni $p = 1.00$).
-3. **Das Statin-Paradoxon (Treatment Confounding):** Herzkranke haben *niedrigeres* Gesamtcholesterin (151.5 vs. 187.0 mg/dL, $\text{SMD} = -0.72$), weil **78.2%** von ihnen Cholesterinsenker (Statine) einnehmen (im Vergleich zu nur 24.9% der Kontrollgruppe).
+3. **Behandlungs-Paradoxon (Treatment Confounding):** Herzkranke haben *niedrigeres* Gesamtcholesterin (151.5 vs. 187.0 mg/dL, $\text{SMD} = -0.72$), wahrscheinlich weil **78.2%** von ihnen lipidsenkende Medikamente (Cholesterinsenker) einnehmen (im Vergleich zu nur 24.9% der Kontrollgruppe).
 
 ---
 
@@ -148,7 +148,7 @@ Ein logistisches Modell für "Einkommen fehlt" zeigt: Das Fehlen hängt von Bild
 | **Option B: Spalte Einkommen löschen** | 5'538 | 0.867 | 0.866 | Verliert den bekannten Risikofaktor Sozioökonomie. |
 | **Option C: Median-Imputation + Missing-Indikator** | **5'538** | **0.867** | **0.868** | **Erhält alle Fälle; Indikator nutzt die Information des Fehlens.** |
 
-### Vorab festgelegte Regel & Entscheidung
+### Entscheidungsregel & Entscheidung
 *Regel:* Wähle Option C, es sei denn, A oder B ist auf denselben Testpersonen um mehr als $\Delta\text{AUC} > 0.005$ überlegen.  
 *Entscheidung:* **Option C gewählt.** Kein AUC-Vorteil für Deletion, dafür bleiben alle 412 Fälle in der Analyse!
 
@@ -181,7 +181,14 @@ Der naive Lasso (S2) erreicht scheinbar eine fantastische AUC von **0.923**. Bei
 * Das sind keine Ursachen oder Prädiktoren, sondern **Folgen und Behandlungen der bereits erfolgten Diagnose**!
 
 ### Entscheidung
-Wir wählen **S1 (Literatur-Set)**. Es beantwortet exakt unsere Forschungsfrage (*"über etablierte Faktoren hinaus"*), ist stabil über Folds und frei von Behandlungslecks.
+**Entscheidungsregel:** Wir behalten S1, ausser eine andere Strategie enthält keine Variablen, die Folge oder Behandlung der Krankheit sind, *und* ist mehr als 0.005 AUC besser als S1, mit einem korrigierten 95%-KI der gepaarten Differenz über 0. (Die Regel wurde nach dem ersten E2-Lauf formuliert, deshalb nennen wir sie nirgends "vorab festgelegt".)
+
+| Vergleich mit S1 | ΔAUC (95%-KI) | ohne Leakage? | Regel erfüllt? |
+|---|---|---|---|
+| S2 naiver Lasso | +0.061 (0.050 bis 0.073) | nein (35 % der Top 20) | nein |
+| S3 hybrider Pool + Lasso | +0.008 (−0.005 bis +0.020) | ja | nein (KI enthält 0) |
+
+Wir wählen deshalb **S1 (Literatur-Set)**. Es beantwortet exakt unsere Forschungsfrage (*"über etablierte Faktoren hinaus"*), ist stabil über Folds und frei von Behandlungslecks.
 
 ---
 
@@ -335,18 +342,18 @@ Verbessern die Marker die Modellanpassung signifikant?
 
 Um zu zeigen, dass unsere Schlussfolgerungen nicht an einer einzelnen Entscheidung hängen, ändern wir jeweils eine Entscheidung (`sensitivity_association.csv`, `sensitivity_prediction.csv`). Fünf Varianten, jede gehört zu einer unserer Entscheidungen:
 1. Complete Cases ($n = 4'563$, 342 Fälle; prüft E1): NLR OR 1.17 (1.03–1.32), CRP OR 0.96 (0.83–1.11).
-2. Einschluss von Statinen (Modell 3; prüft "Behandlung nicht im Hauptmodell"): NLR OR 1.21 (1.08–1.36), CRP OR 0.99 (0.87–1.13).
+2. Einschluss lipidsenkender Medikamente (Modell 3; prüft "Behandlung nicht im Hauptmodell"): NLR OR 1.21 (1.08–1.36), CRP OR 0.99 (0.87–1.13).
 3. Ausschluss akuter Infektionen (hs-CRP $>10$ mg/L; prüft "Ausreisser behalten"): NLR OR 1.19 (1.05–1.34), CRP OR 0.96 (0.82–1.12).
 4. Survey-Gewichte (repräsentativ für die US-Bevölkerung): NLR OR 1.18 (1.05–1.33), CRP OR 0.91 (0.81–1.02).
 5. Inklusive Angina Pectoris im Outcome (prüft die Outcome-Definition): NLR OR 1.14 (1.02–1.27), CRP OR 0.96 (0.85–1.08).
 
-*Ergebnis:* In allen fünf Varianten bleibt NLR signifikant (α = 0.025) und hs-CRP nicht signifikant. Der Marker-Gewinn ΔAUC der logistischen Regression bleibt in allen Varianten unter 0.002 (bei Variante 2 mit Statinen als zusätzlichem Prädiktor; für die Survey-Gewichte gibt es keine AUC-Variante).
+*Ergebnis:* In allen fünf Varianten bleibt NLR signifikant (α = 0.025) und hs-CRP nicht signifikant. Der Marker-Gewinn ΔAUC der logistischen Regression bleibt in allen Varianten unter 0.002 (bei Variante 2 mit lipidsenkenden Medikamenten als zusätzlichem Prädiktor; für die Survey-Gewichte gibt es keine AUC-Variante).
 
 ---
 
 ## Schritt 16: Modell-Interpretierbarkeit & Feature Attribution
 
-1. **Permutation Feature Importance:** Alter dominiert mit weitem Abstand (AUC-Abfall 0.06–0.10, beim Entscheidungsbaum 0.18). Auf Platz 2 folgt Cholesterin (invers, wegen Statinen). NLR belegt Rang 6–9 von 13; hs-CRP landet bei 5 von 6 Algorithmen auf dem **allerletzten Platz**.
+1. **Permutation Feature Importance:** Alter dominiert mit weitem Abstand (AUC-Abfall 0.06–0.10, beim Entscheidungsbaum 0.18). Auf Platz 2 folgt Cholesterin (invers, wahrscheinlich wegen der lipidsenkenden Behandlung). NLR belegt Rang 6–9 von 13; hs-CRP landet bei 5 von 6 Algorithmen auf dem **allerletzten Platz**.
 2. **Partial Dependence Plots:** Das Risiko steigt monoton mit steigendem NLR; die Kurve für hs-CRP ist flach bis leicht fallend (logistische Regression: 8.0 % → 6.5 % vom 5. zum 95. Perzentil).
 3. **Illustrativer Baum (Tiefe 3):** Teilt ausschliesslich nach Alter, Diabetes, Cholesterin und eGFR auf. Kein einziger Entzündungsmarker wird verwendet!
 
@@ -360,7 +367,7 @@ Fragen, die in der Präsentation kommen könnten, und wie man sie beantworten ka
 > **Antwort:** "Die Rohwerte von NLR und hs-CRP weisen extreme Rechtsschiefe auf (Schiefe 4.66 und 7.78). Wenige Extremwerte würden gradientenbasierte und distanzbasierte Verfahren wie kNN und SVM verzerren. Durch die Logarithmierung sinkt die Schiefe auf 0.15 und 0.23, was zu einer symmetrischen, normalverteilungsnahen Verteilung im Q-Q-Plot führt. Zudem erlaubt es die biologisch sinnvolle Interpretation als relatives Risiko: 1 SD entspricht einem festen Multiplikationsfaktor auf der Originalskala."
 
 ### Frage 2: "Warum hat Ihr Random Forest oder Ihre SVM die Logistische Regression nicht geschlagen?"
-> **Antwort:** "Wir haben 13 Prädiktoren, 412 Fälle und vorwiegend monotone biologische Risikobeziehungen. Nicht-lineare Terme (quadratische Tests) und Interaktionen mit Statinen oder Geschlecht waren statistisch nicht signifikant. Komplexe Modelle wie Random Forest oder SVM haben eine höhere Modellvarianz, können hier aber keinen Bias abbauen, weil schlicht keine komplexe Interaktionsstruktur in den Daten vorliegt. Das deckt sich mit der Meta-Analyse von Christodoulou et al. (2019)."
+> **Antwort:** "Wir haben 13 Prädiktoren, 412 Fälle und vorwiegend monotone biologische Risikobeziehungen. Nicht-lineare Terme (quadratische Tests) und Interaktionen mit lipidsenkenden Medikamenten oder Geschlecht waren statistisch nicht signifikant. Komplexe Modelle wie Random Forest oder SVM haben eine höhere Modellvarianz, können hier aber keinen Bias abbauen, weil schlicht keine komplexe Interaktionsstruktur in den Daten vorliegt. Das deckt sich mit der Meta-Analyse von Christodoulou et al. (2019)."
 
 ### Frage 3: "Wie erklären Sie den scheinbaren Widerspruch: NLR ist statistisch hochsignifikant assoziiert (p = 0.002), verbessert aber die AUC um fast gar nichts (+0.0013)?"
 > **Antwort:** "Assoziation und Diskrimination beantworten zwei mathematisch völlig verschiedene Fragen. Ein Odds Ratio von 1.20 pro SD bedeutet, dass NLR ein echtes statistisches Signal liefert (bestätigt durch den Likelihood-Ratio-Test, $\chi^2 = 9.83, p = 0.002$). Aber um die Trennung (AUC) zweier Gruppen spürbar zu verschieben, braucht ein Marker laut Pepe et al. (2004) Odds Ratios von 3.0 oder höher. Da Alter und etablierte Risikofaktoren bereits eine AUC von 0.861 erreichen, reicht das moderate Signal von NLR nicht aus, um Patienten in der Risikorangfolge umzureihen."

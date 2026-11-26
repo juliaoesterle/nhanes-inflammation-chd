@@ -3,3 +3,5 @@ data/
 *.parquet
 __pycache__/
 *.pyc
+# course material from prof / TA (not for the repo)
+*.pdf

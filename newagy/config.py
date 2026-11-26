@@ -1,8 +1,6 @@
 """
-Settings of the newagy analysis: paths, feature sets and the decision rules.
-
-The decision rules are written down here before the experiments are run, so the
-result of an experiment cannot be re-interpreted afterwards.
+Settings of the newagy analysis: paths, feature sets and the decision rules of the
+design experiments E1-E3 and of the final model choice.
 """
 
 from __future__ import annotations
@@ -86,7 +84,7 @@ INDICATOR_VARS = ["income_pir"]       # gets a 0/1 "missing" column
 ALGORITHMS = ["LR", "EN", "DT", "kNN", "SVM", "RF"]
 
 # -----------------------------------------------------------------------------
-# Hypotheses and pre-specified decision rules
+# Hypotheses and decision rules
 # -----------------------------------------------------------------------------
 # H1a / H1b: NLR / hs-CRP associated with CHD/MI after adjustment (Bonferroni: 0.05 / 2)
 # H1c: NLR + hs-CRP improve the discrimination beyond M2 (relevant gain: dAUC >= 0.01)
@@ -96,6 +94,10 @@ CLINICALLY_RELEVANT_DELTA_AUC = 0.010
 # E1: keep median + indicator unless another option is > 0.005 AUC better on the same people
 MISSING_OPTIONS = ["complete_case", "drop_income", "median"]
 DELTA_AUC_EXPERIMENT_RULE = 0.005
+
+# E2: keep the literature set S1 unless another strategy has no post-diagnosis variables (no leakage)
+# and is more than 0.005 AUC better than S1 with a corrected 95% CI of the paired difference above 0
+E2_MIN_AUC_GAIN = 0.005
 
 # E3: use a correction only if it raises the AUC by > 0.005 and the Brier score is not worse
 IMBALANCE_OPTIONS = ["none", "class_weight", "oversample", "undersample", "smote"]

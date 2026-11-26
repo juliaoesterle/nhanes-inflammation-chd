@@ -15,7 +15,7 @@ by hand. The methods are the same as in `NewMarco/`, and the results agree with 
 | H1b: hs-CRP associated beyond the risk factors? | no: OR 0.96 (0.84-1.08), p = 0.48; the crude association disappears after adjusting for BMI |
 | H1c: better discrimination with the markers? | no: logistic regression dAUC +0.0013 (-0.0009 to +0.0035) |
 | Does any algorithm beat logistic regression? | no significant difference (Bonferroni) |
-| Sensitivity analyses | same conclusions in all five (complete cases, + statins, hs-CRP > 10 mg/L excluded, survey weights, outcome incl. angina) |
+| Sensitivity analyses | same conclusions in all five (complete cases, + lipid-lowering medication, hs-CRP > 10 mg/L excluded, survey weights, outcome incl. angina) |
 
 ## Scripts
 

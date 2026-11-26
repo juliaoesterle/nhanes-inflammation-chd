@@ -1,10 +1,11 @@
 """
-Step 03: the four design experiments, each with a rule fixed in config.py beforehand.
+Step 03: the four design experiments, each decided with a rule from config.py.
 
 E1 missing data: listwise deletion vs drop the income column vs median + missing indicator,
    with LR and RF, all scored on the same test people (complete cases of the test folds)
 E2 feature selection: S1 literature set (M3) vs S2 lasso on all raw columns vs
-   S3 lasso on a knowledge-screened pool of 39 variables
+   S3 lasso on a knowledge-screened pool of 39 variables; S1 is kept unless another
+   strategy is leakage-free and clearly better (config.E2_MIN_AUC_GAIN)
 E3 class imbalance: none vs class weights vs oversampling vs undersampling vs SMOTE
 E4 evaluation design: how much does one 80/20 split vary? (200 random splits)
 """
@@ -190,6 +191,25 @@ def run_e2(df):
     print("E2:\n" + summ.round(4).to_string(index=False))
     print("S2 top 10:\n" + top.head(10)[["selection_frequency", "mean_abs_coef", "leakage", "label"]]
           .round(3).to_string())
+
+    # decision rule: compare every strategy with S1 on the same folds
+    auc = res.pivot_table(index=["repeat", "fold"], columns="strategy", values="auc")
+    s1 = auc["S1 literature (M3)"]
+    leakage_top20 = (top.head(20)["leakage"] != "").mean()
+    checks = {}
+    for s in ["S2 all raw columns + lasso", "S3 hybrid pool + lasso"]:
+        t = corrected_ttest(auc[s] - s1)
+        leak_free = s.startswith("S3")          # S3 pool screened for leakage, S2 is not
+        better = t["mean"] > cfg.E2_MIN_AUC_GAIN and t["lo"] > 0
+        checks[s] = {"delta_auc_vs_s1": t["mean"], "lo": t["lo"], "hi": t["hi"], "p": t["p"],
+                     "leakage_free": leak_free, "clearly_better": bool(better)}
+    winners = [s for s, c in checks.items() if c["leakage_free"] and c["clearly_better"]]
+    decision = max(winners, key=lambda s: checks[s]["delta_auc_vs_s1"]) if winners else "S1 literature (M3)"
+    save_json({"rule": "keep S1 unless another strategy has no post-diagnosis variables and is more than "
+                       "0.005 AUC better than S1 with a corrected 95% CI above 0",
+               "share_leakage_in_s2_top20": leakage_top20, "comparisons_vs_s1": checks,
+               "decision": decision}, "feature_selection.json")
+    print("E2 decision:", decision, {s: round(c["delta_auc_vs_s1"], 4) for s, c in checks.items()})
 
     s3 = res[res["strategy"].str.startswith("S3")]["selected"]
     freq = pd.Series([v for x in s3 for v in x.split("|")]).value_counts() / len(s3)
