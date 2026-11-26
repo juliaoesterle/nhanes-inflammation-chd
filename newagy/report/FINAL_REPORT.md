@@ -254,20 +254,20 @@ In a nationally representative sample of US adults, the neutrophil-to-lymphocyte
 
 ## References
 
-1. Adamstein NH, et al. The neutrophil–lymphocyte ratio and incident atherosclerotic events: analyses from five contemporary randomized trials. *European Heart Journal*, 2021;42(9):896–903.
-2. C Reactive Protein Coronary Heart Disease Genetics Collaboration (CCGC). Association between C reactive protein and coronary heart disease: Mendelian randomisation analysis based on individual participant data. *BMJ*, 2011;342:d548.
-3. Christodoulou E, et al. A systematic review shows no performance benefit of machine learning over logistic regression for clinical prediction models. *Journal of Clinical Epidemiology*, 2019;110:12–22.
-4. Emerging Risk Factors Collaboration. C-reactive protein concentration and risk of coronary heart disease, stroke, and mortality: an individual participant meta-analysis. *The Lancet*, 2010;375(9709):132–140.
-5. Emerging Risk Factors Collaboration. C-reactive protein, fibrinogen, and cardiovascular disease prediction. *New England Journal of Medicine*, 2012;367(14):1310–1320.
-6. Goff DC Jr, et al. 2013 ACC/AHA guideline on the assessment of cardiovascular risk: a report of the American College of Cardiology/American Heart Association Task Force on Practice Guidelines. *Circulation*, 2014;129(25 Suppl 2):S49–S73.
-7. Inker LA, et al. New creatinine- and cystatin C–based equations to estimate GFR without race. *New England Journal of Medicine*, 2021;385(19):1737–1749.
-8. Khan SS, et al. Novel prediction equations for absolute risk assessment of total cardiovascular disease: The American Heart Association PREVENT Equations. *Circulation*, 2024;149(6):430–449.
-9. Libby P. Inflammation in atherosclerosis. *Nature*, 2002;420(6917):868–874.
-10. Nadeau C, Bengio Y. Inference for the generalization error. *Machine Learning*, 2003;52(3):239–281.
-11. Pepe MS, et al. Limitations of the odds ratio in gauging the performance of a diagnostic, prognostic, or screening marker. *American Journal of Epidemiology*, 2004;159(9):882–890.
+1. Adamstein NH, et al. The neutrophil–lymphocyte ratio and incident atherosclerotic events: analyses from five contemporary randomized trials. *European Heart Journal*, 2021;42(9):896–903. doi:10.1093/eurheartj/ehaa1034
+2. C Reactive Protein Coronary Heart Disease Genetics Collaboration (CCGC). Association between C reactive protein and coronary heart disease: Mendelian randomisation analysis based on individual participant data. *BMJ*, 2011;342:d548. doi:10.1136/bmj.d548
+3. Christodoulou E, et al. A systematic review shows no performance benefit of machine learning over logistic regression for clinical prediction models. *Journal of Clinical Epidemiology*, 2019;110:12–22. doi:10.1016/j.jclinepi.2019.02.004
+4. Emerging Risk Factors Collaboration. C-reactive protein concentration and risk of coronary heart disease, stroke, and mortality: an individual participant meta-analysis. *The Lancet*, 2010;375(9709):132–140. doi:10.1016/S0140-6736(09)61717-7
+5. Emerging Risk Factors Collaboration. C-reactive protein, fibrinogen, and cardiovascular disease prediction. *New England Journal of Medicine*, 2012;367(14):1310–1320. doi:10.1056/NEJMoa1107477
+6. Goff DC Jr, et al. 2013 ACC/AHA guideline on the assessment of cardiovascular risk: a report of the American College of Cardiology/American Heart Association Task Force on Practice Guidelines. *Circulation*, 2014;129(25 Suppl 2):S49–S73. doi:10.1161/01.cir.0000437741.48606.98
+7. Inker LA, et al. New creatinine- and cystatin C–based equations to estimate GFR without race. *New England Journal of Medicine*, 2021;385(19):1737–1749. doi:10.1056/NEJMoa2102953
+8. Khan SS, et al. Development and validation of the American Heart Association's PREVENT equations. *Circulation*, 2024;149(6):430–449. doi:10.1161/CIRCULATIONAHA.123.067626
+9. Libby P. Inflammation in atherosclerosis. *Nature*, 2002;420(6917):868–874. doi:10.1038/nature01323
+10. Nadeau C, Bengio Y. Inference for the generalization error. *Machine Learning*, 2003;52(3):239–281. doi:10.1023/A:1024068626366
+11. Pepe MS, et al. Limitations of the odds ratio in gauging the performance of a diagnostic, prognostic, or screening marker. *American Journal of Epidemiology*, 2004;159(9):882–890. doi:10.1093/aje/kwh101
 12. Platt JC. Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. *Advances in Large Margin Classifiers*, 1999;10(3):61–74.
-13. Ridker PM, et al. Antiinflammatory therapy with canakinumab for atherosclerotic disease (CANTOS). *New England Journal of Medicine*, 2017;377(12):1119–1131.
-14. SCORE2 Working Group and ESC Cardiovascular Risk Collaboration. SCORE2 risk prediction algorithms: new models to estimate 10-year risk of cardiovascular disease in Europe. *European Heart Journal*, 2021;42(25):2439–2454.
+13. Ridker PM, et al. Antiinflammatory therapy with canakinumab for atherosclerotic disease (CANTOS). *New England Journal of Medicine*, 2017;377(12):1119–1131. doi:10.1056/NEJMoa1707914
+14. SCORE2 Working Group and ESC Cardiovascular Risk Collaboration. SCORE2 risk prediction algorithms: new models to estimate 10-year risk of cardiovascular disease in Europe. *European Heart Journal*, 2021;42(25):2439–2454. doi:10.1093/eurheartj/ehab309
 15. World Health Organization. The top 10 causes of death. Fact sheet, 2024. Available from: https://www.who.int/news-room/fact-sheets/detail/the-top-10-causes-of-death.
 
 ---
